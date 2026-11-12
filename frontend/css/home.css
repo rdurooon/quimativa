@@ -1,0 +1,27 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+}
+
+.home-logo {
+  width: 160px;
+  height: 160px;
+}
+
+.home h1 {
+  color: var(--cor-principal);
+  font-size: 2.5rem;
+}
+
+.home-subtitulo {
+  font-size: 1.1rem;
+}
+
+.home-resposta {
+  min-height: 1.5em;
+  color: var(--cor-principal-escura);
+}
