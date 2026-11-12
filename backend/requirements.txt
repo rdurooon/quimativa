@@ -1,0 +1,4 @@
+pywebview
+SQLAlchemy
+alembic
+pyinstaller

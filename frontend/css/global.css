@@ -1,0 +1,46 @@
+/* --- Reset básico --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- Variáveis de tema --- */
+:root {
+  --cor-principal: #008e15;
+  --cor-principal-escura: #006b10;
+  --cor-fundo: #ffffff;
+  --cor-texto: #1f2933;
+  --cor-texto-claro: #ffffff;
+  --fonte: "Segoe UI", system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte);
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+}
+
+/* --- Botão padrão --- */
+.btn {
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cor-texto-claro);
+  background: var(--cor-principal);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--cor-principal-escura);
+}
