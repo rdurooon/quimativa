@@ -1,29 +1,34 @@
 import os
-
 import webview
 
-from api import API
-from config import FRONTEND_DIR, NOME_APP
+class API:
+    def ping(self):
+        return 'pong'
 
-LARGURA = 1280
-ALTURA = 720
-DEBUG = os.environ.get('QUIMATIVA_DEBUG') == '1'
-
-
-def main():
-    api = API()
-    webview.create_window(
-        NOME_APP,
-        url=str(FRONTEND_DIR / 'home.html'),
-        js_api=api,
-        width=LARGURA,
-        height=ALTURA,
-        min_size=(1024, 600),
-    )
-    # http_server=True serve o frontend por HTTP local (em vez de file://),
-    # o que evita problemas com CSS/JS e é necessário para o Vue + Vite
-    webview.start(http_server=True, debug=DEBUG)
-
+    def sair(self):
+        for janela in webview.windows:
+            janela.destroy()
 
 if __name__ == '__main__':
-    main()
+    api = API()
+    
+    # 1. Pega o diretório onde o app.py está salvo (backend/)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # 2. Sobe um nível para a raiz do projeto e aponta para o frontend/home.html
+    html_path = os.path.normpath(os.path.join(current_dir, '..', 'frontend', 'home.html'))
+    
+    # Verificação opcional para depuração no console
+    print(f"Procurando HTML em: {html_path}")
+
+    # 3. Cria a janela convertendo o caminho para uma URI de arquivo válida
+    window = webview.create_window(
+        title='Quimativa',
+        url=f'file:///{html_path.replace(os.sep, "/")}',
+        js_api=api,
+        width=1280,
+        height=720,
+        resizable=True
+    )
+    
+    webview.start()

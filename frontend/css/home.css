@@ -1,27 +1,202 @@
+/* ==========================================================
+   Tela inicial (home.html)
+   Usa as variáveis e o botão .btn de css/global.css
+   ========================================================== */
+
 .home {
+  position: relative;
+  height: 100%;
+  overflow: hidden; /* esconde as peças da animação enquanto entram pelas laterais */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-centro {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 12px;
+  gap: 5.5vh;
+  padding-bottom: 3vh;
 }
+
+/* ---------- Revelação dos elementos após a animação ---------- */
+.revela {
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease, background 0.15s, color 0.15s;
+}
+
+.revelado .revela {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.revelado .r1 { transition-delay: 0.05s; }
+.revelado .r2 { transition-delay: 0.2s; }
+.revelado .r3,
+.revelado .btn-sair { transition-delay: 0.35s; }
+
+/* ---------- Logotipo (placeholder) ---------- */
+.home-logotipo {
+  display: block;
+  height: 9vh;
+  width: auto;
+  overflow: visible;
+  fill: var(--cor-principal);
+  font-family: var(--fonte);
+}
+
+/* ---------- Botões (estendem o .btn do global.css) ---------- */
+.btn-iniciar {
+  width: 38vw;
+  height: 10.8vh;
+  padding: 0;
+  border-radius: 3vh;
+  font-size: 6.4vh;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.revelado .btn-iniciar:hover { transform: translateY(-2px); }
+.revelado .btn-iniciar:active { transform: translateY(2px); }
+
+.btn-sair {
+  position: absolute;
+  top: 0.7vh;
+  right: 0.4vw;
+  width: 22.7vw;
+  height: 8.6vh;
+  padding: 0;
+  border: 0.7vh solid var(--cor-principal);
+  border-radius: 999px;
+  background: var(--cor-fundo);
+  color: var(--cor-principal);
+  font-size: 4vh;
+  font-weight: 700;
+}
+
+.revelado .btn-sair:hover {
+  background: var(--cor-principal);
+  color: var(--cor-texto-claro);
+}
+
+/* ---------- Rodapé ---------- */
+.home-equipe {
+  position: absolute;
+  left: 1vw;
+  bottom: 1.6vh;
+  color: var(--cor-principal);
+  font-size: 4vh;
+  font-weight: 600;
+}
+
+/* ==========================================================
+   Logo animada (SVG com as partes da logo original)
+   ========================================================== */
 
 .home-logo {
-  width: 160px;
-  height: 160px;
+  --lado: 60vh;
+  --folga: calc(var(--lado) * -0.1537); /* tira as margens em branco do desenho */
+  position: relative;
+  width: var(--lado);
+  height: var(--lado);
+  margin: var(--folga) 0;
 }
 
-.home h1 {
-  color: var(--cor-principal);
-  font-size: 2.5rem;
+/* O SVG é 3,8x mais largo que a logo para as peças entrarem pelas bordas da tela */
+.cena {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(100% * 4080 / 1080);
+  height: 100%;
+  transform: translateX(-50%);
+  overflow: visible;
+  fill: var(--cor-principal);
 }
 
-.home-subtitulo {
-  font-size: 1.1rem;
+.liquido { fill: var(--cor-principal); }
+
+/* Logo já pronta (ao voltar do menu a animação não repete) */
+.parada .cena * { animation: none !important; }
+
+/* ---------- Linha do tempo (~2,7 s) ---------- */
+
+/* 0,00-0,72 s: as duas peças aceleram e se chocam no centro */
+.entra-esq { animation: entra-esq 0.72s cubic-bezier(0.55, 0, 0.9, 0.55) both; }
+.entra-dir { animation: entra-dir 0.72s cubic-bezier(0.55, 0, 0.9, 0.55) both; }
+@keyframes entra-esq { from { transform: translateX(-2400px); } to { transform: translateX(0); } }
+@keyframes entra-dir { from { transform: translateX(2400px); } to { transform: translateX(0); } }
+
+/* 0,72-1,40 s: impacto (frasco tomba e volta; cronômetro recua) */
+.golpe-frasco { animation: golpe-frasco 0.7s ease-out 0.72s both; }
+.golpe-relogio { animation: golpe-relogio 0.6s ease-out 0.72s both; }
+@keyframes golpe-frasco {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(-5deg); }
+  55% { transform: rotate(1.8deg); }
+  80% { transform: rotate(-0.6deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes golpe-relogio {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(26px); }
+  65% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
 
-.home-resposta {
-  min-height: 1.5em;
-  color: var(--cor-principal-escura);
+/* faíscas pretas do impacto */
+.faisca {
+  fill: none;
+  stroke: #000;
+  stroke-width: 12;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: faisca 0.5s ease-out 0.72s both;
+}
+@keyframes faisca {
+  0% { opacity: 0; transform: translateY(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-38px); }
+}
+
+/* 0,80-1,60 s: líquido enche; depois balança */
+.nivel { animation: nivel 0.8s cubic-bezier(0.3, 0.6, 0.3, 1) 0.8s both; }
+@keyframes nivel { from { transform: translateY(480px); } to { transform: translateY(0); } }
+
+.balanco-liquido { animation: balanco 1.3s ease-out 0.75s both; }
+@keyframes balanco {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(-5deg); }
+  35% { transform: rotate(4deg); }
+  55% { transform: rotate(-2.4deg); }
+  75% { transform: rotate(1.2deg); }
+  100% { transform: rotate(0); }
+}
+
+/* bolhas (furos no líquido) */
+.bolha { transform-box: fill-box; transform-origin: center; }
+.bolha-a { animation: bolha-surge 0.4s ease-out 1.5s both, bolha-flutua 1.8s ease-in-out 1.9s infinite; }
+.bolha-b { animation: bolha-surge 0.4s ease-out 1.65s both, bolha-flutua 2.2s ease-in-out 2.05s infinite; }
+@keyframes bolha-surge { from { transform: translateY(70px) scale(0); } to { transform: translateY(0) scale(1); } }
+@keyframes bolha-flutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+
+/* 1,45-2,55 s: ponteiro dá uma volta completa (passa por trás do frasco) */
+.ponteiro { animation: volta 1.1s cubic-bezier(0.5, 0, 0.3, 1) 1.45s both; }
+@keyframes volta { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+/* marcas do cronômetro acendem quando o ponteiro passa (a última, .m2, avisa o js/home.js) */
+.marca { transform-box: fill-box; transform-origin: center; animation: marca 0.25s ease-out both; }
+.m3 { animation-delay: 1.55s; }
+.m4 { animation-delay: 1.62s; }
+.m1 { animation-delay: 2.3s; }
+.m2 { animation-delay: 2.4s; }
+@keyframes marca { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .cena * { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+  .revela { transition-duration: 0.01ms; transition-delay: 0s !important; }
 }

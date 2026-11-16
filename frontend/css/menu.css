@@ -1,0 +1,17 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+}
+
+.menu h1 {
+  color: var(--cor-principal);
+  font-size: 2.5rem;
+}
+
+.menu .btn {
+  text-decoration: none;
+}

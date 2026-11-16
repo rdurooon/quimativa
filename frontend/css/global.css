@@ -1,3 +1,36 @@
+/* --- Fonte: Samsung Sharp Sans ---
+   Arquivos em frontend/assets/fonts/ (nomes esperados abaixo).
+   Se algum arquivo faltar, o navegador usa a próxima fonte da lista em --fonte. */
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/SamsungSharpSans-Regular.woff2") format("woff2"),
+    url("../assets/fonts/SamsungSharpSans-Regular.ttf") format("truetype"),
+    url("../assets/fonts/SamsungSharpSans-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/SamsungSharpSans-Medium.woff2") format("woff2"),
+    url("../assets/fonts/SamsungSharpSans-Medium.ttf") format("truetype"),
+    url("../assets/fonts/SamsungSharpSans-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/SamsungSharpSans-Bold.woff2") format("woff2"),
+    url("../assets/fonts/SamsungSharpSans-Bold.ttf") format("truetype"),
+    url("../assets/fonts/SamsungSharpSans-Bold.otf") format("opentype");
+}
+
 /* --- Reset básico --- */
 *,
 *::before,
@@ -14,7 +47,7 @@
   --cor-fundo: #ffffff;
   --cor-texto: #1f2933;
   --cor-texto-claro: #ffffff;
-  --fonte: "Segoe UI", system-ui, sans-serif;
+  --fonte: "SamsungSharpSans", "Segoe UI", system-ui, sans-serif;
 }
 
 html,
