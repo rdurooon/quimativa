@@ -1,34 +1,44 @@
-import os
-import webview
+"""Ponto de entrada do Quimativa.
 
-class API:
-    def ping(self):
-        return 'pong'
+Executar a partir da raiz do projeto:
+    python -m backend.app
+"""
+import logging
+import sys
+from pathlib import Path
 
-    def sair(self):
-        for janela in webview.windows:
-            janela.destroy()
+# Permite também "python backend/app.py" (e o PyInstaller), que não
+# colocam a raiz do projeto no caminho de importação.
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-if __name__ == '__main__':
-    api = API()
-    
-    # 1. Pega o diretório onde o app.py está salvo (backend/)
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # 2. Sobe um nível para a raiz do projeto e aponta para o frontend/home.html
-    html_path = os.path.normpath(os.path.join(current_dir, '..', 'frontend', 'home.html'))
-    
-    # Verificação opcional para depuração no console
-    print(f"Procurando HTML em: {html_path}")
+import webview  # noqa: E402
 
-    # 3. Cria a janela convertendo o caminho para uma URI de arquivo válida
-    window = webview.create_window(
-        title='Quimativa',
-        url=f'file:///{html_path.replace(os.sep, "/")}',
-        js_api=api,
+from backend import config  # noqa: E402
+from backend.api import API  # noqa: E402
+from backend.database.conexao import fechar_conexoes  # noqa: E402
+from backend.database.inicializacao import inicializar_banco  # noqa: E402
+
+
+def main() -> None:
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s [%(name)s] %(message)s')
+
+    inicializar_banco()
+
+    pagina_inicial = config.FRONTEND_DIR / 'home.html'
+    webview.create_window(
+        title=config.NOME_APP,
+        url=pagina_inicial.as_uri(),
+        js_api=API(),
         width=1280,
         height=720,
-        resizable=False
+        resizable=False,
     )
-    
-    webview.start()
+    try:
+        webview.start()
+    finally:
+        fechar_conexoes()
+
+
+if __name__ == '__main__':
+    main()
