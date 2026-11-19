@@ -28,7 +28,7 @@ if __name__ == '__main__':
         js_api=api,
         width=1280,
         height=720,
-        resizable=True
+        resizable=False
     )
     
     webview.start()

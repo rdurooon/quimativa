@@ -1,0 +1,109 @@
+.transicao-liquido {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0;
+  isolation: isolate;
+}
+
+.transicao-camada {
+  position: absolute;
+  inset: -10vh -4vw;
+  width: 108vw;
+  height: 132vh;
+  overflow: visible;
+  transform: translateY(-128%);
+  will-change: transform;
+}
+
+.transicao-quimica {
+  opacity: 0.72;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: quimica-flutua 3.4s ease-in-out infinite;
+}
+
+.transicao-bolha-svg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 2;
+}
+
+.transicao-molecula {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.transicao-entrada .transicao-liquido,
+.transicao-revelando .transicao-liquido,
+.transicao-coberta .transicao-liquido {
+  opacity: 1;
+}
+
+.transicao-entrada .transicao-camada {
+  animation: liquido-cobrir var(--duracao-cobrir) cubic-bezier(0.35, 0, 0.65, 1) forwards;
+}
+
+.transicao-entrada .transicao-camada:nth-child(2) { animation-delay: 80ms; }
+.transicao-entrada .transicao-camada:nth-child(3) { animation-delay: 160ms; }
+.transicao-entrada .transicao-camada:nth-child(4) { animation-delay: 240ms; }
+
+.transicao-coberta .transicao-camada {
+  transform: translateY(0);
+}
+
+.transicao-revelando .transicao-camada {
+  animation: liquido-revelar var(--duracao-revelar) cubic-bezier(0.35, 0, 0.65, 1) forwards;
+}
+
+.transicao-revelando .transicao-camada:nth-child(1) { animation-delay: 180ms; }
+.transicao-revelando .transicao-camada:nth-child(2) { animation-delay: 120ms; }
+.transicao-revelando .transicao-camada:nth-child(3) { animation-delay: 60ms; }
+.transicao-revelando .transicao-camada:nth-child(4) { animation-delay: 0ms; }
+
+.transicao-revelando .menu {
+  animation: menu-entra 0.7s var(--easing-suave) both;
+}
+
+@keyframes liquido-cobrir {
+  from { transform: translateY(-116%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes liquido-revelar {
+  from { transform: translateY(0); }
+  to { transform: translateY(128%); }
+}
+
+@keyframes quimica-flutua {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -10px; }
+}
+
+@keyframes menu-entra {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transicao-camada {
+    animation: none !important;
+  }
+
+  .transicao-entrada .transicao-camada,
+  .transicao-coberta .transicao-camada {
+    transform: translateY(0);
+  }
+
+  .transicao-revelando .transicao-camada {
+    transform: translateY(128%);
+  }
+
+  .transicao-quimica { animation: none; }
+}

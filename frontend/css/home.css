@@ -25,7 +25,9 @@
   opacity: 0;
   transform: translateY(14px);
   pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease, background 0.15s, color 0.15s;
+  transition: opacity 0.5s var(--easing-suave), transform 0.5s var(--easing-suave),
+    background var(--duracao-interacao) var(--easing-suave),
+    color var(--duracao-interacao) var(--easing-suave);
 }
 
 .revelado .revela {
@@ -34,10 +36,15 @@
   pointer-events: auto;
 }
 
-.revelado .r1 { transition-delay: 0.05s; }
-.revelado .r2 { transition-delay: 0.2s; }
+.revelado .r1 { animation: entrada-revela 0.5s var(--easing-suave) 0.05s both; }
+.revelado .r2 { animation: entrada-revela 0.5s var(--easing-suave) 0.2s both; }
 .revelado .r3,
-.revelado .btn-sair { transition-delay: 0.35s; }
+.revelado .btn-fechar { animation: entrada-revela 0.5s var(--easing-suave) 0.35s both; }
+
+@keyframes entrada-revela {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
 
 /* ---------- Logotipo (placeholder) ---------- */
 .home-logotipo {
@@ -51,34 +58,37 @@
 
 /* ---------- Botões (estendem o .btn do global.css) ---------- */
 .btn-iniciar {
-  width: 38vw;
-  height: 10.8vh;
+  width: clamp(280px, 28vw, 390px);
+  height: clamp(58px, 8.8vh, 76px);
   padding: 0;
   border-radius: 3vh;
-  font-size: 6.4vh;
+  font-size: clamp(2rem, 5vh, 3rem);
   font-weight: 700;
   line-height: 1;
 }
 
-.revelado .btn-iniciar:hover { transform: translateY(-2px); }
-.revelado .btn-iniciar:active { transform: translateY(2px); }
+.revelado .btn-iniciar:hover { background: var(--cor-principal-escura); }
+.revelado .btn-iniciar:active { transform: scale(0.98); }
 
-.btn-sair {
+.btn-fechar {
   position: absolute;
   top: 0.7vh;
   right: 0.4vw;
-  width: 22.7vw;
-  height: 8.6vh;
+  width: clamp(140px, 11.5vw, 170px);
+  height: clamp(40px, 5.8vh, 52px);
   padding: 0;
-  border: 0.7vh solid var(--cor-principal);
+  border: 3px solid var(--cor-principal);
   border-radius: 999px;
   background: var(--cor-fundo);
   color: var(--cor-principal);
-  font-size: 4vh;
+  font-size: clamp(1.05rem, 2.6vh, 1.45rem);
   font-weight: 700;
+  transition: background var(--duracao-interacao) var(--easing-suave),
+    color var(--duracao-interacao) var(--easing-suave),
+    box-shadow var(--duracao-interacao) var(--easing-suave);
 }
 
-.revelado .btn-sair:hover {
+.revelado .btn-fechar:hover {
   background: var(--cor-principal);
   color: var(--cor-texto-claro);
 }
@@ -89,7 +99,7 @@
   left: 1vw;
   bottom: 1.6vh;
   color: var(--cor-principal);
-  font-size: 4vh;
+  font-size: clamp(1rem, 2.6vh, 1.25rem);
   font-weight: 600;
 }
 
@@ -198,5 +208,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cena * { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
-  .revela { transition-duration: 0.01ms; transition-delay: 0s !important; }
+  .revela { transition-duration: 0.01ms;   animation-duration: 0.01ms !important;
+  animation-delay: 0s !important; }
 }

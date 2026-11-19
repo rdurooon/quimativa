@@ -6,9 +6,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url("../assets/fonts/SamsungSharpSans-Regular.woff2") format("woff2"),
-    url("../assets/fonts/SamsungSharpSans-Regular.ttf") format("truetype"),
-    url("../assets/fonts/SamsungSharpSans-Regular.otf") format("opentype");
+  src: url("../assets/fonts/samsungsharpsans.otf") format("opentype");
 }
 
 @font-face {
@@ -16,9 +14,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url("../assets/fonts/SamsungSharpSans-Medium.woff2") format("woff2"),
-    url("../assets/fonts/SamsungSharpSans-Medium.ttf") format("truetype"),
-    url("../assets/fonts/SamsungSharpSans-Medium.otf") format("opentype");
+  src: url("../assets/fonts/samsungsharpsans-medium.otf") format("opentype");
 }
 
 @font-face {
@@ -26,9 +22,7 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url("../assets/fonts/SamsungSharpSans-Bold.woff2") format("woff2"),
-    url("../assets/fonts/SamsungSharpSans-Bold.ttf") format("truetype"),
-    url("../assets/fonts/SamsungSharpSans-Bold.otf") format("opentype");
+  src: url("../assets/fonts/samsungsharpsans-bold.otf") format("opentype");
 }
 
 /* --- Reset básico --- */
@@ -44,9 +38,17 @@
 :root {
   --cor-principal: #008e15;
   --cor-principal-escura: #006b10;
-  --cor-fundo: #ffffff;
-  --cor-texto: #1f2933;
+  --cor-fundo: #f3f6f4;
+  --cor-superficie: #ffffff;
+  --cor-texto: #1e2a25;
+  --cor-texto-secundario: #5e6b65;
+  --cor-linha: #d3dbd6;
+  --cor-azul-petroleo: #2f6f7e;
+  --cor-ambar: #d9a441;
+  --cor-erro: #b3473f;
   --cor-texto-claro: #ffffff;
+  --duracao-interacao: 220ms;
+  --easing-suave: cubic-bezier(0.2, 0.7, 0.2, 1);
   --fonte: "SamsungSharpSans", "Segoe UI", system-ui, sans-serif;
 }
 
@@ -72,8 +74,17 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background var(--duracao-interacao) var(--easing-suave),
+    color var(--duracao-interacao) var(--easing-suave),
+    transform var(--duracao-interacao) var(--easing-suave),
+    box-shadow var(--duracao-interacao) var(--easing-suave);
 }
 
 .btn:hover {
   background: var(--cor-principal-escura);
+}
+
+:focus-visible {
+  outline: 3px solid var(--cor-ambar);
+  outline-offset: 4px;
 }

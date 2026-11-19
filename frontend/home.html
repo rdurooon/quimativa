@@ -7,10 +7,12 @@
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/transicao.css" />
   </head>
   <body>
+    <div class="transicao-liquido" aria-hidden="true"></div>
     <main class="home" id="home">
-      <button id="btn-sair" class="btn btn-sair revela" type="button" tabindex="-1">Sair</button>
+      <button id="btn-fechar" class="btn btn-fechar revela" type="button" tabindex="-1" aria-label="Fechar">Fechar</button>
 
       <section class="home-centro">
         <!--
@@ -86,6 +88,7 @@
 
       <p class="home-equipe revela r3">Equipe Quimativa</p>
     </main>
+    <script src="js/transicao.js"></script>
     <script src="js/home.js"></script>
   </body>
 </html>

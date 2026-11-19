@@ -4,13 +4,13 @@
   var ultimaMarca = document.querySelector('.m2'); // último elemento a terminar a animação
   var revelada = false;
 
-  // Mostra os demais elementos da tela inicial (INICIAR, Sair, logotipo, rodapé)
+  // Mostra os demais elementos da tela inicial (INICIAR, Fechar, logotipo, rodapé)
   function revelar() {
     if (revelada) return;
     revelada = true;
     tela.classList.add('revelado');
     document.getElementById('btn-iniciar').tabIndex = 0;
-    document.getElementById('btn-sair').tabIndex = 0;
+    document.getElementById('btn-fechar').tabIndex = 0;
     try {
       sessionStorage.setItem(CHAVE_INTRO, '1');
     } catch (e) {}
@@ -31,15 +31,24 @@
   }
 
   document.getElementById('btn-iniciar').addEventListener('click', function () {
-    // TODO: apontar para o menu principal real quando ele existir
-    window.location.href = 'pages/menu.html';
+    if (transicionando) return;
+    transicionando = true;
+    document.getElementById('btn-iniciar').disabled = true;
+    window.quimativaTransicao.cobrir(function () {
+      try {
+        sessionStorage.setItem('quimativa.transicao-menu', '1');
+      } catch (e) {}
+      window.location.href = 'pages/menu.html';
+    });
   });
 
-  document.getElementById('btn-sair').addEventListener('click', function () {
+  document.getElementById('btn-fechar').addEventListener('click', function () {
     if (window.pywebview && window.pywebview.api && window.pywebview.api.sair) {
       window.pywebview.api.sair();
     } else {
       window.close(); // fallback fora do pywebview (ex.: abrindo no navegador)
     }
   });
+
+  var transicionando = false;
 })();
