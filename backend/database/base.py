@@ -1,4 +1,7 @@
-"""Classe base dos modelos SQLAlchemy."""
+"""Classe base dos modelos SQLAlchemy e utilitários comuns."""
+from datetime import UTC, datetime
+from uuid import uuid4
+
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
 
@@ -17,3 +20,13 @@ class Base(DeclarativeBase):
     """Todos os modelos herdam desta classe."""
 
     metadata = MetaData(naming_convention=CONVENCAO_NOMES)
+
+
+def novo_id() -> str:
+    """Identificador único (UUID) em texto."""
+    return str(uuid4())
+
+
+def agora_utc() -> datetime:
+    """Data/hora atual em UTC, sem fuso (o SQLite não armazena fuso)."""
+    return datetime.now(UTC).replace(tzinfo=None)
