@@ -38,22 +38,26 @@ def calcular_centro(telas, largura_janela: int, altura_janela: int):
     return x, y, largura_util, altura_util
 
 
+def obter_pagina_inicial(modo_desenvolvimento: bool) -> str:
+    if modo_desenvolvimento:
+        return 'http://127.0.0.1:5173/home.html'
+
+    pagina_inicial = config.FRONTEND_DIR / 'dist' / 'home.html'
+    if not pagina_inicial.is_file():
+        raise FileNotFoundError(
+            f'Frontend compilado não encontrado em {pagina_inicial}. '
+            'Execute "npm run build" em frontend.'
+        )
+    return pagina_inicial.as_uri()
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format='%(levelname)s [%(name)s] %(message)s')
 
     inicializar_banco()
 
     modo_desenvolvimento = os.environ.get('QUIMATIVA_DEV', '').lower() in {'1', 'true', 'yes'}
-    if modo_desenvolvimento:
-        pagina_inicial = 'http://127.0.0.1:5173'
-    else:
-        pagina_inicial = config.FRONTEND_DIR / 'dist' / 'home.html'
-        if not pagina_inicial.is_file():
-            raise FileNotFoundError(
-                f'Frontend compilado não encontrado em {pagina_inicial}. '
-                'Execute "npm run build" em frontend.'
-            )
-        pagina_inicial = pagina_inicial.as_uri()
+    pagina_inicial = obter_pagina_inicial(modo_desenvolvimento)
 
     largura_janela = 1280
     altura_janela = 720
@@ -73,24 +77,7 @@ def main() -> None:
         width=largura_util,
         height=altura_util,
         resizable=False,
-        frameless=True,
-        easy_drag=False,
-        draggable=False,
     )
-
-    def centralizar_apos_exibir():
-        if janela is None:
-            return
-        x_centro, y_centro, _, _ = calcular_centro(
-            webview.screens,
-            janela.width,
-            janela.height,
-        )
-        if x_centro is not None and y_centro is not None:
-            janela.move(x_centro, y_centro)
-
-    if janela is not None:
-        janela.events.shown += centralizar_apos_exibir
 
     try:
         webview.start()

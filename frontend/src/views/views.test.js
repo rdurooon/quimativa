@@ -3,6 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import IntroView from './IntroView.vue';
 import MenuView from './MenuView.vue';
+import PopupTemplate from '../components/PopupTemplate.vue';
 
 function createTestRouter() {
   return createRouter({
@@ -21,6 +22,43 @@ afterEach(() => {
 });
 
 describe('initial views', () => {
+  it('does not close a modal that is not open when Escape is pressed', async () => {
+    const wrapper = mount(PopupTemplate);
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await flushPromises();
+
+    expect(wrapper.emitted('close')).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it('traps Tab focus inside an open modal and closes with Escape', async () => {
+    vi.useFakeTimers();
+    const opener = document.createElement('button');
+    document.body.append(opener);
+    opener.focus();
+    const wrapper = mount(PopupTemplate, {
+      props: { open: true, showClose: false },
+      slots: {
+        default: '<button data-first>Primeiro</button><button data-last>Ultimo</button>',
+      },
+    });
+    await flushPromises();
+
+    expect(document.activeElement?.closest('[role="dialog"]')).not.toBeNull();
+    document.querySelector('[data-last]').focus();
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    expect(document.activeElement?.getAttribute('data-first')).toBe('');
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await vi.advanceTimersByTimeAsync(220);
+    expect(wrapper.emitted('close')).toHaveLength(1);
+
+    await wrapper.setProps({ open: false });
+    expect(document.activeElement).toBe(opener);
+    wrapper.unmount();
+  });
+
   it('renders the introduction', async () => {
     sessionStorage.clear();
     const router = createTestRouter();

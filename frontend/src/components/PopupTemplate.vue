@@ -14,19 +14,88 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 const panel = ref(null);
 const closing = ref(false);
-let closeTimer;
+let closeTimer = null;
+let previouslyFocused = null;
+let listenerActive = false;
+const activeModals = new Set();
+
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+function isAvailable(element) {
+  return element?.isConnected && !element.disabled
+    && element.getAttribute('aria-hidden') !== 'true';
+}
+
+function updateBodyLock() {
+  document.body.style.overflow = activeModals.size ? 'hidden' : '';
+}
+
+function activate() {
+  if (listenerActive) return;
+  previouslyFocused = document.activeElement;
+  listenerActive = true;
+  activeModals.add(panel);
+  updateBodyLock();
+  window.addEventListener('keydown', handleKeydown);
+  focusPanel();
+}
+
+function deactivate() {
+  if (!listenerActive) return;
+  listenerActive = false;
+  activeModals.delete(panel);
+  window.removeEventListener('keydown', handleKeydown);
+  updateBodyLock();
+  if (!activeModals.size && isAvailable(previouslyFocused)) {
+    previouslyFocused.focus();
+  }
+  previouslyFocused = null;
+}
 
 function close() {
-  if (closing.value) return;
+  if (!props.open || closing.value) return;
   closing.value = true;
   closeTimer = window.setTimeout(() => {
+    closeTimer = null;
+    if (!props.open) return;
     closing.value = false;
     emit('close');
   }, window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 220);
 }
 
 function handleKeydown(event) {
-  if (event.key === 'Escape') close();
+  if (!props.open || !listenerActive) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    close();
+    return;
+  }
+  if (event.key !== 'Tab') return;
+
+  const elements = [...(panel.value?.querySelectorAll(focusableSelector) ?? [])]
+    .filter(isAvailable);
+  if (!elements.length) {
+    event.preventDefault();
+    panel.value?.focus();
+    return;
+  }
+
+  const first = elements[0];
+  const last = elements[elements.length - 1];
+  if (event.shiftKey && (document.activeElement === first || !panel.value?.contains(document.activeElement))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (document.activeElement === last || !panel.value?.contains(document.activeElement))) {
+    event.preventDefault();
+    first.focus();
+  }
 }
 
 async function focusPanel() {
@@ -34,34 +103,30 @@ async function focusPanel() {
   const target = props.showClose
     ? panel.value?.querySelector('[data-modal-close]')
     : panel.value?.querySelector('button');
-  target?.focus();
+  (target ?? panel.value)?.focus();
 }
 
 watch(() => props.open, (open) => {
-  if (!open) {
-    closing.value = false;
-    window.clearTimeout(closeTimer);
-  }
   if (open) {
-    document.body.style.overflow = 'hidden';
-    focusPanel();
-  } else {
-    document.body.style.overflow = '';
+    closing.value = false;
+    activate();
+    return;
   }
+  closing.value = false;
+  if (closeTimer !== null) {
+    window.clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+  deactivate();
 });
 
 onMounted(() => {
-  window.addEventListener('keydown', handleKeydown);
-  if (props.open) {
-    document.body.style.overflow = 'hidden';
-    focusPanel();
-  }
+  if (props.open) activate();
 });
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeydown);
-  document.body.style.overflow = '';
-  window.clearTimeout(closeTimer);
+  if (closeTimer !== null) window.clearTimeout(closeTimer);
+  deactivate();
 });
 </script>
 
@@ -87,6 +152,7 @@ onUnmounted(() => {
         role="dialog"
         aria-modal="true"
         :aria-label="title"
+        tabindex="-1"
       >
         <header v-if="searchPlaceholder" class="popup-cabecalho">
           <label class="popup-busca">
