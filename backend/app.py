@@ -4,6 +4,7 @@ Executar a partir da raiz do projeto:
     python -m backend.app
 """
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -20,20 +21,77 @@ from backend.database.conexao import fechar_conexoes  # noqa: E402
 from backend.database.inicializacao import inicializar_banco  # noqa: E402
 
 
+def calcular_centro(telas, largura_janela: int, altura_janela: int):
+    tela_principal = next(
+        (tela for tela in telas if tela.x == 0 and tela.y == 0),
+        telas[0] if telas else None,
+    )
+    if tela_principal is None:
+        return None, None, largura_janela, altura_janela
+
+    largura_tela = max(1, int(tela_principal.width))
+    altura_tela = max(1, int(tela_principal.height))
+    largura_util = min(largura_janela, largura_tela)
+    altura_util = min(altura_janela, altura_tela)
+    x = int(tela_principal.x + (largura_tela - largura_util) // 2)
+    y = int(tela_principal.y + (altura_tela - altura_util) // 2)
+    return x, y, largura_util, altura_util
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format='%(levelname)s [%(name)s] %(message)s')
 
     inicializar_banco()
 
-    pagina_inicial = config.FRONTEND_DIR / 'home.html'
-    webview.create_window(
-        title=config.NOME_APP,
-        url=pagina_inicial.as_uri(),
-        js_api=API(),
-        width=1280,
-        height=720,
-        resizable=False,
+    modo_desenvolvimento = os.environ.get('QUIMATIVA_DEV', '').lower() in {'1', 'true', 'yes'}
+    if modo_desenvolvimento:
+        pagina_inicial = 'http://127.0.0.1:5173'
+    else:
+        pagina_inicial = config.FRONTEND_DIR / 'dist' / 'home.html'
+        if not pagina_inicial.is_file():
+            raise FileNotFoundError(
+                f'Frontend compilado não encontrado em {pagina_inicial}. '
+                'Execute "npm run build" em frontend.'
+            )
+        pagina_inicial = pagina_inicial.as_uri()
+
+    largura_janela = 1280
+    altura_janela = 720
+
+    x, y, largura_util, altura_util = calcular_centro(
+        webview.screens,
+        largura_janela,
+        altura_janela,
     )
+
+    janela = webview.create_window(
+        title=config.NOME_APP,
+        url=pagina_inicial,
+        js_api=API(),
+        x=x,
+        y=y,
+        width=largura_util,
+        height=altura_util,
+        resizable=False,
+        frameless=True,
+        easy_drag=False,
+        draggable=False,
+    )
+
+    def centralizar_apos_exibir():
+        if janela is None:
+            return
+        x_centro, y_centro, _, _ = calcular_centro(
+            webview.screens,
+            janela.width,
+            janela.height,
+        )
+        if x_centro is not None and y_centro is not None:
+            janela.move(x_centro, y_centro)
+
+    if janela is not None:
+        janela.events.shown += centralizar_apos_exibir
+
     try:
         webview.start()
     finally:
