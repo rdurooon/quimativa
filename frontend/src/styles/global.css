@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../../assets/fonts/samsungsharpsans.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("../../assets/fonts/samsungsharpsans-medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SamsungSharpSans";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("../../assets/fonts/samsungsharpsans-bold.otf") format("opentype");
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte);
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+}
+
+.btn {
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cor-texto-claro);
+  background: var(--cor-principal);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background var(--duracao-interacao) var(--easing-suave),
+    color var(--duracao-interacao) var(--easing-suave),
+    transform var(--duracao-interacao) var(--easing-suave);
+}
+
+.btn:hover { background: var(--cor-principal-escura); }
+
+:focus-visible {
+  outline: 3px solid var(--cor-ambar);
+  outline-offset: 4px;
+}

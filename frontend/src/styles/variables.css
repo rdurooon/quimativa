@@ -1,0 +1,15 @@
+:root {
+  --cor-principal: #008e15;
+  --cor-principal-escura: #006b10;
+  --cor-fundo: #f3f6f4;
+  --cor-superficie: #ffffff;
+  --cor-texto: #1e2a25;
+  --cor-texto-secundario: #5e6b65;
+  --cor-linha: #d3dbd6;
+  --cor-azul-petroleo: #2f6f7e;
+  --cor-ambar: #d9a441;
+  --cor-texto-claro: #ffffff;
+  --duracao-interacao: 220ms;
+  --easing-suave: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --fonte: "SamsungSharpSans", "Segoe UI", system-ui, sans-serif;
+}

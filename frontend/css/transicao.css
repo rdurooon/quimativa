@@ -67,10 +67,6 @@
 .transicao-revelando .transicao-camada:nth-child(3) { animation-delay: 60ms; }
 .transicao-revelando .transicao-camada:nth-child(4) { animation-delay: 0ms; }
 
-.transicao-revelando .menu {
-  animation: menu-entra 0.7s var(--easing-suave) both;
-}
-
 @keyframes liquido-cobrir {
   from { transform: translateY(-116%); }
   to { transform: translateY(0); }
