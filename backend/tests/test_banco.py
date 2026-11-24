@@ -150,3 +150,58 @@ def test_chaves_estrangeiras_sao_respeitadas():
     with pytest.raises(IntegrityError):
         with conexao.sessao() as s:
             s.execute(text('INSERT INTO filho (pai_id) VALUES (999)'))
+
+
+def test_migracao_0004_converte_assets_antigos():
+    """Assets no formato antigo (um por questão) viram assets reaproveitáveis."""
+    config.garantir_diretorios()
+    url = config.obter_url_banco()
+    cfg = _config_alembic(url)
+    command.upgrade(cfg, '0003')
+
+    engine = conexao.criar_engine(url)
+    try:
+        with engine.begin() as c:
+            c.execute(text(
+                "INSERT INTO questions (id, minigame_type, difficulty, source_type, statement, payload, "
+                "created_at, updated_at) VALUES ('q1', 'identification', 1, 'local', 'x', '{}', "
+                "CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+            ))
+            c.execute(text(
+                "INSERT INTO question_assets (id, question_id, file_path, asset_type, role) "
+                "VALUES ('a1', 'q1', 'etanol.svg', 'svg', 'molecula')"
+            ))
+    finally:
+        engine.dispose()
+
+    command.upgrade(cfg, 'head')
+
+    engine = conexao.criar_engine(url)
+    try:
+        with engine.connect() as c:
+            assert c.execute(text('SELECT id, source_type, file_path FROM assets')).all() == [
+                ('a1', 'local', 'etanol.svg')
+            ]
+            assert c.execute(text('SELECT question_id, asset_id, role FROM question_assets')).all() == [
+                ('q1', 'a1', 'molecula')
+            ]
+    finally:
+        engine.dispose()
+
+
+def test_mantem_somente_os_ultimos_backups(pasta_dados):
+    import os
+
+    from backend.database.inicializacao import BACKUPS_MANTIDOS, _limpar_backups_antigos
+
+    banco = pasta_dados / config.NOME_BANCO
+    for i in range(5):
+        arquivo = pasta_dados / f'{banco.stem}.backup-000{i}.db'
+        arquivo.write_bytes(b'x')
+        os.utime(arquivo, (1000 + i, 1000 + i))
+
+    _limpar_backups_antigos(banco)
+
+    restantes = sorted(p.name for p in pasta_dados.glob('*.backup-*.db'))
+    assert len(restantes) == BACKUPS_MANTIDOS
+    assert restantes == [f'{banco.stem}.backup-000{i}.db' for i in (2, 3, 4)]

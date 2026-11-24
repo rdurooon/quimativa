@@ -6,13 +6,23 @@ Uso:
 """
 from typing import Any
 
+from backend.questoes.schemas.analise_molecular import MolecularAnalysisPayload
+from backend.questoes.schemas.associacao_cartas import CardAssociationPayload
 from backend.questoes.schemas.base import PayloadBase
+from backend.questoes.schemas.encontre_diferenca import FindDifferencePayload
 from backend.questoes.schemas.identificacao import IdentificationPayload
+from backend.questoes.schemas.molecula_da_funcao import FunctionMoleculePayload
+from backend.questoes.schemas.ordem_funcoes import FunctionOrderPayload
 from backend.questoes.tipos import MinigameType
 
-# Minijogo -> schema do payload. Os demais entram após a revisão deste padrão.
+# Minijogo -> schema do payload.
 SCHEMAS_PAYLOAD: dict[MinigameType, type[PayloadBase]] = {
     MinigameType.IDENTIFICATION: IdentificationPayload,
+    MinigameType.FIND_DIFFERENCE: FindDifferencePayload,
+    MinigameType.CARD_ASSOCIATION: CardAssociationPayload,
+    MinigameType.MOLECULAR_ANALYSIS: MolecularAnalysisPayload,
+    MinigameType.FUNCTION_MOLECULE: FunctionMoleculePayload,
+    MinigameType.FUNCTION_ORDER: FunctionOrderPayload,
 }
 
 
@@ -33,5 +43,8 @@ def validar_payload(minigame_type: str, payload: dict[str, Any]) -> PayloadBase:
     return obter_schema(minigame_type).model_validate(payload)
 
 
-__all__ = ['IdentificationPayload', 'PayloadBase', 'PayloadNaoSuportado',
-           'SCHEMAS_PAYLOAD', 'obter_schema', 'validar_payload']
+__all__ = [
+    'CardAssociationPayload', 'FindDifferencePayload', 'FunctionMoleculePayload',
+    'FunctionOrderPayload', 'IdentificationPayload', 'MolecularAnalysisPayload',
+    'PayloadBase', 'PayloadNaoSuportado', 'SCHEMAS_PAYLOAD', 'obter_schema', 'validar_payload',
+]

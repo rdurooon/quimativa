@@ -25,6 +25,10 @@ else:
     BASE_DIR = BACKEND_DIR.parent
     FRONTEND_DIR = BASE_DIR / 'frontend'
 
+# Conteúdo oficial (questões-base) distribuído com o software: somente leitura.
+PACOTE_BASE_PATH = BACKEND_DIR / 'questoes' / 'dados' / 'pacote_base.json'
+ASSETS_BASE_DIR = BACKEND_DIR / 'questoes' / 'assets' / 'base'
+
 
 def obter_data_dir() -> Path:
     r"""Pasta de dados persistentes do usuário.
@@ -53,3 +57,16 @@ def garantir_diretorios() -> Path:
     data_dir = obter_data_dir()
     data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
+
+
+def obter_assets_dir(origem: str) -> Path:
+    """Pasta dos SVGs de cada origem de questão.
+
+    - base: dentro do app (somente leitura);
+    - local/remote: na pasta de dados do usuário.
+    """
+    if origem == 'base':
+        return ASSETS_BASE_DIR
+    if origem in ('local', 'remote'):
+        return obter_data_dir() / 'assets' / origem
+    raise ValueError(f'Origem desconhecida: {origem}')

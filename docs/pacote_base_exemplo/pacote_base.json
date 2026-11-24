@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "etanol",
+      "file": "alcoois/etanol.svg",
+      "name": "Etanol"
+    },
+    {
+      "id": "propanona",
+      "file": "cetonas/propanona.svg",
+      "name": "Propanona"
+    },
+    {
+      "id": "etanal",
+      "file": "aldeidos/etanal.svg",
+      "name": "Etanal"
+    },
+    {
+      "id": "etanoato-de-metila",
+      "file": "esteres/etanoato-de-metila.svg",
+      "name": "Etanoato de metila"
+    },
+    {
+      "id": "etanamida",
+      "file": "amidas/etanamida.svg",
+      "name": "Etanamida"
+    },
+    {
+      "id": "metilamina",
+      "file": "aminas/metilamina.svg",
+      "name": "Metilamina"
+    }
+  ],
+  "questions": [
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d01",
+      "minigame_type": "identification",
+      "difficulty": 1,
+      "statement": "Qual função orgânica está destacada na molécula?",
+      "payload": {
+        "molecule_asset_id": "etanol",
+        "highlight": {
+          "region_id": "grupo-oh"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Álcool"
+          },
+          {
+            "id": "B",
+            "label": "Cetona"
+          },
+          {
+            "id": "C",
+            "label": "Éster"
+          },
+          {
+            "id": "D",
+            "label": "Aldeído"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "O grupo hidroxila (–OH) ligado a carbono saturado caracteriza os álcoois.",
+      "tags": [
+        "Álcool",
+        "Grupo funcional"
+      ]
+    },
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d02",
+      "minigame_type": "find_difference",
+      "difficulty": 1,
+      "statement": "Encontre a molécula que possui a função éster.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "etanol"
+          },
+          {
+            "id": "M2",
+            "asset_id": "etanoato-de-metila"
+          },
+          {
+            "id": "M3",
+            "asset_id": "propanona"
+          }
+        ],
+        "criterion": "Possui função éster",
+        "correct_molecule_id": "M2"
+      },
+      "tags": [
+        "Éster"
+      ]
+    },
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d03",
+      "minigame_type": "card_association",
+      "difficulty": 2,
+      "statement": "Selecione as duas cartas que formam o par correto.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "etanal"
+          },
+          {
+            "id": "C2",
+            "content": "Aldeído"
+          },
+          {
+            "id": "C3",
+            "content": "Amina"
+          },
+          {
+            "id": "C4",
+            "content": "Fórmula C2H6O"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "tags": [
+        "Aldeído"
+      ]
+    },
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d04",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 2,
+      "statement": "Analise a molécula apresentada.",
+      "payload": {
+        "molecule_asset_id": "propanona",
+        "question": "Quantos átomos de carbono há na cadeia principal?",
+        "highlight": {
+          "region_id": "grupo-carbonila"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "2"
+          },
+          {
+            "id": "B",
+            "label": "3"
+          },
+          {
+            "id": "C",
+            "label": "4"
+          },
+          {
+            "id": "D",
+            "label": "5"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "tags": [
+        "Cetona",
+        "Cadeia aberta"
+      ]
+    },
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d05",
+      "minigame_type": "function_molecule",
+      "difficulty": 1,
+      "statement": "Qual molécula pertence à função amina?",
+      "payload": {
+        "target_function": "Amina",
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "etanamida"
+          },
+          {
+            "id": "M2",
+            "asset_id": "metilamina"
+          },
+          {
+            "id": "M3",
+            "asset_id": "etanol"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "tags": [
+        "Amina"
+      ]
+    },
+    {
+      "id": "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d06",
+      "minigame_type": "function_order",
+      "difficulty": 3,
+      "statement": "Selecione as moléculas na ordem: Álcool → Éster → Amida → Amina.",
+      "payload": {
+        "requested_order": [
+          "Álcool",
+          "Éster",
+          "Amida",
+          "Amina"
+        ],
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "etanol"
+          },
+          {
+            "id": "M2",
+            "asset_id": "metilamina"
+          },
+          {
+            "id": "M3",
+            "asset_id": "etanamida"
+          },
+          {
+            "id": "M4",
+            "asset_id": "etanoato-de-metila"
+          }
+        ],
+        "correct_order": [
+          "M1",
+          "M4",
+          "M3",
+          "M2"
+        ]
+      },
+      "tags": [
+        "Álcool",
+        "Éster",
+        "Amida",
+        "Amina"
+      ],
+      "source": {
+        "name": "Documento mestre do Quimativa",
+        "notes": "Exemplo aprovado do minijogo 6"
+      }
+    }
+  ]
+}

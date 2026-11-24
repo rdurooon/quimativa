@@ -6,7 +6,6 @@ from pydantic import ValidationError
 
 from backend.questoes.schemas import (
     IdentificationPayload,
-    PayloadNaoSuportado,
     validar_payload,
 )
 
@@ -101,11 +100,12 @@ def test_validar_payload_escolhe_o_schema_pelo_minijogo():
     assert isinstance(validar_payload('identification', VALIDO), IdentificationPayload)
 
 
-def test_minijogo_sem_schema_ainda():
-    with pytest.raises(PayloadNaoSuportado):
-        validar_payload('card_association', {})
-
-
 def test_minijogo_inexistente():
     with pytest.raises(ValueError):
         validar_payload('jogo_inexistente', {})
+
+
+def test_assets_e_regioes_referenciados():
+    p = IdentificationPayload.model_validate(VALIDO)
+    assert p.assets_referenciados() == {'asset-001'}
+    assert p.regioes_referenciadas() == {'asset-001': {'group-01'}}

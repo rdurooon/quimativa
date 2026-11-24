@@ -62,7 +62,7 @@ class Question(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=agora_utc)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=agora_utc, onupdate=agora_utc)
 
-    assets: Mapped[list[QuestionAsset]] = relationship(
+    asset_links: Mapped[list[QuestionAsset]] = relationship(
         back_populates='question', cascade='all, delete-orphan', passive_deletes=True
     )
     tags: Mapped[list[Tag]] = relationship(secondary=question_tags, back_populates='questions')

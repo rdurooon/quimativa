@@ -18,12 +18,27 @@ from backend import config  # noqa: E402
 from backend.api import API  # noqa: E402
 from backend.database.conexao import fechar_conexoes  # noqa: E402
 from backend.database.inicializacao import inicializar_banco  # noqa: E402
+from backend.questoes.erros import ErroPacoteBase  # noqa: E402
+from backend.questoes.importador import importar_pacote_base  # noqa: E402
+
+log = logging.getLogger('quimativa')
+
+
+def carregar_questoes_base() -> None:
+    """Importa o pacote oficial. Um pacote com erro não impede o app de abrir."""
+    try:
+        importar_pacote_base()
+    except ErroPacoteBase as erro:
+        log.error('%s', erro)
+    except Exception:
+        log.exception('Falha inesperada ao importar as questões-base')
 
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format='%(levelname)s [%(name)s] %(message)s')
 
     inicializar_banco()
+    carregar_questoes_base()
 
     pagina_inicial = config.FRONTEND_DIR / 'home.html'
     webview.create_window(

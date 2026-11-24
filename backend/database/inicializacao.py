@@ -21,6 +21,8 @@ from backend.database.conexao import criar_engine
 
 log = logging.getLogger(__name__)
 
+BACKUPS_MANTIDOS = 3
+
 PASTA_MIGRACOES = config.BACKEND_DIR / 'database' / 'migrations'
 
 
@@ -51,6 +53,20 @@ def _fazer_backup(caminho_banco: Path, revisao: str | None) -> Path:
     return destino
 
 
+def _limpar_backups_antigos(caminho_banco: Path, manter: int = BACKUPS_MANTIDOS) -> None:
+    """Mantém só os backups mais recentes do banco."""
+    backups = sorted(
+        caminho_banco.parent.glob(f'{caminho_banco.stem}.backup-*.db'),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for antigo in backups[manter:]:
+        try:
+            antigo.unlink()
+        except OSError:
+            log.warning('Não foi possível apagar o backup antigo %s', antigo)
+
+
 def inicializar_banco(url: str | None = None) -> str:
     """Garante que o banco existe e está na versão mais recente.
 
@@ -74,6 +90,7 @@ def inicializar_banco(url: str | None = None) -> str:
         if usando_padrao and revisao is not None and caminho.exists():
             backup = _fazer_backup(caminho, revisao)
             log.info('Backup do banco criado em %s', backup)
+            _limpar_backups_antigos(caminho)
 
         with engine.begin() as conexao:
             cfg.attributes['connection'] = conexao

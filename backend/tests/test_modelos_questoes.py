@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from backend.database import conexao
 from backend.database.inicializacao import inicializar_banco
-from backend.database.models import Question, QuestionAsset, QuestionSource, Tag, question_tags
+from backend.database.models import Asset, Question, QuestionAsset, QuestionSource, Tag, question_tags
 from backend.questoes.tipos import Difficulty, MinigameType, SourceType
 
 PAYLOAD = {
@@ -49,7 +49,9 @@ def test_cria_e_le_questao_completa():
         q = nova_questao(
             source=QuestionSource(name='ENEM 2023', notes='Enunciado adaptado'),
             tags=[Tag(name='Álcool')],
-            assets=[QuestionAsset(file_path='base/moleculas/etanol.png', asset_type='imagem', role='molecula')],
+            asset_links=[QuestionAsset(
+                asset=Asset(id='asset-001', source_type='local', file_path='etanol.svg'), role='molecula'
+            )],
         )
         s.add(q)
         s.flush()
@@ -65,7 +67,9 @@ def test_cria_e_le_questao_completa():
         assert q.difficulty == 1
         assert q.source.name == 'ENEM 2023'
         assert [t.name for t in q.tags] == ['Álcool']
-        assert q.assets[0].file_path == 'base/moleculas/etanol.png'
+        assert q.asset_links[0].asset.file_path == 'etanol.svg'
+        assert q.asset_links[0].asset.asset_type == 'svg'
+        assert q.asset_links[0].role == 'molecula'
         assert q.created_at is not None and q.updated_at is not None
 
 
@@ -112,11 +116,11 @@ def test_questao_remota_valida_e_remote_id_unico():
             s.add(nova_questao(source_type=SourceType.REMOTE, remote_id='site-1'))
 
 
-def test_excluir_questao_remove_assets_e_vinculos_mas_mantem_tags():
+def test_excluir_questao_remove_vinculos_mas_mantem_tags_e_assets():
     with conexao.sessao() as s:
         q = nova_questao(
             tags=[Tag(name='Álcool')],
-            assets=[QuestionAsset(file_path='local/a.png', asset_type='imagem')],
+            asset_links=[QuestionAsset(asset=Asset(source_type='local', file_path='a.svg'))],
         )
         s.add(q)
     with conexao.sessao() as s:
@@ -124,6 +128,7 @@ def test_excluir_questao_remove_assets_e_vinculos_mas_mantem_tags():
     with conexao.sessao() as s:
         assert contar(s, Question) == 0
         assert contar(s, QuestionAsset) == 0
+        assert contar(s, Asset) == 1  # o arquivo pode servir a outras questões
         assert contar(s, question_tags) == 0
         assert contar(s, Tag) == 1
 
@@ -143,3 +148,41 @@ def test_nome_de_tag_e_unico():
     with pytest.raises(IntegrityError):
         with conexao.sessao() as s:
             s.add(Tag(name='Éster'))
+
+
+def test_asset_aceita_somente_svg():
+    with conexao.sessao() as s:
+        s.add(Asset(source_type='local', file_path='a.svg'))
+    with pytest.raises(IntegrityError):
+        with conexao.sessao() as s:
+            s.add(Asset(source_type='local', file_path='a.png', asset_type='png'))
+
+
+def test_mesmo_asset_em_varias_questoes():
+    with conexao.sessao() as s:
+        etanol = Asset(id='etanol', source_type='base', file_path='etanol.svg')
+        s.add_all([
+            nova_questao(asset_links=[QuestionAsset(asset=etanol)]),
+            nova_questao(asset_links=[QuestionAsset(asset=etanol)]),
+        ])
+    with conexao.sessao() as s:
+        assert contar(s, Asset) == 1
+        assert contar(s, QuestionAsset) == 2
+        assert len(s.get(Asset, 'etanol').question_links) == 2
+
+
+def test_asset_em_uso_nao_pode_ser_excluido():
+    with conexao.sessao() as s:
+        s.add(nova_questao(asset_links=[QuestionAsset(asset=Asset(id='x', source_type='local', file_path='x.svg'))]))
+    with pytest.raises(IntegrityError):
+        with conexao.sessao() as s:
+            s.delete(s.get(Asset, 'x'))
+
+
+def test_mesmo_arquivo_nao_e_registrado_duas_vezes_na_mesma_origem():
+    with conexao.sessao() as s:
+        s.add(Asset(source_type='local', file_path='a.svg'))
+        s.add(Asset(source_type='base', file_path='a.svg'))  # outra origem: pode
+    with pytest.raises(IntegrityError):
+        with conexao.sessao() as s:
+            s.add(Asset(source_type='local', file_path='a.svg'))

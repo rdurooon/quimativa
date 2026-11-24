@@ -16,8 +16,6 @@ Exemplo:
       "correct_alternative_id": "A"
     }
 
-Validado aqui: estrutura, 4 alternativas, IDs e textos sem repetição e
-resposta correta existente entre as alternativas.
 Validado no serviço (precisa do banco/disco): se o asset da molécula existe.
 """
 from typing import Annotated
@@ -26,20 +24,13 @@ from pydantic import Field, model_validator
 
 from backend.questoes.schemas.base import (
     Alternativa,
-    Esquema,
+    Destaque,
     Identificador,
     PayloadBase,
-    normalizar,
-    repetidos,
+    validar_alternativas,
 )
 
 QTD_ALTERNATIVAS = 4
-
-
-class Destaque(Esquema):
-    """Região/grupo funcional destacado na molécula."""
-
-    region_id: Identificador
 
 
 class IdentificationPayload(PayloadBase):
@@ -50,18 +41,13 @@ class IdentificationPayload(PayloadBase):
     ]
     correct_alternative_id: Identificador
 
+    def assets_referenciados(self) -> set[str]:
+        return {self.molecule_asset_id}
+
+    def regioes_referenciadas(self) -> dict[str, set[str]]:
+        return {self.molecule_asset_id: {self.highlight.region_id}}
+
     @model_validator(mode='after')
-    def _validar_alternativas(self):
-        ids = [a.id for a in self.alternatives]
-        if duplicados := repetidos(ids):
-            raise ValueError(f'IDs de alternativa repetidos: {", ".join(duplicados)}')
-
-        # Duas alternativas com o mesmo texto tornariam a questão ambígua.
-        if duplicados := repetidos(normalizar(a.label) for a in self.alternatives):
-            raise ValueError(f'Alternativas com o mesmo texto: {", ".join(duplicados)}')
-
-        if self.correct_alternative_id not in ids:
-            raise ValueError(
-                f'A resposta correta "{self.correct_alternative_id}" não está entre as alternativas'
-            )
+    def _validar(self):
+        validar_alternativas(self.alternatives, self.correct_alternative_id)
         return self

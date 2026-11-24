@@ -21,6 +21,10 @@ class Difficulty(IntEnum):
     HARD = 3
 
 
+class AssetType(StrEnum):
+    SVG = 'svg'  # imagens/estruturas das questões são sempre SVG
+
+
 class SourceType(StrEnum):
     BASE = 'base'      # vem com o software; não pode ser editada nem removida
     LOCAL = 'local'    # criada pelo usuário; CRUD completo
@@ -41,4 +45,10 @@ NOMES_DIFICULDADES = {
     Difficulty.EASY: 'Fácil',
     Difficulty.MEDIUM: 'Média',
     Difficulty.HARD: 'Difícil',
+}
+
+NOMES_ORIGENS = {
+    SourceType.BASE: 'Base',
+    SourceType.LOCAL: 'Local',
+    SourceType.REMOTE: 'Site',
 }
