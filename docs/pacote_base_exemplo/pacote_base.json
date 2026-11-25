@@ -83,13 +83,8 @@
           {
             "id": "M2",
             "asset_id": "etanoato-de-metila"
-          },
-          {
-            "id": "M3",
-            "asset_id": "propanona"
           }
         ],
-        "criterion": "Possui função éster",
         "correct_molecule_id": "M2"
       },
       "tags": [
@@ -136,7 +131,6 @@
       "statement": "Analise a molécula apresentada.",
       "payload": {
         "molecule_asset_id": "propanona",
-        "question": "Quantos átomos de carbono há na cadeia principal?",
         "highlight": {
           "region_id": "grupo-carbonila"
         },
@@ -171,8 +165,7 @@
       "difficulty": 1,
       "statement": "Qual molécula pertence à função amina?",
       "payload": {
-        "target_function": "Amina",
-        "molecules": [
+        "cards": [
           {
             "id": "M1",
             "asset_id": "etanamida"
@@ -184,9 +177,13 @@
           {
             "id": "M3",
             "asset_id": "etanol"
+          },
+          {
+            "id": "M4",
+            "asset_id": "etanal"
           }
         ],
-        "correct_molecule_id": "M2"
+        "correct_card_id": "M2"
       },
       "tags": [
         "Amina"
@@ -198,12 +195,6 @@
       "difficulty": 3,
       "statement": "Selecione as moléculas na ordem: Álcool → Éster → Amida → Amina.",
       "payload": {
-        "requested_order": [
-          "Álcool",
-          "Éster",
-          "Amida",
-          "Amina"
-        ],
         "molecules": [
           {
             "id": "M1",

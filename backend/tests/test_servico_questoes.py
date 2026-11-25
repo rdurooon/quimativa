@@ -1,18 +1,23 @@
 """Testes do serviço de questões e de assets (regras de negócio)."""
-import copy
 import json
-import shutil
 
 import pytest
 from sqlalchemy import func, select
 
 from backend import config
+from backend.api import API
 from backend.database import conexao
 from backend.database.inicializacao import inicializar_banco
-from backend.database.models import Asset, Question, QuestionSource, Tag
+from backend.database.models import Asset, Question, QuestionAsset, QuestionSource, Tag
 from backend.questoes import assets as servico_assets
 from backend.questoes import servico
-from backend.questoes.erros import DadosInvalidos, NaoEncontrado, OperacaoNaoPermitida
+from backend.questoes.erros import (
+    AssetIndisponivel,
+    DadosInvalidos,
+    NaoEncontrado,
+    OperacaoNaoPermitida,
+    PayloadIncompativel,
+)
 from backend.questoes.importador import importar_pacote_base
 
 EXEMPLO = config.BASE_DIR / 'docs' / 'pacote_base_exemplo'
@@ -25,6 +30,7 @@ SVG = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">'
 @pytest.fixture(autouse=True)
 def ambiente(pasta_dados, monkeypatch):
     """Banco novo + questões-base do pacote de exemplo."""
+    assert pasta_dados.is_dir()
     monkeypatch.setattr(config, 'ASSETS_BASE_DIR', EXEMPLO / 'assets')
     inicializar_banco()
     importar_pacote_base(EXEMPLO / 'pacote_base.json', EXEMPLO / 'assets')
@@ -296,6 +302,129 @@ def test_obter_asset_com_conteudo():
     assert a['data_uri'].startswith('data:image/svg+xml;base64,')
     with pytest.raises(NaoEncontrado):
         servico_assets.obter_asset('nao-existe')
+
+
+def test_asset_registrado_sem_arquivo_falha_explicitamente_na_bridge():
+    with conexao.sessao() as s:
+        s.add(Asset(id='arquivo-ausente', source_type='local', file_path='ausente.svg'))
+
+    with pytest.raises(AssetIndisponivel, match='não está disponível'):
+        servico_assets.obter_asset('arquivo-ausente')
+
+    resposta = API().assets_obter('arquivo-ausente')
+    assert resposta['ok'] is False
+    assert resposta['erro']['codigo'] == 'asset_indisponivel'
+
+
+def test_questao_com_asset_registrado_sem_arquivo_falha_ao_obter():
+    with conexao.sessao() as s:
+        asset = Asset(id='svg-ausente', source_type='local', file_path='ausente.svg')
+        questao = Question(
+            id='q-svg-ausente',
+            minigame_type='identification',
+            difficulty=1,
+            source_type='local',
+            statement='Questão com imagem ausente',
+            payload=dados_questao()['payload'],
+            asset_links=[QuestionAsset(asset=asset)],
+        )
+        s.add(questao)
+
+    with pytest.raises(AssetIndisponivel, match='não está disponível'):
+        servico.obter_questao('q-svg-ausente')
+
+
+def test_criar_questao_que_referencia_asset_sem_arquivo_falha_explicitamente():
+    with conexao.sessao() as s:
+        s.add(Asset(id='svg-sem-arquivo', source_type='local', file_path='ausente.svg'))
+
+    with pytest.raises(AssetIndisponivel, match='não está disponível'):
+        servico.criar_questao_local(
+            dados_questao(asset_id='svg-sem-arquivo', regiao='grupo-oh')
+        )
+
+
+def test_questao_legada_nao_representavel_falha_sem_apagar_payload():
+    payload_original = {
+        'target_function': 'Amina',
+        'molecules': [
+            {'id': 'M1', 'asset_id': 'etanol'},
+            {'id': 'M2', 'asset_id': 'metilamina'},
+            {'id': 'M3', 'asset_id': 'etanal'},
+        ],
+        'correct_molecule_id': 'M2',
+    }
+    with conexao.sessao() as s:
+        s.add(Question(
+            id='questao-legada-curta',
+            minigame_type='function_molecule',
+            difficulty=1,
+            source_type='local',
+            statement='Identifique a molécula',
+            payload=payload_original,
+        ))
+
+    with pytest.raises(PayloadIncompativel, match='conteúdo original foi preservado'):
+        servico.obter_questao('questao-legada-curta')
+    with pytest.raises(PayloadIncompativel):
+        servico.atualizar_questao_local('questao-legada-curta', dados_questao())
+
+    resposta = API().questoes_obter('questao-legada-curta')
+    assert resposta['ok'] is False
+    assert resposta['erro']['codigo'] == 'payload_incompativel'
+    with conexao.sessao() as s:
+        questao = s.get(Question, 'questao-legada-curta')
+        assert questao is not None
+        assert questao.payload == payload_original
+
+
+def test_questao_sem_vinculo_de_asset_falha_com_erro_controlado():
+    payload_original = {
+        'cards': [
+            {'id': f'C{i}', 'asset_id': f'asset-{i}'}
+            for i in range(1, 5)
+        ],
+        'correct_card_id': 'C1',
+    }
+    with conexao.sessao() as s:
+        s.add(Question(
+            id='questao-sem-vinculo',
+            minigame_type='function_molecule',
+            difficulty=1,
+            source_type='local',
+            statement='Identifique a molécula',
+            payload=payload_original,
+        ))
+
+    with pytest.raises(PayloadIncompativel, match='imagens sem relação persistida'):
+        servico.obter_questao('questao-sem-vinculo')
+    with conexao.sessao() as s:
+        questao = s.get(Question, 'questao-sem-vinculo')
+        assert questao is not None
+        assert questao.payload == payload_original
+
+
+def test_edicao_preserva_target_function_legado_omitido_pelo_formulario():
+    cards = [
+        {'id': f'C{i}', 'content': f'Molécula {i}'}
+        for i in range(1, 5)
+    ]
+    dados = {
+        'minigame_type': 'function_molecule',
+        'difficulty': 1,
+        'statement': 'Qual molécula pertence à função?',
+        'payload': {
+            'cards': cards,
+            'correct_card_id': 'C2',
+            'target_function': 'Amina',
+        },
+    }
+    questao = servico.criar_questao_local(dados)
+    dados['payload'] = {'cards': cards, 'correct_card_id': 'C2'}
+
+    atualizada = servico.atualizar_questao_local(questao['id'], dados)
+
+    assert atualizada['payload']['target_function'] == 'Amina'
 
 
 def test_remover_asset_local_sem_uso(svg_local):

@@ -25,11 +25,15 @@ def dados():
     return {
         'minigame_type': 'function_molecule',
         'difficulty': 1,
-        'statement': 'Qual molécula é um álcool?',
+        'statement': 'Qual molécula corresponde à função álcool?',
         'payload': {
-            'target_function': 'Álcool',
-            'molecules': [{'id': 'M1', 'asset_id': 'etanol'}, {'id': 'M2', 'asset_id': 'metilamina'}],
-            'correct_molecule_id': 'M1',
+            'cards': [
+                {'id': 'C1', 'asset_id': 'etanol'},
+                {'id': 'C2', 'asset_id': 'metilamina'},
+                {'id': 'C3', 'asset_id': 'propanona'},
+                {'id': 'C4', 'asset_id': 'etanal'},
+            ],
+            'correct_card_id': 'C1',
         },
     }
 
@@ -39,7 +43,7 @@ def test_fluxo_completo_pela_bridge(api):
     assert criada['ok'] is True
     qid = criada['dados']['id']
 
-    assert api.questoes_obter(qid)['dados']['statement'] == 'Qual molécula é um álcool?'
+    assert api.questoes_obter(qid)['dados']['statement'] == 'Qual molécula corresponde à função álcool?'
     assert api.questoes_listar({'source_type': 'local'})['dados']['total'] == 1
 
     novo = dados()
@@ -62,11 +66,11 @@ def test_respostas_sao_serializaveis_em_json(api):
 
 def test_erro_de_validacao_vem_em_portugues(api):
     d = dados()
-    d['payload']['molecules'] = d['payload']['molecules'][:1]
+    d['payload']['cards'] = d['payload']['cards'][:3]
     r = api.questoes_criar(d)
     assert r['ok'] is False
     assert r['erro']['codigo'] == 'dados_invalidos'
-    assert {'campo': 'payload.molecules', 'mensagem': 'Precisa ter pelo menos 2 item(ns)'} in r['erro']['detalhes']
+    assert {'campo': 'payload.cards', 'mensagem': 'Precisa ter pelo menos 4 item(ns)'} in r['erro']['detalhes']
 
 
 def test_erro_de_permissao(api):

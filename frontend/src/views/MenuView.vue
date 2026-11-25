@@ -2,7 +2,7 @@
 import { nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { callDesktop } from '../services/desktop';
-import { initializeTransition } from '../services/transition';
+import { GAME_TRANSITION, initializeTransition } from '../services/transition';
 import QuickGameArtwork from '../components/QuickGameArtwork.vue';
 import ConfiguredGameArtwork from '../components/ConfiguredGameArtwork.vue';
 import PopupTemplate from '../components/PopupTemplate.vue';
@@ -38,7 +38,7 @@ function fecharPopup() {
 }
 
 onMounted(() => {
-  transition = initializeTransition();
+  transition = initializeTransition(GAME_TRANSITION);
 });
 </script>
 

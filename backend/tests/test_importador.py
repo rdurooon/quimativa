@@ -104,7 +104,7 @@ def test_nova_versao_troca_svg_de_uma_questao(pacote):
     importar(pacote)
     with conexao.sessao() as s:
         q = s.get(Question, dados['questions'][1]['id'])
-        assert {l.asset_id for l in q.asset_links} == {'etanal', 'etanoato-de-metila', 'propanona'}
+        assert {l.asset_id for l in q.asset_links} == {'etanal', 'etanoato-de-metila'}
 
 
 def test_remover_fonte_na_nova_versao(pacote):

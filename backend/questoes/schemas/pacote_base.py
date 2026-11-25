@@ -38,6 +38,7 @@ class AssetBase(Esquema):
 
 class QuestaoBase(DadosQuestao):
     id: UUID
+    package_id: None = None
 
     _payload: PayloadBase = PrivateAttr()
 

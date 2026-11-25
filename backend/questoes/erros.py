@@ -38,6 +38,14 @@ class OperacaoNaoPermitida(ErroQuestoes):
     codigo = 'nao_permitido'
 
 
+class AssetIndisponivel(ErroQuestoes):
+    codigo = 'asset_indisponivel'
+
+
+class PayloadIncompativel(ErroQuestoes):
+    codigo = 'payload_incompativel'
+
+
 class ErroPacoteBase(ErroQuestoes):
     """O pacote oficial de questões-base tem problemas (não foi importado)."""
 

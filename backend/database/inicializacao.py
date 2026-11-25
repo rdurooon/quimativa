@@ -15,6 +15,7 @@ from alembic.config import Config
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
 from sqlalchemy import Engine
+from sqlalchemy.orm import Session
 
 from backend import config
 from backend.database.conexao import criar_engine
@@ -67,6 +68,48 @@ def _limpar_backups_antigos(caminho_banco: Path, manter: int = BACKUPS_MANTIDOS)
             log.warning('Não foi possível apagar o backup antigo %s', antigo)
 
 
+def _migrar_payloads_qual_molecula(engine: Engine, revisao: str) -> None:
+    from backend.questoes.migracoes_payloads import (
+        contar_questoes_qual_molecula,
+        migracao_pendente,
+        migrar_payloads_qual_molecula,
+    )
+
+    with Session(engine) as s:
+        if not migracao_pendente(s):
+            return
+        quantidade = contar_questoes_qual_molecula(s)
+
+    caminho_db = engine.url.database
+    if quantidade and caminho_db not in (None, '', ':memory:'):
+        caminho = Path(caminho_db)
+        if caminho.is_file():
+            backup = _fazer_backup(caminho, revisao)
+            _limpar_backups_antigos(caminho)
+            log.info('Backup anterior à migração de payloads criado em %s', backup)
+
+    with Session(engine) as s:
+        with s.begin():
+            resultado = migrar_payloads_qual_molecula(s)
+
+    if resultado.ja_aplicada:
+        log.info('Migração de payloads de Qual molécula já aplicada')
+        return
+
+    log.info(
+        'Migração de payloads de Qual molécula: %s convertidas, %s já válidas, %s não convertidas',
+        resultado.convertidas,
+        resultado.validas,
+        len(resultado.nao_convertidas),
+    )
+    for item in resultado.nao_convertidas:
+        log.warning(
+            'Payload de Qual molécula preservado sem conversão (questão %s): %s',
+            item['question_id'],
+            item['reason'],
+        )
+
+
 def inicializar_banco(url: str | None = None) -> str:
     """Garante que o banco existe e está na versão mais recente.
 
@@ -79,24 +122,26 @@ def inicializar_banco(url: str | None = None) -> str:
 
     cfg = _config_alembic(url)
     revisao_final = ScriptDirectory.from_config(cfg).get_current_head()
+    if revisao_final is None:
+        raise RuntimeError('O projeto não possui uma revisão Alembic head configurada')
 
     engine = criar_engine(url)
     try:
         revisao = _revisao_atual(engine)
-        if revisao == revisao_final:
-            return revisao
+        if revisao != revisao_final:
+            caminho = config.obter_caminho_banco()
+            if usando_padrao and revisao is not None and caminho.exists():
+                backup = _fazer_backup(caminho, revisao)
+                log.info('Backup do banco criado em %s', backup)
+                _limpar_backups_antigos(caminho)
 
-        caminho = config.obter_caminho_banco()
-        if usando_padrao and revisao is not None and caminho.exists():
-            backup = _fazer_backup(caminho, revisao)
-            log.info('Backup do banco criado em %s', backup)
-            _limpar_backups_antigos(caminho)
+            with engine.begin() as conexao:
+                cfg.attributes['connection'] = conexao
+                command.upgrade(cfg, 'head')
 
-        with engine.begin() as conexao:
-            cfg.attributes['connection'] = conexao
-            command.upgrade(cfg, 'head')
+            log.info('Banco atualizado de %s para %s', revisao, revisao_final)
 
-        log.info('Banco atualizado de %s para %s', revisao, revisao_final)
+        _migrar_payloads_qual_molecula(engine, revisao_final)
         return revisao_final
     finally:
         engine.dispose()

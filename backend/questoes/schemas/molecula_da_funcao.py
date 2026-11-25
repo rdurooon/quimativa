@@ -1,44 +1,42 @@
 """Minijogo 5 — Qual molécula pertence à função?
 
-Apresenta uma função orgânica e duas ou mais moléculas; a equipe escolhe a
-molécula que apresenta a função. Uma resposta correta.
-(Inverso do minijogo 1: aqui a função é dada e a molécula é escolhida.)
-
-Exemplo:
-    {
-      "target_function": "Éster",
-      "molecules": [
-        {"id": "M1", "asset_id": "asset-006"},
-        {"id": "M2", "asset_id": "asset-007"},
-        {"id": "M3", "asset_id": "asset-008"}
-      ],
-      "correct_molecule_id": "M2"
-    }
+Quatro cartas são apresentadas; o enunciado informa a função e uma carta
+correta é selecionada.
 """
-from typing import Annotated
+from typing import Any
 
 from pydantic import Field, model_validator
 
-from backend.questoes.schemas.base import (
-    Identificador,
-    MoleculaRef,
-    PayloadBase,
-    TextoCurto,
-    validar_moleculas,
-)
-
-MIN_MOLECULAS = 2
+from backend.questoes.schemas.associacao_cartas import Carta, QTD_CARTAS, validar_cartas
+from backend.questoes.schemas.base import Identificador, PayloadBase, TextoCurto
 
 
 class FunctionMoleculePayload(PayloadBase):
-    target_function: TextoCurto
-    molecules: Annotated[list[MoleculaRef], Field(min_length=MIN_MOLECULAS)]
-    correct_molecule_id: Identificador
+    cards: list[Carta] = Field(min_length=QTD_CARTAS, max_length=QTD_CARTAS)
+    correct_card_id: Identificador
+    target_function: TextoCurto | None = None
 
     def assets_referenciados(self) -> set[str]:
-        return {m.asset_id for m in self.molecules}
+        return {card.asset_id for card in self.cards if card.asset_id is not None}
 
     @model_validator(mode='after')
     def _validar(self):
-        validar_moleculas(self.molecules, self.correct_molecule_id)
+        validar_cartas(self.cards)
+        if self.correct_card_id not in {card.id for card in self.cards}:
+            raise ValueError(f'A carta correta "{self.correct_card_id}" não existe')
         return self
+
+    @model_validator(mode='before')
+    @classmethod
+    def _converter_payload_antigo(cls, dados: Any) -> Any:
+        if not isinstance(dados, dict) or 'cards' in dados or 'molecules' not in dados:
+            return dados
+        molecules = dados['molecules']
+        if not isinstance(molecules, list) or any(not isinstance(item, dict) for item in molecules):
+            return dados
+
+        convertido = dict(dados)
+        convertido['cards'] = [dict(item) for item in molecules]
+        convertido['correct_card_id'] = convertido.pop('correct_molecule_id', None)
+        convertido.pop('molecules')
+        return convertido

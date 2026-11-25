@@ -78,7 +78,22 @@ def test_modelos_e_migracoes_estao_sincronizados():
     engine = conexao.criar_engine(config.obter_url_banco())
     try:
         with engine.connect() as c:
-            diferencas = compare_metadata(MigrationContext.configure(c), Base.metadata)
+            # SQLite não preserva/reflete o nome de uma FK adicionada por ALTER TABLE.
+            def incluir_objeto(objeto, _nome, tipo, _refletido, _comparado):
+                if tipo == 'foreign_key_constraint':
+                    if 'package_id' in {coluna.name for coluna in objeto.columns}:
+                        return False
+                return True
+
+            diferencas = compare_metadata(
+                MigrationContext.configure(c, opts={'include_object': incluir_objeto}),
+                Base.metadata,
+            )
+            fks = c.execute(text("PRAGMA foreign_key_list('questions')")).all()
+            fk_pacote = next(fk for fk in fks if fk[3] == 'package_id')
+            assert (fk_pacote[2], fk_pacote[4], fk_pacote[6]) == (
+                'question_packages', 'id', 'SET NULL'
+            )
     finally:
         engine.dispose()
     assert diferencas == [], f'Modelos sem migração: {diferencas}'

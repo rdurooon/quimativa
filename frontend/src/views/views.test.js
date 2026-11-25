@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createRouter, createMemoryHistory } from 'vue-router';
+import GameView from './GameView.vue';
 import IntroView from './IntroView.vue';
 import MenuView from './MenuView.vue';
 import PopupTemplate from '../components/PopupTemplate.vue';
@@ -11,6 +12,7 @@ function createTestRouter() {
     routes: [
       { path: '/', component: IntroView },
       { path: '/menu', component: MenuView },
+      { path: '/game', component: GameView },
     ],
   });
 }
@@ -57,6 +59,51 @@ describe('initial views', () => {
     await wrapper.setProps({ open: false });
     expect(document.activeElement).toBe(opener);
     wrapper.unmount();
+  });
+
+  it('keeps the underlying modal open and focused when the top modal closes', async () => {
+    vi.useFakeTimers();
+    const opener = document.createElement('button');
+    document.body.append(opener);
+    opener.focus();
+    const background = mount(PopupTemplate, {
+      props: { open: true, title: 'Banco de questões', showClose: false },
+      slots: { default: '<button data-background>Banco</button>' },
+    });
+    await flushPromises();
+    const backgroundButton = document.querySelector('[data-background]');
+
+    const foreground = mount(PopupTemplate, {
+      props: { open: true, title: 'Criar questão', showClose: false },
+      slots: { default: '<button data-foreground>Criar</button>' },
+    });
+    await flushPromises();
+
+    const [backgroundOverlay, foregroundOverlay] = document.querySelectorAll('.popup-fundo');
+    expect(backgroundOverlay.getAttribute('aria-hidden')).toBe('true');
+    expect(backgroundOverlay.hasAttribute('inert')).toBe(true);
+    expect(Number(foregroundOverlay.style.zIndex)).toBeGreaterThan(Number(backgroundOverlay.style.zIndex));
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await vi.advanceTimersByTimeAsync(220);
+    expect(foreground.emitted('close')).toHaveLength(1);
+    expect(background.emitted('close')).toBeUndefined();
+
+    await foreground.setProps({ open: false });
+    await flushPromises();
+    expect(document.querySelectorAll('.popup-fundo')).toHaveLength(1);
+    expect(document.activeElement).toBe(backgroundButton);
+    expect(document.body.style.overflow).toBe('hidden');
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await vi.advanceTimersByTimeAsync(220);
+    expect(background.emitted('close')).toHaveLength(1);
+    await background.setProps({ open: false });
+    await flushPromises();
+    expect(document.body.style.overflow).toBe('');
+
+    foreground.unmount();
+    background.unmount();
   });
 
   it('renders the introduction', async () => {
@@ -169,6 +216,37 @@ describe('initial views', () => {
 
     delete window.pywebview;
     wrapper.unmount();
+  });
+
+  it('uses the faster transition when entering and leaving a game', async () => {
+    const router = createTestRouter();
+    await router.push('/menu');
+    await router.isReady();
+    const menu = mount(MenuView, { global: { plugins: [router] } });
+    await flushPromises();
+
+    await menu.get('.partida-rapida').trigger('click');
+    expect(document.documentElement.classList.contains('transicao-entrada')).toBe(true);
+    document.querySelectorAll('.transicao-camada')[3].dispatchEvent(new Event('animationend'));
+    await flushPromises();
+    expect(router.currentRoute.value.path).toBe('/game');
+    expect(document.documentElement.classList.contains('transicao-revelando')).toBe(true);
+    document.querySelectorAll('.transicao-camada')[0].dispatchEvent(new Event('animationend'));
+    await flushPromises();
+    menu.unmount();
+
+    const game = mount(GameView, { global: { plugins: [router] } });
+    await flushPromises();
+    await game.get('[aria-label="Voltar ao menu"]').trigger('click');
+    expect(document.documentElement.classList.contains('transicao-entrada')).toBe(true);
+    document.querySelectorAll('.transicao-camada')[3].dispatchEvent(new Event('animationend'));
+    await flushPromises();
+    expect(router.currentRoute.value.path).toBe('/menu');
+    expect(document.documentElement.classList.contains('transicao-revelando')).toBe(true);
+    document.querySelectorAll('.transicao-camada')[0].dispatchEvent(new Event('animationend'));
+    await flushPromises();
+    expect(document.documentElement.classList.contains('transicao-revelando')).toBe(false);
+    game.unmount();
   });
 
 });

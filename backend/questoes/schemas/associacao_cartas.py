@@ -1,7 +1,7 @@
 """Minijogo 3 — Associação de cartas.
 
 Exatamente quatro cartas; apenas duas formam o par válido (um único par).
-Cada carta pode ter texto (content), imagem (asset_id) ou ambos.
+Cada carta tem texto principal ou imagem, além de texto complementar opcional.
 
 Exemplo:
     {
@@ -38,12 +38,27 @@ class Carta(Esquema):
     id: Identificador
     content: TextoCurto | None = None
     asset_id: Identificador | None = None
+    supplementary_text: TextoCurto | None = None
 
     @model_validator(mode='after')
-    def _exigir_conteudo(self):
-        if self.content is None and self.asset_id is None:
-            raise ValueError(f'A carta "{self.id}" precisa de texto (content) ou imagem (asset_id)')
+    def _validar_conteudo_principal(self):
+        if (self.content is None) == (self.asset_id is None):
+            raise ValueError(f'A carta "{self.id}" precisa de exatamente um texto principal ou imagem')
         return self
+
+
+def validar_cartas(cartas: list[Carta]) -> None:
+    ids = [c.id for c in cartas]
+    if duplicados := repetidos(ids):
+        raise ValueError(f'IDs de carta repetidos: {", ".join(duplicados)}')
+
+    textos = [normalizar(c.content) for c in cartas if c.content is not None]
+    if duplicados := repetidos(textos):
+        raise ValueError(f'Cartas com o mesmo conteúdo: {", ".join(duplicados)}')
+
+    imagens = [c.asset_id for c in cartas if c.asset_id is not None]
+    if duplicados := repetidos(imagens):
+        raise ValueError(f'A mesma imagem (asset {", ".join(duplicados)}) aparece mais de uma vez')
 
 
 class CardAssociationPayload(PayloadBase):
@@ -55,18 +70,9 @@ class CardAssociationPayload(PayloadBase):
 
     @model_validator(mode='after')
     def _validar(self):
+        validar_cartas(self.cards)
+
         ids = [c.id for c in self.cards]
-        if duplicados := repetidos(ids):
-            raise ValueError(f'IDs de carta repetidos: {", ".join(duplicados)}')
-
-        textos = [normalizar(c.content) for c in self.cards if c.content is not None]
-        if duplicados := repetidos(textos):
-            raise ValueError(f'Cartas com o mesmo conteúdo: {", ".join(duplicados)}')
-
-        imagens = [c.asset_id for c in self.cards if c.asset_id is not None]
-        if duplicados := repetidos(imagens):
-            raise ValueError(f'A mesma imagem (asset {", ".join(duplicados)}) aparece mais de uma vez')
-
         primeira, segunda = self.correct_pair
         if primeira == segunda:
             raise ValueError('O par correto precisa ter duas cartas diferentes')

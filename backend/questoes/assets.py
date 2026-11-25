@@ -18,7 +18,12 @@ from backend.database.base import novo_id
 from backend.database.conexao import sessao
 from backend.database.models import Asset
 from backend.questoes import repositorio
-from backend.questoes.erros import DadosInvalidos, NaoEncontrado, OperacaoNaoPermitida
+from backend.questoes.erros import (
+    AssetIndisponivel,
+    DadosInvalidos,
+    NaoEncontrado,
+    OperacaoNaoPermitida,
+)
 from backend.questoes.svg import SvgInvalido, SvgValidado, validar_svg
 from backend.questoes.tipos import SourceType
 
@@ -41,11 +46,13 @@ def ler_svg(asset: Asset) -> SvgValidado:
     """Lê e valida o SVG de um asset do banco."""
     caminho = caminho_do_arquivo(asset)
     if not caminho.is_file():
-        raise DadosInvalidos([{'campo': 'payload', 'mensagem': f'Arquivo do asset "{asset.id}" não encontrado'}])
+        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não está disponível')
     try:
         return validar_svg(caminho.read_bytes())
     except SvgInvalido as erro:
-        raise DadosInvalidos([{'campo': 'payload', 'mensagem': f'Asset "{asset.id}": {erro}'}]) from None
+        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não é um SVG válido: {erro}') from None
+    except OSError as erro:
+        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não está disponível') from erro
 
 
 def apagar_arquivos(caminhos: list[Path]) -> None:
@@ -78,14 +85,18 @@ def serializar_asset(asset: Asset, *, usos: int | None = None, com_conteudo: boo
     return dados
 
 
-def _data_uri(asset: Asset) -> str | None:
+def _data_uri(asset: Asset) -> str:
     """SVG como data URI, para o frontend usar direto em <img src="...">."""
+    caminho = caminho_do_arquivo(asset)
     try:
-        conteudo = caminho_do_arquivo(asset).read_bytes()
-    except (OSError, OperacaoNaoPermitida):
-        log.warning('Arquivo do asset %s não encontrado', asset.id)
-        return None
-    return 'data:image/svg+xml;base64,' + base64.b64encode(conteudo).decode('ascii')
+        conteudo = caminho.read_bytes()
+    except OSError as erro:
+        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não está disponível') from erro
+    try:
+        svg = validar_svg(conteudo)
+    except SvgInvalido as erro:
+        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não é um SVG válido: {erro}') from None
+    return 'data:image/svg+xml;base64,' + base64.b64encode(svg.conteudo).decode('ascii')
 
 
 # --- Operações ----------------------------------------------------------------

@@ -12,6 +12,7 @@ from backend.questoes.tipos import Difficulty, MinigameType, SourceType
 
 if TYPE_CHECKING:
     from backend.database.models.fonte_questao import QuestionSource
+    from backend.database.models.pacote import QuestionPackage
     from backend.database.models.questao_asset import QuestionAsset
     from backend.database.models.tag import Tag
 
@@ -44,6 +45,11 @@ class Question(Base):
         CheckConstraint(f'source_type IN ({_valores_sql(SourceType)})', name='source_type_valido'),
         # remote_id só existe (e é obrigatório) em questões remotas
         CheckConstraint("(source_type = 'remote') = (remote_id IS NOT NULL)", name='remote_id_somente_remotas'),
+        CheckConstraint(
+            "(source_type = 'base' AND package_id = 'base') OR "
+            "(source_type != 'base' AND (package_id IS NULL OR package_id != 'base'))",
+            name='origem_base_pacote_base',
+        ),
     )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=novo_id)
@@ -56,6 +62,9 @@ class Question(Base):
     source_id: Mapped[str | None] = mapped_column(
         String(36), ForeignKey('question_sources.id', ondelete='RESTRICT')
     )
+    package_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey('question_packages.id', ondelete='SET NULL'), index=True
+    )
     status: Mapped[str | None] = mapped_column(String(30))  # fluxo editorial ainda não definido
     remote_id: Mapped[str | None] = mapped_column(String(100), index=True, unique=True)
     remote_version: Mapped[str | None] = mapped_column(String(50))
@@ -67,6 +76,7 @@ class Question(Base):
     )
     tags: Mapped[list[Tag]] = relationship(secondary=question_tags, back_populates='questions')
     source: Mapped[QuestionSource | None] = relationship(back_populates='questions')
+    package: Mapped[QuestionPackage | None] = relationship(back_populates='questions')
 
     def __repr__(self) -> str:
         return f'<Question {self.id} {self.minigame_type} {self.source_type}>'

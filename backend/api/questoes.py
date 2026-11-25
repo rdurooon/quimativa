@@ -13,7 +13,7 @@ from __future__ import annotations
 import functools
 import logging
 
-from backend.questoes import assets, servico
+from backend.questoes import assets, pacotes, servico
 from backend.questoes.erros import ErroQuestoes
 
 log = logging.getLogger(__name__)
@@ -66,6 +66,19 @@ class QuestoesAPI:
     @endpoint
     def questoes_remover(self, questao_id):
         return servico.remover_questao(questao_id)
+
+    # --- Pacotes ---
+    @endpoint
+    def pacotes_listar(self):
+        return pacotes.listar_pacotes()
+
+    @endpoint
+    def pacotes_criar(self, dados):
+        return pacotes.criar_pacote(dados)
+
+    @endpoint
+    def pacotes_remover(self, pacote_id):
+        return pacotes.remover_pacote(pacote_id)
 
     # --- Imagens (SVG) ---
     @endpoint

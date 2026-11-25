@@ -25,6 +25,7 @@ from backend import config
 from backend.database.conexao import sessao
 from backend.database.metadados import definir_versao_base, obter_versao_base
 from backend.database.models import Asset, Question
+from backend.database.models.pacote import BASE_PACKAGE_ID
 from backend.questoes import repositorio
 from backend.questoes.erros import ErroPacoteBase, traduzir_erros
 from backend.questoes.schemas.pacote_base import PacoteQuestoesBase
@@ -165,6 +166,7 @@ def _importar_questoes(s, pacote: PacoteQuestoesBase, resultado: ResultadoImport
             'statement': item.statement,
             'payload': item.payload,
             'explanation': item.explanation,
+            'package_id': BASE_PACKAGE_ID,
         }
         q = s.get(Question, str(item.id))
         if q is None:

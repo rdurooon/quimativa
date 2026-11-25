@@ -1,6 +1,11 @@
 const COLORS = ['#006b10', '#008e15', '#31b84b', '#a8e3ae'];
-const COVER_DURATION = 1250;
-const REVEAL_DURATION = 1100;
+const DEFAULT_COVER_DURATION = 1250;
+const DEFAULT_REVEAL_DURATION = 1100;
+
+export const GAME_TRANSITION = Object.freeze({
+  coverDuration: 700,
+  revealDuration: 650,
+});
 
 function random(seed) {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
@@ -55,7 +60,10 @@ function createLayer(index) {
   return svg;
 }
 
-export function initializeTransition() {
+export function initializeTransition({
+  coverDuration = DEFAULT_COVER_DURATION,
+  revealDuration = DEFAULT_REVEAL_DURATION,
+} = {}) {
   const root = document.documentElement;
   let overlay = document.querySelector('.transicao-liquido');
   if (!overlay) {
@@ -64,8 +72,8 @@ export function initializeTransition() {
     overlay.setAttribute('aria-hidden', 'true');
     document.body.prepend(overlay);
   }
-  root.style.setProperty('--duracao-cobrir', `${COVER_DURATION}ms`);
-  root.style.setProperty('--duracao-revelar', `${REVEAL_DURATION}ms`);
+  root.style.setProperty('--duracao-cobrir', `${coverDuration}ms`);
+  root.style.setProperty('--duracao-revelar', `${revealDuration}ms`);
   if (!overlay.querySelector('.transicao-camada')) {
     COLORS.forEach((_, index) => overlay.appendChild(createLayer(index)));
   }
@@ -93,7 +101,7 @@ export function initializeTransition() {
         window.setTimeout(resolve, 250);
         return;
       }
-      waitForAnimation(layers[3] || overlay, 2100).then(resolve);
+      waitForAnimation(layers[3] || overlay, coverDuration + 400).then(resolve);
     }),
     reveal: () => {
       root.classList.remove('transicao-entrada');
@@ -104,7 +112,7 @@ export function initializeTransition() {
         }, 250);
         return;
       }
-      waitForAnimation(layers[0] || overlay, 1600).then(() => {
+      waitForAnimation(layers[0] || overlay, revealDuration + 300).then(() => {
         root.classList.remove('transicao-revelando', 'transicao-coberta');
       });
     },

@@ -5,10 +5,11 @@ Todas as funções recebem uma sessão aberta e não fazem commit.
 """
 from __future__ import annotations
 
-from sqlalchemy import func, select
+from sqlalchemy import case, func, select, update
 from sqlalchemy.orm import Session, selectinload
 
-from backend.database.models import Asset, Question, QuestionAsset, QuestionSource, Tag
+from backend.database.models import Asset, Question, QuestionAsset, QuestionPackage, QuestionSource, Tag
+from backend.database.models.pacote import BASE_PACKAGE_ID
 from backend.questoes.schemas.base import normalizar
 from backend.questoes.schemas.questao import FonteEntrada
 
@@ -57,7 +58,28 @@ def sincronizar_assets(q: Question, asset_ids: set[str]) -> bool:
 
 
 def contar_usos_asset(s: Session, asset_id: str) -> int:
-    return s.scalar(select(func.count()).select_from(QuestionAsset).where(QuestionAsset.asset_id == asset_id))
+    return s.execute(
+        select(func.count()).select_from(QuestionAsset).where(QuestionAsset.asset_id == asset_id)
+    ).scalar_one()
+
+
+# --- Pacotes -----------------------------------------------------------------
+
+
+def listar_pacotes(s: Session) -> list[tuple[QuestionPackage, int]]:
+    consulta = (
+        select(QuestionPackage, func.count(Question.id))
+        .outerjoin(Question, Question.package_id == QuestionPackage.id)
+        .group_by(QuestionPackage.id)
+        .order_by(case((QuestionPackage.id == BASE_PACKAGE_ID, 0), else_=1), QuestionPackage.name_key)
+    )
+    return [(pacote, int(quantidade or 0)) for pacote, quantidade in s.execute(consulta)]
+
+
+def desassociar_questoes_do_pacote(s: Session, package_id: str) -> None:
+    s.execute(
+        update(Question).where(Question.package_id == package_id).values(package_id=None)
+    )
 
 
 # --- Fontes -----------------------------------------------------------------
@@ -66,7 +88,9 @@ CAMPOS_FONTE = ('name', 'reference', 'license', 'notes')
 
 
 def _contar_usos_fonte(s: Session, fonte: QuestionSource) -> int:
-    return s.scalar(select(func.count()).select_from(Question).where(Question.source_id == fonte.id))
+    return s.execute(
+        select(func.count()).select_from(Question).where(Question.source_id == fonte.id)
+    ).scalar_one()
 
 
 def aplicar_fonte(s: Session, q: Question, fonte: FonteEntrada | None) -> tuple[bool, QuestionSource | None]:
@@ -135,9 +159,14 @@ def listar_questoes(
     if busca:
         consulta = consulta.where(Question.statement.contains(busca, autoescape=True))
 
-    total = s.scalar(select(func.count()).select_from(consulta.subquery()))
+    total = s.execute(select(func.count()).select_from(consulta.subquery())).scalar_one()
     pagina = s.scalars(
-        consulta.options(selectinload(Question.tags), selectinload(Question.source))
+        consulta.options(
+            selectinload(Question.tags),
+            selectinload(Question.source),
+            selectinload(Question.package),
+            selectinload(Question.asset_links).selectinload(QuestionAsset.asset),
+        )
         .order_by(Question.created_at.desc(), Question.id)
         .limit(limite)
         .offset(deslocamento)

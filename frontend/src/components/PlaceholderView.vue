@@ -1,18 +1,31 @@
 <script setup>
+import { nextTick, onMounted } from 'vue';
 import { ArrowLeft } from '@lucide/vue';
 import { useRouter } from 'vue-router';
+import { GAME_TRANSITION, initializeTransition } from '../services/transition';
 
-defineProps({
+const props = defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   icon: { type: [Object, Function], required: true },
+  animatedBack: { type: Boolean, default: false },
 });
 
 const router = useRouter();
+let transition;
 
-function voltar() {
-  router.push('/menu');
+async function voltar() {
+  if (transition) await transition.cover();
+  await router.push('/menu');
+  if (transition) {
+    await nextTick();
+    transition.reveal();
+  }
 }
+
+onMounted(() => {
+  if (props.animatedBack) transition = initializeTransition(GAME_TRANSITION);
+});
 </script>
 
 <template>

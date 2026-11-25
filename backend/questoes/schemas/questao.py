@@ -7,7 +7,14 @@ from typing import Annotated, Any
 
 from pydantic import Field, model_validator
 
-from backend.questoes.schemas.base import Esquema, TextoCurto, TextoLongo, normalizar, repetidos
+from backend.questoes.schemas.base import (
+    Esquema,
+    Identificador,
+    TextoCurto,
+    TextoLongo,
+    normalizar,
+    repetidos,
+)
 from backend.questoes.tipos import Difficulty, MinigameType
 
 MAX_TAGS = 20
@@ -27,6 +34,7 @@ class DadosQuestao(Esquema):
     difficulty: Difficulty
     statement: TextoLongo
     payload: dict[str, Any]
+    package_id: Identificador | None = None
     explanation: TextoLongo | None = None
     tags: Annotated[list[TextoCurto], Field(max_length=MAX_TAGS)] = []
     source: FonteEntrada | None = None

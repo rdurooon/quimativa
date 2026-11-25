@@ -1,6 +1,7 @@
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { X } from '@lucide/vue';
+import { activateModal, deactivateModal, getModalIndex, getTopModal } from '../services/modalStack';
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -14,10 +15,11 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 const panel = ref(null);
 const closing = ref(false);
+const isTopModal = computed(() => getTopModal() === panel);
+const modalIndex = computed(() => getModalIndex(panel));
 let closeTimer = null;
 let previouslyFocused = null;
 let listenerActive = false;
-const activeModals = new Set();
 
 const focusableSelector = [
   'a[href]',
@@ -33,28 +35,40 @@ function isAvailable(element) {
     && element.getAttribute('aria-hidden') !== 'true';
 }
 
-function updateBodyLock() {
-  document.body.style.overflow = activeModals.size ? 'hidden' : '';
-}
-
 function activate() {
   if (listenerActive) return;
   previouslyFocused = document.activeElement;
   listenerActive = true;
-  activeModals.add(panel);
-  updateBodyLock();
+  activateModal(panel);
   window.addEventListener('keydown', handleKeydown);
   focusPanel();
 }
 
 function deactivate() {
   if (!listenerActive) return;
+  const wasTopModal = isTopModal.value;
+  const focusTarget = previouslyFocused;
   listenerActive = false;
-  activeModals.delete(panel);
+  deactivateModal(panel);
   window.removeEventListener('keydown', handleKeydown);
-  updateBodyLock();
-  if (!activeModals.size && isAvailable(previouslyFocused)) {
-    previouslyFocused.focus();
+  if (wasTopModal) {
+    const nextTopModal = getTopModal();
+    if (!nextTopModal) {
+      if (isAvailable(focusTarget)) focusTarget.focus();
+    } else {
+      nextTick(() => {
+        if (getTopModal() !== nextTopModal) return;
+        const nextPanel = nextTopModal.value;
+        if (isAvailable(focusTarget) && nextPanel?.contains(focusTarget)) {
+          focusTarget.focus();
+        } else {
+          const target = nextPanel?.querySelector('[data-modal-close]')
+            ?? nextPanel?.querySelector('button')
+            ?? nextPanel;
+          target?.focus();
+        }
+      });
+    }
   }
   previouslyFocused = null;
 }
@@ -71,7 +85,7 @@ function close() {
 }
 
 function handleKeydown(event) {
-  if (!props.open || !listenerActive) return;
+  if (!props.open || !listenerActive || !isTopModal.value) return;
   if (event.key === 'Escape') {
     event.preventDefault();
     close();
@@ -136,7 +150,10 @@ onUnmounted(() => {
       v-if="open"
       class="popup-fundo"
       :class="{ 'popup-fundo-saindo': closing }"
+      :style="{ zIndex: 100 + modalIndex }"
       role="presentation"
+      :aria-hidden="isTopModal ? 'false' : 'true'"
+      :inert="!isTopModal"
       @mousedown.self="close"
     >
       <section
@@ -150,7 +167,7 @@ onUnmounted(() => {
           },
         ]"
         role="dialog"
-        aria-modal="true"
+        :aria-modal="isTopModal ? 'true' : undefined"
         :aria-label="title"
         tabindex="-1"
       >

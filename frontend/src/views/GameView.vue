@@ -8,5 +8,6 @@ import PlaceholderView from '../components/PlaceholderView.vue';
     title="Partida"
     description="Estrutura reservada para uma próxima etapa."
     :icon="Gamepad2"
+    animated-back
   />
 </template>

@@ -1,10 +1,6 @@
 """Minijogo 2 — Encontre a diferença.
 
-Duas ou mais moléculas; a equipe escolhe a que possui a característica pedida
-(critério explícito: função, ramificação, saturação...). Uma resposta correta.
-
-PENDENTE (documento mestre): quantidade exata de moléculas e tipos de
-comparação. Por isso só o mínimo (2) é exigido, sem máximo.
+Duas moléculas; o enunciado descreve o critério e há uma resposta correta.
 
 Exemplo:
     {
@@ -29,12 +25,13 @@ from backend.questoes.schemas.base import (
     validar_moleculas,
 )
 
-MIN_MOLECULAS = 2
+QTD_MOLECULAS = 2
 
 
 class FindDifferencePayload(PayloadBase):
-    molecules: Annotated[list[MoleculaRef], Field(min_length=MIN_MOLECULAS)]
-    criterion: TextoCurto
+    molecules: Annotated[list[MoleculaRef], Field(min_length=QTD_MOLECULAS, max_length=QTD_MOLECULAS)]
+    # Compatibilidade com payloads antigos; novos formulários usam statement.
+    criterion: TextoCurto | None = None
     correct_molecule_id: Identificador
 
     def assets_referenciados(self) -> set[str]:

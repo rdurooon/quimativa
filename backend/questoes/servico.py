@@ -23,12 +23,20 @@ from typing import Any
 from pydantic import Field, ValidationError
 
 from backend.database.conexao import sessao
-from backend.database.models import Question
+from backend.database.models import Question, QuestionPackage
+from backend.database.models.pacote import BASE_PACKAGE_ID
 from backend.questoes import repositorio
 from backend.questoes.assets import apagar_arquivos, caminho_do_arquivo, ler_svg, serializar_asset
-from backend.questoes.erros import DadosInvalidos, NaoEncontrado, OperacaoNaoPermitida, traduzir_erros
+from backend.questoes.erros import (
+    DadosInvalidos,
+    NaoEncontrado,
+    OperacaoNaoPermitida,
+    PayloadIncompativel,
+    traduzir_erros,
+)
 from backend.questoes.schemas import PayloadBase, validar_payload
 from backend.questoes.schemas.base import Esquema, TextoCurto
+from backend.questoes.schemas.molecula_da_funcao import FunctionMoleculePayload
 from backend.questoes.schemas.questao import DadosQuestao
 from backend.questoes.tipos import (
     NOMES_DIFICULDADES,
@@ -65,6 +73,31 @@ def permissoes(source_type: str) -> dict:
     }
 
 
+def _payload_para_edicao(q: Question) -> dict:
+    if q.minigame_type != MinigameType.FUNCTION_MOLECULE.value:
+        return q.payload
+    try:
+        payload = FunctionMoleculePayload.model_validate(q.payload)
+    except ValidationError as erro:
+        raise PayloadIncompativel(
+            f'O payload da questão "{q.id}" não pode ser representado com segurança pelo formulário atual. '
+            'O conteúdo original foi preservado.',
+            traduzir_erros(erro, 'payload'),
+        ) from None
+    vinculados = {link.asset_id for link in q.asset_links}
+    sem_vinculo = sorted(payload.assets_referenciados() - vinculados)
+    if sem_vinculo:
+        raise PayloadIncompativel(
+            f'O payload da questão "{q.id}" referencia imagens sem relação persistida. '
+            'O conteúdo original foi preservado.',
+            [{
+                'campo': 'payload',
+                'mensagem': f'Imagem sem relação question_assets: "{asset_id}"',
+            } for asset_id in sem_vinculo],
+        )
+    return payload.model_dump(mode='json', exclude_none=True)
+
+
 def serializar_questao(q: Question, *, completa: bool = True) -> dict:
     """Converte a questão em dicionário simples (pronto para JSON)."""
     dados = {
@@ -80,17 +113,26 @@ def serializar_questao(q: Question, *, completa: bool = True) -> dict:
         'source': None if q.source is None else {
             campo: getattr(q.source, campo) for campo in repositorio.CAMPOS_FONTE
         },
+        'package': None if q.package is None else {'id': q.package.id, 'name': q.package.name},
+        'preview_asset': _asset_preview(q),
         'status': q.status,
         'created_at': q.created_at.isoformat() if q.created_at else None,
         'updated_at': q.updated_at.isoformat() if q.updated_at else None,
         'permissions': permissoes(q.source_type),
     }
     if completa:
-        dados['payload'] = q.payload
+        dados['payload'] = _payload_para_edicao(q)
         dados['assets'] = {
             link.asset_id: serializar_asset(link.asset, com_conteudo=True) for link in q.asset_links
         }
     return dados
+
+
+def _asset_preview(q: Question) -> dict | None:
+    if not q.asset_links:
+        return None
+    asset = min((link.asset for link in q.asset_links), key=lambda item: item.id)
+    return {'id': asset.id, 'name': asset.name}
 
 
 # --- Validação ------------------------------------------------------------------
@@ -129,10 +171,22 @@ def _validar_entrada(s, dados: Any) -> tuple[DadosQuestao, PayloadBase]:
 
 
 def _aplicar(s, q: Question, entrada: DadosQuestao, payload: PayloadBase) -> None:
+    pacote = None
+    if entrada.package_id is not None:
+        with s.no_autoflush:
+            pacote = s.get(QuestionPackage, entrada.package_id)
+        if pacote is None:
+            raise DadosInvalidos([{
+                'campo': 'package_id',
+                'mensagem': 'Pacote não encontrado',
+            }])
+
     q.minigame_type = entrada.minigame_type.value
     q.difficulty = int(entrada.difficulty)
     q.statement = entrada.statement
     q.explanation = entrada.explanation
+    q.package = pacote
+    q.source_type = SourceType.BASE if pacote and pacote.id == BASE_PACKAGE_ID else SourceType.LOCAL
     # dicionário NOVO: garante que o SQLAlchemy perceba a alteração do JSON
     q.payload = payload.model_dump(mode='json', exclude_none=True)
     q.tags = repositorio.obter_ou_criar_tags(s, entrada.tags)
@@ -208,7 +262,20 @@ def atualizar_questao_local(questao_id: str, dados: dict) -> dict:
         q = _obter_ou_erro(s, questao_id)
         if q.source_type != SourceType.LOCAL:
             raise OperacaoNaoPermitida(MENSAGENS_EDICAO[SourceType(q.source_type)])
+        if q.minigame_type == MinigameType.FUNCTION_MOLECULE.value:
+            _payload_para_edicao(q)
         entrada, payload = _validar_entrada(s, dados)
+        if (
+            entrada.minigame_type == MinigameType.FUNCTION_MOLECULE
+            and isinstance(payload, FunctionMoleculePayload)
+            and 'target_function' not in payload.model_fields_set
+            and isinstance(q.payload, dict)
+            and q.payload.get('target_function') is not None
+        ):
+            payload = FunctionMoleculePayload.model_validate({
+                **payload.model_dump(mode='json', exclude_none=True),
+                'target_function': q.payload['target_function'],
+            })
         _aplicar(s, q, entrada, payload)
         s.flush()
         return serializar_questao(q)
