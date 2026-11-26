@@ -41,6 +41,19 @@ NOMES_MINIJOGOS = {
     MinigameType.FUNCTION_ORDER: 'Ordem das funções',
 }
 
+# Texto de apoio exibido ao escolher o minijogo na criação de questão.
+DESCRICOES_MINIJOGOS = {
+    MinigameType.IDENTIFICATION: 'Uma molécula com um grupo destacado e quatro alternativas; '
+                                 'o jogador escolhe a função orgânica do grupo.',
+    MinigameType.FIND_DIFFERENCE: 'Duas moléculas lado a lado; o jogador escolhe a que responde ao enunciado.',
+    MinigameType.CARD_ASSOCIATION: 'Quatro cartas com imagem ou texto; o jogador encontra o par correto.',
+    MinigameType.MOLECULAR_ANALYSIS: 'Uma molécula com uma região destacada e quatro alternativas; '
+                                     'o jogador escolhe a correta.',
+    MinigameType.FUNCTION_MOLECULE: 'O enunciado informa uma função orgânica; o jogador escolhe, '
+                                    'entre quatro moléculas, a que pertence a ela.',
+    MinigameType.FUNCTION_ORDER: 'Quatro moléculas; o jogador as coloca na sequência correta.',
+}
+
 NOMES_DIFICULDADES = {
     Difficulty.EASY: 'Fácil',
     Difficulty.MEDIUM: 'Média',

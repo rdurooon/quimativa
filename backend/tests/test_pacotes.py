@@ -55,9 +55,24 @@ def test_pacote_base_e_listado_sem_duplicacao_e_com_contagem():
         'name': BASE_PACKAGE_NAME,
         'kind': 'base',
         'question_count': 6,
+        'minigame_types': [
+            'identification', 'find_difference', 'card_association',
+            'molecular_analysis', 'function_molecule', 'function_order',
+        ],
+        'difficulties': [1, 2, 3],
         'permissions': {'delete': False},
     }
 
+def test_pacote_local_resume_minijogos_e_dificuldades_presentes():
+    pacote = pacotes.criar_pacote({'name': 'Resumo'})
+    assert pacote['minigame_types'] == []
+    assert pacote['difficulties'] == []
+
+    servico.criar_questao_local(dados_questao(pacote['id']))
+    listado = next(p for p in pacotes.listar_pacotes() if p['id'] == pacote['id'])
+    assert listado['minigame_types'] == ['identification']
+    assert listado['difficulties'] == [1]
+    assert listado['question_count'] == 1
 
 def test_criar_pacote_e_rejeitar_nome_duplicado_normalizado():
     criado = pacotes.criar_pacote({'name': '  Química   Orgânica  '})

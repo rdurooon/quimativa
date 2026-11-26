@@ -1,4 +1,5 @@
 """Testes do serviço de questões e de assets (regras de negócio)."""
+
 import json
 
 import pytest
@@ -20,42 +21,48 @@ from backend.questoes.erros import (
 )
 from backend.questoes.importador import importar_pacote_base
 
-EXEMPLO = config.BASE_DIR / 'docs' / 'pacote_base_exemplo'
-ID_BASE = '5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d01'  # questão-base do exemplo (identificação)
+EXEMPLO = config.BASE_DIR / "docs" / "pacote_base_exemplo"
+ID_BASE = (
+    "5b0e7c52-3f7e-4d8a-9a51-1c2f4e6b8d01"  # questão-base do exemplo (identificação)
+)
 
-SVG = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">'
-       '<g id="grupo-cooh"><circle cx="5" cy="5" r="2"/></g></svg>')
+SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">'
+    '<g id="grupo-cooh"><circle cx="5" cy="5" r="2"/></g></svg>'
+)
 
 
 @pytest.fixture(autouse=True)
 def ambiente(pasta_dados, monkeypatch):
     """Banco novo + questões-base do pacote de exemplo."""
     assert pasta_dados.is_dir()
-    monkeypatch.setattr(config, 'ASSETS_BASE_DIR', EXEMPLO / 'assets')
+    monkeypatch.setattr(config, "ASSETS_BASE_DIR", EXEMPLO / "assets")
     inicializar_banco()
-    importar_pacote_base(EXEMPLO / 'pacote_base.json', EXEMPLO / 'assets')
+    importar_pacote_base(EXEMPLO / "pacote_base.json", EXEMPLO / "assets")
 
 
 @pytest.fixture
 def svg_local():
-    return servico_assets.importar_svg_local(SVG, 'Ácido etanoico')
+    return servico_assets.importar_svg_local(SVG, "Ácido etanoico")
 
 
-def dados_questao(asset_id='etanol', regiao='grupo-oh', **mudancas):
+def dados_questao(asset_id="etanol", regiao="grupo-oh", **mudancas):
     dados = {
-        'minigame_type': 'identification',
-        'difficulty': 2,
-        'statement': 'Qual função está destacada?',
-        'payload': {
-            'molecule_asset_id': asset_id,
-            'highlight': {'region_id': regiao},
-            'alternatives': [
-                {'id': 'A', 'label': 'Álcool'}, {'id': 'B', 'label': 'Ácido carboxílico'},
-                {'id': 'C', 'label': 'Éster'}, {'id': 'D', 'label': 'Aldeído'},
+        "minigame_type": "identification",
+        "difficulty": 2,
+        "statement": "Qual função está destacada?",
+        "payload": {
+            "molecule_asset_id": asset_id,
+            "highlight": {"region_id": regiao},
+            "alternatives": [
+                {"id": "A", "label": "Álcool"},
+                {"id": "B", "label": "Ácido carboxílico"},
+                {"id": "C", "label": "Éster"},
+                {"id": "D", "label": "Aldeído"},
             ],
-            'correct_alternative_id': 'A',
+            "correct_alternative_id": "A",
         },
-        'tags': ['Álcool'],
+        "tags": ["Álcool"],
     }
     dados.update(mudancas)
     return dados
@@ -68,21 +75,32 @@ def contar(alvo, *condicoes):
 
 # --- Criar / obter --------------------------------------------------------------
 
+
 def test_criar_questao_local_usando_svg_da_base():
     q = servico.criar_questao_local(dados_questao())
-    assert q['source_type'] == 'local'
-    assert q['permissions'] == {'edit': True, 'delete': True}
-    assert q['minigame_name'] == 'Identificação de função orgânica'
-    assert q['difficulty_name'] == 'Média'
-    assert q['assets']['etanol']['data_uri'].startswith('data:image/svg+xml;base64,')
-    assert servico.obter_questao(q['id']) == q
+    assert q["source_type"] == "local"
+    assert q["permissions"] == {"edit": True, "delete": True}
+    assert q["minigame_name"] == "Identificação de função orgânica"
+    assert q["difficulty_name"] == "Média"
+    assert q["assets"]["etanol"]["data_uri"].startswith("data:image/svg+xml;base64,")
+    assert servico.obter_questao(q["id"]) == q
 
 
 def test_criar_questao_local_com_svg_local(svg_local):
     q = servico.criar_questao_local(
-        dados_questao(svg_local['id'], 'grupo-cooh', source={'name': 'ENEM 2022', 'notes': 'Adaptada'}))
-    assert set(q['assets']) == {svg_local['id']}
-    assert q['source'] == {'name': 'ENEM 2022', 'reference': None, 'license': None, 'notes': 'Adaptada'}
+        dados_questao(
+            svg_local["id"],
+            "grupo-cooh",
+            source={"name": "ENEM 2022", "notes": "Adaptada"},
+        )
+    )
+    assert set(q["assets"]) == {svg_local["id"]}
+    assert q["source"] == {
+        "name": "ENEM 2022",
+        "reference": None,
+        "license": None,
+        "notes": "Adaptada",
+    }
 
 
 def test_resultado_e_serializavel_em_json():
@@ -94,52 +112,57 @@ def test_resultado_e_serializavel_em_json():
 
 
 def test_tags_reaproveitadas_sem_diferenciar_maiusculas():
-    servico.criar_questao_local(dados_questao(tags=[' álcool ', 'Novo   assunto']))
+    servico.criar_questao_local(dados_questao(tags=[" álcool ", "Novo   assunto"]))
     with conexao.sessao() as s:
         nomes = sorted(s.scalars(select(Tag.name)))
-    assert 'álcool' not in nomes and 'Álcool' in nomes
-    assert 'Novo assunto' in nomes
+    assert "álcool" not in nomes and "Álcool" in nomes
+    assert "Novo assunto" in nomes
 
 
 def test_obter_inexistente():
     with pytest.raises(NaoEncontrado):
-        servico.obter_questao('nao-existe')
+        servico.obter_questao("nao-existe")
 
 
 # --- Validação ----------------------------------------------------------------------
 
+
 def detalhes(erro):
-    return {(d['campo'], d['mensagem']) for d in erro.value.detalhes}
+    return {(d["campo"], d["mensagem"]) for d in erro.value.detalhes}
 
 
 def test_payload_invalido_aponta_o_campo_em_portugues():
     dados = dados_questao()
-    dados['payload']['alternatives'].pop()
+    dados["payload"]["alternatives"].pop()
     with pytest.raises(DadosInvalidos) as erro:
         servico.criar_questao_local(dados)
-    assert ('payload.alternatives', 'Precisa ter pelo menos 4 item(ns)') in detalhes(erro)
+    assert ("payload.alternatives", "Precisa ter pelo menos 4 item(ns)") in detalhes(
+        erro
+    )
 
 
 def test_campos_gerais_invalidos():
     with pytest.raises(DadosInvalidos) as erro:
-        servico.criar_questao_local(dados_questao(statement='  ', difficulty=7, extra=1))
-    campos = {d['campo'] for d in erro.value.detalhes}
-    assert {'statement', 'difficulty', 'extra'} <= campos
+        servico.criar_questao_local(
+            dados_questao(statement="  ", difficulty=7, extra=1)
+        )
+    campos = {d["campo"] for d in erro.value.detalhes}
+    assert {"statement", "difficulty", "extra"} <= campos
 
 
 def test_imagem_inexistente():
     with pytest.raises(DadosInvalidos) as erro:
-        servico.criar_questao_local(dados_questao(asset_id='nao-existe'))
-    assert ('payload', 'Imagem "nao-existe" não encontrada') in detalhes(erro)
+        servico.criar_questao_local(dados_questao(asset_id="nao-existe"))
+    assert ("payload", 'Imagem "nao-existe" não encontrada') in detalhes(erro)
 
 
 def test_regiao_inexistente_no_svg():
     with pytest.raises(DadosInvalidos) as erro:
-        servico.criar_questao_local(dados_questao(regiao='grupo-xyz'))
-    assert any('grupo-xyz' in m for _, m in detalhes(erro))
+        servico.criar_questao_local(dados_questao(regiao="grupo-xyz"))
+    assert any("grupo-xyz" in m for _, m in detalhes(erro))
 
 
-@pytest.mark.parametrize('dados', [None, [], 'texto'])
+@pytest.mark.parametrize("dados", [None, [], "texto"])
 def test_formato_invalido(dados):
     with pytest.raises(DadosInvalidos):
         servico.criar_questao_local(dados)
@@ -148,77 +171,96 @@ def test_formato_invalido(dados):
 def test_nada_e_gravado_quando_ha_erro():
     antes = contar(Question)
     with pytest.raises(DadosInvalidos):
-        servico.criar_questao_local(dados_questao(regiao='grupo-xyz', tags=['Tag nova']))
+        servico.criar_questao_local(
+            dados_questao(regiao="grupo-xyz", tags=["Tag nova"])
+        )
     assert contar(Question) == antes
-    assert contar(Tag, Tag.name == 'Tag nova') == 0
+    assert contar(Tag, Tag.name == "Tag nova") == 0
 
 
 # --- Editar ----------------------------------------------------------------------------
 
+
 def test_editar_questao_local(svg_local):
-    q = servico.criar_questao_local(dados_questao(source={'name': 'ENEM 2022'}))
-    novo = dados_questao(svg_local['id'], 'grupo-cooh', statement='Novo enunciado', tags=['Ácido'])
-    novo['payload']['correct_alternative_id'] = 'B'
-    r = servico.atualizar_questao_local(q['id'], novo)
-    assert r['statement'] == 'Novo enunciado'
-    assert r['payload']['correct_alternative_id'] == 'B'
-    assert set(r['assets']) == {svg_local['id']}
-    assert r['tags'] == ['Ácido']
-    assert r['source'] is None
+    q = servico.criar_questao_local(dados_questao(source={"name": "ENEM 2022"}))
+    novo = dados_questao(
+        svg_local["id"], "grupo-cooh", statement="Novo enunciado", tags=["Ácido"]
+    )
+    novo["payload"]["correct_alternative_id"] = "B"
+    r = servico.atualizar_questao_local(q["id"], novo)
+    assert r["statement"] == "Novo enunciado"
+    assert r["payload"]["correct_alternative_id"] == "B"
+    assert set(r["assets"]) == {svg_local["id"]}
+    assert r["tags"] == ["Ácido"]
+    assert r["source"] is None
     assert contar(QuestionSource) == 1  # só a fonte da questão-base do exemplo
 
 
 def test_editar_fonte_mantem_o_mesmo_registro():
-    q = servico.criar_questao_local(dados_questao(source={'name': 'ENEM 2022'}))
-    servico.atualizar_questao_local(q['id'], dados_questao(source={'name': 'ENEM 2023'}))
+    q = servico.criar_questao_local(dados_questao(source={"name": "ENEM 2022"}))
+    servico.atualizar_questao_local(
+        q["id"], dados_questao(source={"name": "ENEM 2023"})
+    )
     assert contar(QuestionSource) == 2
-    assert servico.obter_questao(q['id'])['source']['name'] == 'ENEM 2023'
+    assert servico.obter_questao(q["id"])["source"]["name"] == "ENEM 2023"
 
 
 def test_editar_questao_base_e_proibido():
-    with pytest.raises(OperacaoNaoPermitida, match='Questões-base não podem ser editadas'):
+    with pytest.raises(
+        OperacaoNaoPermitida, match="Questões-base não podem ser editadas"
+    ):
         servico.atualizar_questao_local(ID_BASE, dados_questao())
 
 
 def test_editar_questao_remota_e_proibido():
     with conexao.sessao() as s:
-        s.add(Question(id='r1', minigame_type='identification', difficulty=1, source_type='remote',
-                       remote_id='site-1', statement='x', payload={}))
-    with pytest.raises(OperacaoNaoPermitida, match='site'):
-        servico.atualizar_questao_local('r1', dados_questao())
+        s.add(
+            Question(
+                id="r1",
+                minigame_type="identification",
+                difficulty=1,
+                source_type="remote",
+                remote_id="site-1",
+                statement="x",
+                payload={},
+            )
+        )
+    with pytest.raises(OperacaoNaoPermitida, match="site"):
+        servico.atualizar_questao_local("r1", dados_questao())
 
 
 def test_editar_com_dados_invalidos_nao_altera_nada():
     q = servico.criar_questao_local(dados_questao())
     with pytest.raises(DadosInvalidos):
-        servico.atualizar_questao_local(q['id'], dados_questao(statement=''))
-    assert servico.obter_questao(q['id'])['statement'] == q['statement']
+        servico.atualizar_questao_local(q["id"], dados_questao(statement=""))
+    assert servico.obter_questao(q["id"])["statement"] == q["statement"]
 
 
 # --- Remover ----------------------------------------------------------------------------
 
+
 def test_remover_questao_local_apaga_svg_local_sem_uso(svg_local):
-    q = servico.criar_questao_local(dados_questao(svg_local['id'], 'grupo-cooh'))
-    arquivo = config.obter_assets_dir('local') / f'{svg_local["id"]}.svg'
+    q = servico.criar_questao_local(dados_questao(svg_local["id"], "grupo-cooh"))
+    arquivo = config.obter_assets_dir("local") / f"{svg_local['id']}.svg"
     assert arquivo.exists()
-    servico.remover_questao(q['id'])
-    assert contar(Question, Question.id == q['id']) == 0
-    assert contar(Asset, Asset.id == svg_local['id']) == 0
+    servico.remover_questao(q["id"])
+    assert contar(Question, Question.id == q["id"]) == 0
+    assert contar(Asset, Asset.id == svg_local["id"]) == 0
     assert not arquivo.exists()
 
 
 def test_remover_mantem_svg_local_usado_por_outra_questao(svg_local):
-    q1 = servico.criar_questao_local(dados_questao(svg_local['id'], 'grupo-cooh'))
-    servico.criar_questao_local(dados_questao(svg_local['id'], 'grupo-cooh'))
-    servico.remover_questao(q1['id'])
-    assert contar(Asset, Asset.id == svg_local['id']) == 1
+    q1 = servico.criar_questao_local(dados_questao(svg_local["id"], "grupo-cooh"))
+    servico.criar_questao_local(dados_questao(svg_local["id"], "grupo-cooh"))
+    servico.remover_questao(q1["id"])
+    assert contar(Asset, Asset.id == svg_local["id"]) == 1
 
 
 def test_remover_questao_local_nunca_apaga_svg_da_base():
     q = servico.criar_questao_local(dados_questao())
-    servico.remover_questao(q['id'])
-    assert contar(Asset, Asset.id == 'etanol') == 1
-    assert (EXEMPLO / 'assets' / 'alcoois' / 'etanol.svg').exists()
+    servico.remover_questao(q["id"])
+    assert contar(Asset, Asset.id == "etanol") == 1
+    assert (EXEMPLO / "assets" / "alcoois" / "etanol.svg").exists()
 
 
 def test_remover_questao_base_e_proibido():
@@ -228,217 +270,255 @@ def test_remover_questao_base_e_proibido():
 
 def test_remover_copia_de_questao_remota():
     with conexao.sessao() as s:
-        s.add(Question(id='r1', minigame_type='identification', difficulty=1, source_type='remote',
-                       remote_id='site-1', statement='x', payload={}))
-    servico.remover_questao('r1')
-    assert contar(Question, Question.id == 'r1') == 0
+        s.add(
+            Question(
+                id="r1",
+                minigame_type="identification",
+                difficulty=1,
+                source_type="remote",
+                remote_id="site-1",
+                statement="x",
+                payload={},
+            )
+        )
+    servico.remover_questao("r1")
+    assert contar(Question, Question.id == "r1") == 0
 
 
 # --- Listar ---------------------------------------------------------------------------------
 
+
 def test_listar_com_filtros():
-    servico.criar_questao_local(dados_questao(statement='Questão local sobre etanol', tags=['Etanol']))
-    assert servico.listar_questoes()['total'] == 7
-    assert servico.listar_questoes({'source_type': 'local'})['total'] == 1
-    assert servico.listar_questoes({'source_type': 'base'})['total'] == 6
-    assert servico.listar_questoes({'minigame_type': 'identification'})['total'] == 2
-    assert servico.listar_questoes({'difficulty': 3})['total'] == 1
-    assert servico.listar_questoes({'tag': 'ÉSTER'})['total'] == 2
-    assert servico.listar_questoes({'tag': 'não existe'})['total'] == 0
-    assert servico.listar_questoes({'busca': 'sobre etanol'})['total'] == 1
+    servico.criar_questao_local(
+        dados_questao(statement="Questão local sobre etanol", tags=["Etanol"])
+    )
+    assert servico.listar_questoes()["total"] == 7
+    assert servico.listar_questoes({"source_type": "local"})["total"] == 1
+    assert servico.listar_questoes({"source_type": "base"})["total"] == 6
+    assert servico.listar_questoes({"minigame_type": "identification"})["total"] == 2
+    assert servico.listar_questoes({"difficulty": 3})["total"] == 1
+    assert servico.listar_questoes({"tag": "ÉSTER"})["total"] == 2
+    assert servico.listar_questoes({"tag": "não existe"})["total"] == 0
+    assert servico.listar_questoes({"busca": "sobre etanol"})["total"] == 1
+
+
+def test_busca_ignora_acentos_e_maiusculas_e_encontra_pelo_minijogo():
+    servico.criar_questao_local(
+        dados_questao(statement="Qual é a FUNÇÃO orgânica do etanol?")
+    )
+    assert servico.listar_questoes({"busca": "funcao organica do"})["total"] == 1
+    assert servico.listar_questoes({"busca": "Função Orgânica Do"})["total"] == 1
+    # "associação" bate com o nome do minijogo Associação de cartas, não com o enunciado.
+    assert servico.listar_questoes({"busca": "associacao"})["total"] == 1
+    assert servico.listar_questoes({"busca": "100%"})["total"] == 0
 
 
 def test_listar_paginado_e_sem_gabarito():
-    r = servico.listar_questoes({'limite': 2, 'deslocamento': 1})
-    assert len(r['items']) == 2 and r['total'] == 6
-    assert 'payload' not in r['items'][0]
+    r = servico.listar_questoes({"limite": 2, "deslocamento": 1})
+    assert len(r["items"]) == 2 and r["total"] == 6
+    assert "payload" not in r["items"][0]
 
 
 def test_listar_com_filtro_invalido():
     with pytest.raises(DadosInvalidos) as erro:
-        servico.listar_questoes({'difficulty': 9, 'limite': 0})
-    assert {'filtros.difficulty', 'filtros.limite'} <= {d['campo'] for d in erro.value.detalhes}
+        servico.listar_questoes({"difficulty": 9, "limite": 0})
+    assert {"filtros.difficulty", "filtros.limite"} <= {
+        d["campo"] for d in erro.value.detalhes
+    }
 
 
 def test_metadados():
     m = servico.obter_metadados()
-    assert len(m['minigames']) == 6
-    assert m['difficulties'][0] == {'value': 1, 'name': 'Fácil'}
-    base = next(o for o in m['source_types'] if o['value'] == 'base')
-    assert base == {'value': 'base', 'name': 'Base', 'can_create': False, 'edit': False, 'delete': False}
+    assert len(m["minigames"]) == 6
+    assert all(item["description"] for item in m["minigames"])
+    assert m["difficulties"][0] == {"value": 1, "name": "Fácil"}
+    base = next(o for o in m["source_types"] if o["value"] == "base")
+    assert base == {
+        "value": "base",
+        "name": "Base",
+        "can_create": False,
+        "edit": False,
+        "delete": False,
+    }
 
 
 # --- Assets -----------------------------------------------------------------------------------
 
+
 def test_importar_svg_local(svg_local):
-    assert svg_local['source_type'] == 'local'
-    assert svg_local['name'] == 'Ácido etanoico'
-    assert svg_local['permissions'] == {'delete': True}
-    assert (config.obter_assets_dir('local') / f'{svg_local["id"]}.svg').read_text() == SVG
+    assert svg_local["source_type"] == "local"
+    assert svg_local["name"] == "Ácido etanoico"
+    assert svg_local["permissions"] == {"delete": True}
+    assert (
+        config.obter_assets_dir("local") / f"{svg_local['id']}.svg"
+    ).read_text() == SVG
 
 
 def test_importar_mesmo_svg_duas_vezes_reaproveita(svg_local):
-    de_novo = servico_assets.importar_svg_local(SVG, 'outro nome')
-    assert de_novo['id'] == svg_local['id']
-    assert contar(Asset, Asset.source_type == 'local') == 1
+    de_novo = servico_assets.importar_svg_local(SVG, "outro nome")
+    assert de_novo["id"] == svg_local["id"]
+    assert contar(Asset, Asset.source_type == "local") == 1
 
 
 def test_importar_svg_malicioso():
-    with pytest.raises(DadosInvalidos, match='SVG inválido'):
-        servico_assets.importar_svg_local('<svg xmlns="http://www.w3.org/2000/svg" onload="x()"/>')
-    assert not config.obter_assets_dir('local').exists() or not any(config.obter_assets_dir('local').iterdir())
+    with pytest.raises(DadosInvalidos, match="SVG inválido"):
+        servico_assets.importar_svg_local(
+            '<svg xmlns="http://www.w3.org/2000/svg" onload="x()"/>'
+        )
+    assert not config.obter_assets_dir("local").exists() or not any(
+        config.obter_assets_dir("local").iterdir()
+    )
 
 
 def test_listar_assets():
-    assert len(servico_assets.listar_assets('base')) == 6
-    assert servico_assets.listar_assets('local') == []
-    etanol = next(a for a in servico_assets.listar_assets() if a['id'] == 'etanol')
-    assert etanol['usage_count'] == 4
-    assert etanol['permissions'] == {'delete': False}
+    assert len(servico_assets.listar_assets("base")) == 6
+    assert servico_assets.listar_assets("local") == []
+    etanol = next(a for a in servico_assets.listar_assets() if a["id"] == "etanol")
+    assert etanol["usage_count"] == 4
+    assert etanol["permissions"] == {"delete": False}
 
 
 def test_obter_asset_com_conteudo():
-    a = servico_assets.obter_asset('etanol')
-    assert a['data_uri'].startswith('data:image/svg+xml;base64,')
+    a = servico_assets.obter_asset("etanol")
+    assert a["data_uri"].startswith("data:image/svg+xml;base64,")
+    assert a["region_ids"] == ["grupo-oh"]
     with pytest.raises(NaoEncontrado):
-        servico_assets.obter_asset('nao-existe')
+        servico_assets.obter_asset("nao-existe")
 
 
 def test_asset_registrado_sem_arquivo_falha_explicitamente_na_bridge():
     with conexao.sessao() as s:
-        s.add(Asset(id='arquivo-ausente', source_type='local', file_path='ausente.svg'))
+        s.add(Asset(id="arquivo-ausente", source_type="local", file_path="ausente.svg"))
 
-    with pytest.raises(AssetIndisponivel, match='não está disponível'):
-        servico_assets.obter_asset('arquivo-ausente')
+    with pytest.raises(AssetIndisponivel, match="não está disponível"):
+        servico_assets.obter_asset("arquivo-ausente")
 
-    resposta = API().assets_obter('arquivo-ausente')
-    assert resposta['ok'] is False
-    assert resposta['erro']['codigo'] == 'asset_indisponivel'
+    resposta = API().assets_obter("arquivo-ausente")
+    assert resposta["ok"] is False
+    assert resposta["erro"]["codigo"] == "asset_indisponivel"
 
 
 def test_questao_com_asset_registrado_sem_arquivo_falha_ao_obter():
     with conexao.sessao() as s:
-        asset = Asset(id='svg-ausente', source_type='local', file_path='ausente.svg')
+        asset = Asset(id="svg-ausente", source_type="local", file_path="ausente.svg")
         questao = Question(
-            id='q-svg-ausente',
-            minigame_type='identification',
+            id="q-svg-ausente",
+            minigame_type="identification",
             difficulty=1,
-            source_type='local',
-            statement='Questão com imagem ausente',
-            payload=dados_questao()['payload'],
+            source_type="local",
+            statement="Questão com imagem ausente",
+            payload=dados_questao()["payload"],
             asset_links=[QuestionAsset(asset=asset)],
         )
         s.add(questao)
 
-    with pytest.raises(AssetIndisponivel, match='não está disponível'):
-        servico.obter_questao('q-svg-ausente')
+    with pytest.raises(AssetIndisponivel, match="não está disponível"):
+        servico.obter_questao("q-svg-ausente")
 
 
 def test_criar_questao_que_referencia_asset_sem_arquivo_falha_explicitamente():
     with conexao.sessao() as s:
-        s.add(Asset(id='svg-sem-arquivo', source_type='local', file_path='ausente.svg'))
+        s.add(Asset(id="svg-sem-arquivo", source_type="local", file_path="ausente.svg"))
 
-    with pytest.raises(AssetIndisponivel, match='não está disponível'):
+    with pytest.raises(AssetIndisponivel, match="não está disponível"):
         servico.criar_questao_local(
-            dados_questao(asset_id='svg-sem-arquivo', regiao='grupo-oh')
+            dados_questao(asset_id="svg-sem-arquivo", regiao="grupo-oh")
         )
 
 
 def test_questao_legada_nao_representavel_falha_sem_apagar_payload():
     payload_original = {
-        'target_function': 'Amina',
-        'molecules': [
-            {'id': 'M1', 'asset_id': 'etanol'},
-            {'id': 'M2', 'asset_id': 'metilamina'},
-            {'id': 'M3', 'asset_id': 'etanal'},
+        "target_function": "Amina",
+        "molecules": [
+            {"id": "M1", "asset_id": "etanol"},
+            {"id": "M2", "asset_id": "metilamina"},
+            {"id": "M3", "asset_id": "etanal"},
         ],
-        'correct_molecule_id': 'M2',
+        "correct_molecule_id": "M2",
     }
     with conexao.sessao() as s:
-        s.add(Question(
-            id='questao-legada-curta',
-            minigame_type='function_molecule',
-            difficulty=1,
-            source_type='local',
-            statement='Identifique a molécula',
-            payload=payload_original,
-        ))
+        s.add(
+            Question(
+                id="questao-legada-curta",
+                minigame_type="function_molecule",
+                difficulty=1,
+                source_type="local",
+                statement="Identifique a molécula",
+                payload=payload_original,
+            )
+        )
 
-    with pytest.raises(PayloadIncompativel, match='conteúdo original foi preservado'):
-        servico.obter_questao('questao-legada-curta')
+    with pytest.raises(PayloadIncompativel, match="conteúdo original foi preservado"):
+        servico.obter_questao("questao-legada-curta")
     with pytest.raises(PayloadIncompativel):
-        servico.atualizar_questao_local('questao-legada-curta', dados_questao())
+        servico.atualizar_questao_local("questao-legada-curta", dados_questao())
 
-    resposta = API().questoes_obter('questao-legada-curta')
-    assert resposta['ok'] is False
-    assert resposta['erro']['codigo'] == 'payload_incompativel'
+    resposta = API().questoes_obter("questao-legada-curta")
+    assert resposta["ok"] is False
+    assert resposta["erro"]["codigo"] == "payload_incompativel"
     with conexao.sessao() as s:
-        questao = s.get(Question, 'questao-legada-curta')
+        questao = s.get(Question, "questao-legada-curta")
         assert questao is not None
         assert questao.payload == payload_original
 
 
 def test_questao_sem_vinculo_de_asset_falha_com_erro_controlado():
     payload_original = {
-        'cards': [
-            {'id': f'C{i}', 'asset_id': f'asset-{i}'}
-            for i in range(1, 5)
-        ],
-        'correct_card_id': 'C1',
+        "cards": [{"id": f"C{i}", "asset_id": f"asset-{i}"} for i in range(1, 5)],
+        "correct_card_id": "C1",
     }
     with conexao.sessao() as s:
-        s.add(Question(
-            id='questao-sem-vinculo',
-            minigame_type='function_molecule',
-            difficulty=1,
-            source_type='local',
-            statement='Identifique a molécula',
-            payload=payload_original,
-        ))
+        s.add(
+            Question(
+                id="questao-sem-vinculo",
+                minigame_type="function_molecule",
+                difficulty=1,
+                source_type="local",
+                statement="Identifique a molécula",
+                payload=payload_original,
+            )
+        )
 
-    with pytest.raises(PayloadIncompativel, match='imagens sem relação persistida'):
-        servico.obter_questao('questao-sem-vinculo')
+    with pytest.raises(PayloadIncompativel, match="imagens sem relação persistida"):
+        servico.obter_questao("questao-sem-vinculo")
     with conexao.sessao() as s:
-        questao = s.get(Question, 'questao-sem-vinculo')
+        questao = s.get(Question, "questao-sem-vinculo")
         assert questao is not None
         assert questao.payload == payload_original
 
 
 def test_edicao_preserva_target_function_legado_omitido_pelo_formulario():
-    cards = [
-        {'id': f'C{i}', 'content': f'Molécula {i}'}
-        for i in range(1, 5)
-    ]
+    cards = [{"id": f"C{i}", "content": f"Molécula {i}"} for i in range(1, 5)]
     dados = {
-        'minigame_type': 'function_molecule',
-        'difficulty': 1,
-        'statement': 'Qual molécula pertence à função?',
-        'payload': {
-            'cards': cards,
-            'correct_card_id': 'C2',
-            'target_function': 'Amina',
+        "minigame_type": "function_molecule",
+        "difficulty": 1,
+        "statement": "Qual molécula pertence à função?",
+        "payload": {
+            "cards": cards,
+            "correct_card_id": "C2",
+            "target_function": "Amina",
         },
     }
     questao = servico.criar_questao_local(dados)
-    dados['payload'] = {'cards': cards, 'correct_card_id': 'C2'}
+    dados["payload"] = {"cards": cards, "correct_card_id": "C2"}
 
-    atualizada = servico.atualizar_questao_local(questao['id'], dados)
+    atualizada = servico.atualizar_questao_local(questao["id"], dados)
 
-    assert atualizada['payload']['target_function'] == 'Amina'
+    assert atualizada["payload"]["target_function"] == "Amina"
 
 
 def test_remover_asset_local_sem_uso(svg_local):
-    servico_assets.remover_asset(svg_local['id'])
-    assert contar(Asset, Asset.id == svg_local['id']) == 0
-    assert not (config.obter_assets_dir('local') / f'{svg_local["id"]}.svg').exists()
+    servico_assets.remover_asset(svg_local["id"])
+    assert contar(Asset, Asset.id == svg_local["id"]) == 0
+    assert not (config.obter_assets_dir("local") / f"{svg_local['id']}.svg").exists()
 
 
 def test_remover_asset_em_uso_e_proibido(svg_local):
-    servico.criar_questao_local(dados_questao(svg_local['id'], 'grupo-cooh'))
-    with pytest.raises(OperacaoNaoPermitida, match='em uso'):
-        servico_assets.remover_asset(svg_local['id'])
+    servico.criar_questao_local(dados_questao(svg_local["id"], "grupo-cooh"))
+    with pytest.raises(OperacaoNaoPermitida, match="em uso"):
+        servico_assets.remover_asset(svg_local["id"])
 
 
 def test_remover_asset_base_e_proibido():
     with pytest.raises(OperacaoNaoPermitida):
-        servico_assets.remover_asset('etanol')
+        servico_assets.remover_asset("etanol")

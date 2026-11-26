@@ -15,21 +15,21 @@ Toda função devolve uma `Promise` com:
                      detalhes: [{ campo: 'payload.alternatives', mensagem: 'Precisa ter pelo menos 4 item(ns)' }] } }
 ```
 
-| `codigo` | Quando acontece |
-|---|---|
-| `dados_invalidos` | Algum campo está errado. `detalhes` indica o campo (ex.: `payload.alternatives.2.label`) e a mensagem em português. |
-| `nao_encontrado` | Questão, pacote ou imagem não existe. |
-| `nao_permitido` | Operação proibida pela origem (editar/remover questão-base, remover pacote fixo, remover imagem em uso...). |
-| `asset_indisponivel` | O registro do SVG existe, mas o arquivo não pode ser lido ou não é mais um SVG válido. |
+| `codigo`               | Quando acontece                                                                                                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `dados_invalidos`      | Algum campo está errado. `detalhes` indica o campo (ex.: `payload.alternatives.2.label`) e a mensagem em português.    |
+| `nao_encontrado`       | Questão, pacote ou imagem não existe.                                                                                  |
+| `nao_permitido`        | Operação proibida pela origem (editar/remover questão-base, remover pacote fixo, remover imagem em uso...).            |
+| `asset_indisponivel`   | O registro do SVG existe, mas o arquivo não pode ser lido ou não é mais um SVG válido.                                 |
 | `payload_incompativel` | Questão legada não pode ser representada com segurança pelo formulário atual; o payload original permanece preservado. |
-| `erro_interno` | Falha inesperada. Detalhes ficam só no log do aplicativo. |
+| `erro_interno`         | Falha inesperada. Detalhes ficam só no log do aplicativo.                                                              |
 
 Esperar o PyWebView ficar pronto antes da primeira chamada:
 
 ```js
-window.addEventListener('pywebviewready', async () => {
-  const r = await window.pywebview.api.questoes_metadados()
-})
+window.addEventListener("pywebviewready", async () => {
+  const r = await window.pywebview.api.questoes_metadados();
+});
 ```
 
 ## Regras importantes para o frontend
@@ -54,7 +54,7 @@ window.addEventListener('pywebviewready', async () => {
   permissions: { edit: false, delete: false },
   // somente em questoes_obter / criar / atualizar:
   payload: { … },                       // formato do minijogo (ver backend/questoes/schemas/)
-  assets: { etanol: { id, name, source_type, asset_type, checksum, created_at, data_uri } }
+    assets: { etanol: { id, name, source_type, asset_type, checksum, created_at, data_uri, region_ids } }
 }
 ```
 
@@ -66,24 +66,26 @@ payloads, assets ou fontes.
 
 ## Funções — questões e pacotes
 
-| Função | Parâmetros | Retorno (`dados`) | Erros |
-|---|---|---|---|
-| `questoes_metadados()` | — | `{ minigames: [{value, name}], difficulties: [{value, name}], source_types: [{value, name, can_create, edit, delete}] }` | — |
-| `questoes_listar(filtros?)` | objeto opcional (abaixo) | `{ items: [questão sem payload/assets], total, limite, deslocamento }` | `dados_invalidos` |
-| `questoes_obter(id)` | `id: string` | questão completa | `nao_encontrado`, `asset_indisponivel`, `payload_incompativel` |
-| `questoes_criar(dados)` | objeto "dados da questão" | questão completa (origem `local`, ou `base` ao escolher o pacote fixo) | `dados_invalidos`, `nao_encontrado`, `asset_indisponivel` |
-| `questoes_atualizar(id, dados)` | `id: string`, dados completos (substitui tudo) | questão completa | `nao_encontrado`, `nao_permitido` (base/remota), `dados_invalidos`, `asset_indisponivel`, `payload_incompativel` |
-| `questoes_remover(id)` | `id: string` | `{ id }` | `nao_encontrado`, `nao_permitido` (base) |
-| `pacotes_listar()` | — | lista `{ id, name, kind, question_count, permissions }` | — |
-| `pacotes_criar(dados)` | `{ name }` | pacote local com contagem zero | `dados_invalidos` (nome inválido/duplicado) |
-| `pacotes_remover(id)` | `id: string` | `{ id }` | `nao_encontrado`, `nao_permitido` (pacote fixo) |
+| Função                          | Parâmetros                                     | Retorno (`dados`)                                                                                                                     | Erros                                                                                                            |
+| ------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `questoes_metadados()`          | —                                              | `{ minigames: [{value, name, description}], difficulties: [{value, name}], source_types: [{value, name, can_create, edit, delete}] }` | —                                                                                                                |
+| `questoes_listar(filtros?)`     | objeto opcional (abaixo)                       | `{ items: [questão sem payload/assets], total, limite, deslocamento }`                                                                | `dados_invalidos`                                                                                                |
+| `questoes_obter(id)`            | `id: string`                                   | questão completa                                                                                                                      | `nao_encontrado`, `asset_indisponivel`, `payload_incompativel`                                                   |
+| `questoes_criar(dados)`         | objeto "dados da questão"                      | questão completa (origem `local`, ou `base` ao escolher o pacote fixo)                                                                | `dados_invalidos`, `nao_encontrado`, `asset_indisponivel`                                                        |
+| `questoes_atualizar(id, dados)` | `id: string`, dados completos (substitui tudo) | questão completa                                                                                                                      | `nao_encontrado`, `nao_permitido` (base/remota), `dados_invalidos`, `asset_indisponivel`, `payload_incompativel` |
+| `questoes_remover(id)`          | `id: string`                                   | `{ id }`                                                                                                                              | `nao_encontrado`, `nao_permitido` (base)                                                                         |
+| `pacotes_listar()`              | —                                              | lista `{ id, name, kind, question_count, minigame_types, difficulties, permissions }`                                                 | —                                                                                                                |
+| `pacotes_criar(dados)`          | `{ name }`                                     | pacote local com contagem zero                                                                                                        | `dados_invalidos` (nome inválido/duplicado)                                                                      |
+| `pacotes_remover(id)`           | `id: string`                                   | `{ id }`                                                                                                                              | `nao_encontrado`, `nao_permitido` (pacote fixo)                                                                  |
 
 O pacote fixo usa `id: 'base'`, `kind: 'base'` e
 `permissions.delete: false`; os pacotes do usuário têm `kind: 'local'` e
-`permissions.delete: true`. A lista retorna primeiro o pacote fixo e depois os
+`permissions.delete: true`. `minigame_types` e `difficulties` listam os valores presentes no pacote, na ordem
+canônica dos enums (vazios em pacote sem questões); os nomes vêm de
+`questoes_metadados()`. A lista retorna primeiro o pacote fixo e depois os
 locais por nome normalizado. Não há edição/renomeação de pacote na bridge.
 
-**Filtros** (todos opcionais): `minigame_type`, `difficulty` (1–3), `source_type`, `tag` (ignora maiúsculas), `busca` (trecho do enunciado), `limite` (1–200, padrão 50), `deslocamento` (padrão 0). Ordem: mais recentes primeiro.
+**Filtros** (todos opcionais): `minigame_type`, `difficulty` (1–3), `source_type`, `tag` (ignora maiúsculas), `busca` (trecho do enunciado ou do nome do minijogo; ignora acentos e maiúsculas), `limite` (1–200, padrão 50), `deslocamento` (padrão 0). Ordem: mais recentes primeiro.
 
 **Dados da questão** (criar/atualizar):
 
@@ -141,12 +143,15 @@ O backend confere ainda se cada imagem citada no payload existe e se a região d
 
 ## Funções — imagens (SVG)
 
-| Função | Parâmetros | Retorno (`dados`) | Erros |
-|---|---|---|---|
-| `assets_importar_svg(conteudo, nome?)` | texto do arquivo `.svg`, nome amigável | imagem com `data_uri`, `usage_count`, `permissions` | `dados_invalidos` (SVG inválido/inseguro) |
-| `assets_listar(origem?, com_conteudo?)` | `'base'`/`'local'`/`'remote'`; `true` para incluir `data_uri` | lista de imagens | `dados_invalidos`, `asset_indisponivel` |
-| `assets_obter(id)` | `id: string` | imagem com `data_uri` | `nao_encontrado`, `asset_indisponivel` |
-| `assets_remover(id)` | `id: string` | `{ id }` | `nao_permitido` (base ou em uso) |
+| Função                                  | Parâmetros                                                    | Retorno (`dados`)                                                 | Erros                                     |
+| --------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------- |
+| `assets_importar_svg(conteudo, nome?)`  | texto do arquivo `.svg`, nome amigável                        | imagem com `data_uri`, `region_ids`, `usage_count`, `permissions` | `dados_invalidos` (SVG inválido/inseguro) |
+| `assets_listar(origem?, com_conteudo?)` | `'base'`/`'local'`/`'remote'`; `true` para incluir `data_uri` | lista de imagens                                                  | `dados_invalidos`, `asset_indisponivel`   |
+| `assets_obter(id)`                      | `id: string`                                                  | imagem com `data_uri` e `region_ids`                              | `nao_encontrado`, `asset_indisponivel`    |
+| `assets_remover(id)`                    | `id: string`                                                  | `{ id }`                                                          | `nao_permitido` (base ou em uso)          |
+
+Toda imagem com `data_uri` traz também `region_ids`: a lista ordenada dos `id`s
+de elementos do SVG, que são os valores aceitos em `highlight.region_id`.
 
 Enviar o mesmo SVG duas vezes devolve a imagem já existente (não duplica).
 Questões e assets podem referenciar o mesmo SVG. Se o registro existir, mas o
@@ -156,25 +161,38 @@ não retorna uma resposta de sucesso sem imagem.
 ## Exemplos
 
 ```js
-const api = window.pywebview.api
+const api = window.pywebview.api;
 
 // listar questões locais de identificação
-const r = await api.questoes_listar({ source_type: 'local', minigame_type: 'identification' })
-if (r.ok) questoes.value = r.dados.items
+const r = await api.questoes_listar({
+  source_type: "local",
+  minigame_type: "identification",
+});
+if (r.ok) questoes.value = r.dados.items;
 
 // importar SVG escolhido num <input type="file">
-const texto = await arquivo.text()
-const img = await api.assets_importar_svg(texto, arquivo.name.replace('.svg', ''))
+const texto = await arquivo.text();
+const img = await api.assets_importar_svg(
+  texto,
+  arquivo.name.replace(".svg", ""),
+);
 
 // criar questão usando a imagem
 const nova = await api.questoes_criar({
-  minigame_type: 'identification', difficulty: 1, statement: 'Qual função está destacada?',
+  minigame_type: "identification",
+  difficulty: 1,
+  statement: "Qual função está destacada?",
   payload: {
-    molecule_asset_id: img.dados.id, highlight: { region_id: 'grupo-oh' },
-    alternatives: [{ id: 'A', label: 'Álcool' }, { id: 'B', label: 'Cetona' },
-                   { id: 'C', label: 'Éster' }, { id: 'D', label: 'Aldeído' }],
-    correct_alternative_id: 'A',
+    molecule_asset_id: img.dados.id,
+    highlight: { region_id: "grupo-oh" },
+    alternatives: [
+      { id: "A", label: "Álcool" },
+      { id: "B", label: "Cetona" },
+      { id: "C", label: "Éster" },
+      { id: "D", label: "Aldeído" },
+    ],
+    correct_alternative_id: "A",
   },
-})
-if (!nova.ok) mostrarErros(nova.erro.detalhes)   // [{ campo, mensagem }]
+});
+if (!nova.ok) mostrarErros(nova.erro.detalhes); // [{ campo, mensagem }]
 ```

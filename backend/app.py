@@ -3,6 +3,7 @@
 Executar a partir da raiz do projeto:
     python -m backend.app
 """
+
 import logging
 import os
 import sys
@@ -10,7 +11,7 @@ from pathlib import Path
 
 # Permite também "python backend/app.py" (e o PyInstaller), que não
 # colocam a raiz do projeto no caminho de importação.
-if __package__ in (None, ''):
+if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import webview  # noqa: E402
@@ -22,7 +23,7 @@ from backend.database.inicializacao import inicializar_banco  # noqa: E402
 from backend.questoes.erros import ErroPacoteBase  # noqa: E402
 from backend.questoes.importador import importar_pacote_base  # noqa: E402
 
-log = logging.getLogger('quimativa')
+log = logging.getLogger("quimativa")
 
 
 def carregar_questoes_base() -> None:
@@ -30,9 +31,9 @@ def carregar_questoes_base() -> None:
     try:
         importar_pacote_base()
     except ErroPacoteBase as erro:
-        log.error('%s', erro)
+        log.error("%s", erro)
     except Exception:
-        log.exception('Falha inesperada ao importar as questões-base')
+        log.exception("Falha inesperada ao importar as questões-base")
 
 
 def calcular_centro(telas, largura_janela: int, altura_janela: int):
@@ -54,24 +55,30 @@ def calcular_centro(telas, largura_janela: int, altura_janela: int):
 
 def obter_pagina_inicial(modo_desenvolvimento: bool) -> str:
     if modo_desenvolvimento:
-        return 'http://127.0.0.1:5173/home.html'
+        return "http://127.0.0.1:5173/home.html"
 
-    pagina_inicial = config.FRONTEND_DIR / 'dist' / 'home.html'
+    pagina_inicial = config.FRONTEND_DIR / "dist" / "home.html"
     if not pagina_inicial.is_file():
         raise FileNotFoundError(
-            f'Frontend compilado não encontrado em {pagina_inicial}. '
+            f"Frontend compilado não encontrado em {pagina_inicial}. "
             'Execute "npm run build" em frontend.'
         )
     return pagina_inicial.as_uri()
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s [%(name)s] %(message)s')
+    logging.basicConfig(
+        level=logging.INFO, format="%(levelname)s [%(name)s] %(message)s"
+    )
 
     inicializar_banco()
     carregar_questoes_base()
 
-    modo_desenvolvimento = os.environ.get('QUIMATIVA_DEV', '').lower() in {'1', 'true', 'yes'}
+    modo_desenvolvimento = os.environ.get("QUIMATIVA_DEV", "").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
     pagina_inicial = obter_pagina_inicial(modo_desenvolvimento)
 
     largura_janela = 1280
@@ -100,5 +107,5 @@ def main() -> None:
         fechar_conexoes()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,18 +1,26 @@
 <script setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
-import { X } from '@lucide/vue';
-import { activateModal, deactivateModal, getModalIndex, getTopModal } from '../services/modalStack';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { X } from "@lucide/vue";
+import {
+  activateModal,
+  deactivateModal,
+  getModalIndex,
+  getTopModal,
+} from "../services/modalStack";
 
 const props = defineProps({
   open: { type: Boolean, default: false },
-  title: { type: String, default: '' },
-  description: { type: String, default: '' },
-  searchPlaceholder: { type: String, default: '' },
+  title: { type: String, default: "" },
+  description: { type: String, default: "" },
+  searchPlaceholder: { type: String, default: "" },
+  modelValue: { type: String, default: "" },
   showClose: { type: Boolean, default: true },
-  size: { type: String, default: 'large' },
+  size: { type: String, default: "large" },
+  hideTitle: { type: Boolean, default: false },
+  contentClass: { type: String, default: "" },
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close", "update:modelValue"]);
 const panel = ref(null);
 const closing = ref(false);
 const isTopModal = computed(() => getTopModal() === panel);
@@ -22,17 +30,20 @@ let previouslyFocused = null;
 let listenerActive = false;
 
 const focusableSelector = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
   '[tabindex]:not([tabindex="-1"])',
-].join(',');
+].join(",");
 
 function isAvailable(element) {
-  return element?.isConnected && !element.disabled
-    && element.getAttribute('aria-hidden') !== 'true';
+  return (
+    element?.isConnected &&
+    !element.disabled &&
+    element.getAttribute("aria-hidden") !== "true"
+  );
 }
 
 function activate() {
@@ -40,7 +51,7 @@ function activate() {
   previouslyFocused = document.activeElement;
   listenerActive = true;
   activateModal(panel);
-  window.addEventListener('keydown', handleKeydown);
+  window.addEventListener("keydown", handleKeydown);
   focusPanel();
 }
 
@@ -50,7 +61,7 @@ function deactivate() {
   const focusTarget = previouslyFocused;
   listenerActive = false;
   deactivateModal(panel);
-  window.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener("keydown", handleKeydown);
   if (wasTopModal) {
     const nextTopModal = getTopModal();
     if (!nextTopModal) {
@@ -62,9 +73,10 @@ function deactivate() {
         if (isAvailable(focusTarget) && nextPanel?.contains(focusTarget)) {
           focusTarget.focus();
         } else {
-          const target = nextPanel?.querySelector('[data-modal-close]')
-            ?? nextPanel?.querySelector('button')
-            ?? nextPanel;
+          const target =
+            nextPanel?.querySelector("[data-modal-close]") ??
+            nextPanel?.querySelector("button") ??
+            nextPanel;
           target?.focus();
         }
       });
@@ -76,25 +88,29 @@ function deactivate() {
 function close() {
   if (!props.open || closing.value) return;
   closing.value = true;
-  closeTimer = window.setTimeout(() => {
-    closeTimer = null;
-    if (!props.open) return;
-    closing.value = false;
-    emit('close');
-  }, window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 220);
+  closeTimer = window.setTimeout(
+    () => {
+      closeTimer = null;
+      if (!props.open) return;
+      closing.value = false;
+      emit("close");
+    },
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : 220,
+  );
 }
 
 function handleKeydown(event) {
   if (!props.open || !listenerActive || !isTopModal.value) return;
-  if (event.key === 'Escape') {
+  if (event.key === "Escape") {
     event.preventDefault();
     close();
     return;
   }
-  if (event.key !== 'Tab') return;
+  if (event.key !== "Tab") return;
 
-  const elements = [...(panel.value?.querySelectorAll(focusableSelector) ?? [])]
-    .filter(isAvailable);
+  const elements = [
+    ...(panel.value?.querySelectorAll(focusableSelector) ?? []),
+  ].filter(isAvailable);
   if (!elements.length) {
     event.preventDefault();
     panel.value?.focus();
@@ -103,10 +119,18 @@ function handleKeydown(event) {
 
   const first = elements[0];
   const last = elements[elements.length - 1];
-  if (event.shiftKey && (document.activeElement === first || !panel.value?.contains(document.activeElement))) {
+  if (
+    event.shiftKey &&
+    (document.activeElement === first ||
+      !panel.value?.contains(document.activeElement))
+  ) {
     event.preventDefault();
     last.focus();
-  } else if (!event.shiftKey && (document.activeElement === last || !panel.value?.contains(document.activeElement))) {
+  } else if (
+    !event.shiftKey &&
+    (document.activeElement === last ||
+      !panel.value?.contains(document.activeElement))
+  ) {
     event.preventDefault();
     first.focus();
   }
@@ -114,25 +138,30 @@ function handleKeydown(event) {
 
 async function focusPanel() {
   await nextTick();
-  const target = props.showClose
-    ? panel.value?.querySelector('[data-modal-close]')
-    : panel.value?.querySelector('button');
+  const target =
+    panel.value?.querySelector("[data-autofocus]") ??
+    (props.showClose
+      ? panel.value?.querySelector("[data-modal-close]")
+      : panel.value?.querySelector("button"));
   (target ?? panel.value)?.focus();
 }
 
-watch(() => props.open, (open) => {
-  if (open) {
+watch(
+  () => props.open,
+  (open) => {
+    if (open) {
+      closing.value = false;
+      activate();
+      return;
+    }
     closing.value = false;
-    activate();
-    return;
-  }
-  closing.value = false;
-  if (closeTimer !== null) {
-    window.clearTimeout(closeTimer);
-    closeTimer = null;
-  }
-  deactivate();
-});
+    if (closeTimer !== null) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    deactivate();
+  },
+);
 
 onMounted(() => {
   if (props.open) activate();
@@ -174,7 +203,12 @@ onUnmounted(() => {
         <header v-if="searchPlaceholder" class="popup-cabecalho">
           <label class="popup-busca">
             <span class="sr-only">{{ searchPlaceholder }}</span>
-            <input type="search" :placeholder="searchPlaceholder" />
+            <input
+              type="search"
+              :placeholder="searchPlaceholder"
+              :value="modelValue"
+              @input="emit('update:modelValue', $event.target.value)"
+            />
           </label>
           <button
             v-if="showClose"
@@ -199,8 +233,8 @@ onUnmounted(() => {
           <X aria-hidden="true" />
         </button>
 
-        <div class="popup-conteudo">
-          <h1 v-if="title">{{ title }}</h1>
+        <div class="popup-conteudo" :class="contentClass">
+          <h1 v-if="title" :class="{ 'sr-only': hideTitle }">{{ title }}</h1>
           <p v-if="description">{{ description }}</p>
           <slot />
         </div>

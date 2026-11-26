@@ -8,8 +8,10 @@ Uso típico nas camadas de repositório/serviço:
         s.add(objeto)
     # commit automático ao sair do bloco; rollback se ocorrer erro
 """
+
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Iterator
 from contextlib import contextmanager
 
@@ -22,12 +24,28 @@ _engine: Engine | None = None
 _fabrica_sessoes: sessionmaker[Session] | None = None
 
 
+def texto_para_busca(texto: str | None) -> str:
+    """Forma usada na busca: sem acentos, sem diferença de maiúsculas e com espaços simples."""
+    if texto is None:
+        return ""
+    sem_acentos = "".join(
+        c for c in unicodedata.normalize("NFD", texto) if not unicodedata.combining(c)
+    )
+    return " ".join(sem_acentos.split()).casefold()
+
+
 def _configurar_sqlite(conexao_dbapi, _registro) -> None:
     """Executado a cada nova conexão com o SQLite."""
+    # O LIKE do SQLite só ignora maiúsculas em letras sem acento; a busca usa esta função.
+    conexao_dbapi.create_function(
+        "quimativa_busca", 1, texto_para_busca, deterministic=True
+    )
     cursor = conexao_dbapi.cursor()
-    cursor.execute('PRAGMA foreign_keys=ON')   # SQLite vem com FKs desligadas
-    cursor.execute('PRAGMA journal_mode=WAL')  # leituras e escritas mais seguras
-    cursor.execute('PRAGMA busy_timeout=5000') # espera até 5s se o banco estiver ocupado
+    cursor.execute("PRAGMA foreign_keys=ON")  # SQLite vem com FKs desligadas
+    cursor.execute("PRAGMA journal_mode=WAL")  # leituras e escritas mais seguras
+    cursor.execute(
+        "PRAGMA busy_timeout=5000"
+    )  # espera até 5s se o banco estiver ocupado
     cursor.close()
 
 
@@ -37,8 +55,8 @@ def criar_engine(url: str | None = None, *, echo: bool = False) -> Engine:
         config.garantir_diretorios()
         url = config.obter_url_banco()
     # check_same_thread=False: o PyWebView chama a API em threads diferentes.
-    engine = create_engine(url, echo=echo, connect_args={'check_same_thread': False})
-    event.listen(engine, 'connect', _configurar_sqlite)
+    engine = create_engine(url, echo=echo, connect_args={"check_same_thread": False})
+    event.listen(engine, "connect", _configurar_sqlite)
     return engine
 
 

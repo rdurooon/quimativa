@@ -18,27 +18,36 @@ from backend.questoes.erros import (
     traduzir_erros,
 )
 from backend.questoes.schemas.base import normalizar
+from backend.questoes.tipos import Difficulty, MinigameType
 from backend.questoes.schemas.pacote import DadosPacote
 
 
-def _serializar(pacote: QuestionPackage, quantidade: int) -> dict:
+def _serializar(
+    pacote: QuestionPackage,
+    quantidade: int,
+    minigames: set[str] = frozenset(),
+    dificuldades: set[int] = frozenset(),
+) -> dict:
     eh_base = pacote.id == BASE_PACKAGE_ID
     return {
         'id': pacote.id,
         'name': pacote.name,
         'kind': 'base' if eh_base else 'local',
         'question_count': quantidade,
+        # Valores presentes no pacote, na ordem canônica dos enums.
+        'minigame_types': [m.value for m in MinigameType if m.value in minigames],
+        'difficulties': [int(d) for d in Difficulty if int(d) in dificuldades],
         'permissions': {'delete': not eh_base},
     }
 
 
 def listar_pacotes() -> list[dict]:
     with sessao() as s:
+        resumo = repositorio.resumo_conteudo_pacotes(s)
         return [
-            _serializar(pacote, int(quantidade or 0))
+            _serializar(pacote, int(quantidade or 0), *resumo.get(pacote.id, (set(), set())))
             for pacote, quantidade in repositorio.listar_pacotes(s)
         ]
-
 
 def criar_pacote(dados: Any) -> dict:
     try:

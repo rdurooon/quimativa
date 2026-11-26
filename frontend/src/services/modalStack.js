@@ -1,15 +1,18 @@
-import { reactive } from 'vue';
+import { reactive } from "vue";
 
 const activeModals = reactive([]);
 
 function updateBodyLock() {
-  if (typeof document !== 'undefined') {
-    document.body.style.overflow = activeModals.length ? 'hidden' : '';
+  if (typeof document !== "undefined") {
+    document.body.style.overflow = activeModals.length ? "hidden" : "";
   }
 }
 
 export function activateModal(modal) {
-  if (!activeModals.includes(modal)) activeModals.push(modal);
+  // Quem abre por último fica no topo, mesmo que já estivesse na pilha.
+  const index = activeModals.indexOf(modal);
+  if (index !== -1) activeModals.splice(index, 1);
+  activeModals.push(modal);
   updateBodyLock();
 }
 

@@ -3,12 +3,22 @@
 Sem regras de permissão aqui: isso fica no serviço (servico.py).
 Todas as funções recebem uma sessão aberta e não fazem commit.
 """
+
 from __future__ import annotations
 
-from sqlalchemy import case, func, select, update
+from sqlalchemy import case, func, or_, select, update
+from backend.database.conexao import texto_para_busca
+from backend.questoes.tipos import NOMES_MINIJOGOS
 from sqlalchemy.orm import Session, selectinload
 
-from backend.database.models import Asset, Question, QuestionAsset, QuestionPackage, QuestionSource, Tag
+from backend.database.models import (
+    Asset,
+    Question,
+    QuestionAsset,
+    QuestionPackage,
+    QuestionSource,
+    Tag,
+)
 from backend.database.models.pacote import BASE_PACKAGE_ID
 from backend.questoes.schemas.base import normalizar
 from backend.questoes.schemas.questao import FonteEntrada
@@ -27,7 +37,7 @@ def obter_ou_criar_tags(s: Session, nomes: list[str]) -> list[Tag]:
     for nome in nomes:
         chave = normalizar(nome)
         if chave not in mapa:
-            mapa[chave] = Tag(name=' '.join(nome.split()))
+            mapa[chave] = Tag(name=" ".join(nome.split()))
             s.add(mapa[chave])
         tags.append(mapa[chave])
     return tags
@@ -59,7 +69,9 @@ def sincronizar_assets(q: Question, asset_ids: set[str]) -> bool:
 
 def contar_usos_asset(s: Session, asset_id: str) -> int:
     return s.execute(
-        select(func.count()).select_from(QuestionAsset).where(QuestionAsset.asset_id == asset_id)
+        select(func.count())
+        .select_from(QuestionAsset)
+        .where(QuestionAsset.asset_id == asset_id)
     ).scalar_one()
 
 
@@ -71,20 +83,42 @@ def listar_pacotes(s: Session) -> list[tuple[QuestionPackage, int]]:
         select(QuestionPackage, func.count(Question.id))
         .outerjoin(Question, Question.package_id == QuestionPackage.id)
         .group_by(QuestionPackage.id)
-        .order_by(case((QuestionPackage.id == BASE_PACKAGE_ID, 0), else_=1), QuestionPackage.name_key)
+        .order_by(
+            case((QuestionPackage.id == BASE_PACKAGE_ID, 0), else_=1),
+            QuestionPackage.name_key,
+        )
     )
-    return [(pacote, int(quantidade or 0)) for pacote, quantidade in s.execute(consulta)]
+    return [
+        (pacote, int(quantidade or 0)) for pacote, quantidade in s.execute(consulta)
+    ]
+
+
+def resumo_conteudo_pacotes(s: Session) -> dict[str, tuple[set[str], set[int]]]:
+    """Minijogos e dificuldades presentes em cada pacote: { id: ({tipos}, {níveis}) }."""
+    consulta = (
+        select(Question.package_id, Question.minigame_type, Question.difficulty)
+        .where(Question.package_id.is_not(None))
+        .distinct()
+    )
+    resumo: dict[str, tuple[set[str], set[int]]] = {}
+    for package_id, minigame, dificuldade in s.execute(consulta):
+        tipos, niveis = resumo.setdefault(package_id, (set(), set()))
+        tipos.add(minigame)
+        niveis.add(int(dificuldade))
+    return resumo
 
 
 def desassociar_questoes_do_pacote(s: Session, package_id: str) -> None:
     s.execute(
-        update(Question).where(Question.package_id == package_id).values(package_id=None)
+        update(Question)
+        .where(Question.package_id == package_id)
+        .values(package_id=None)
     )
 
 
 # --- Fontes -----------------------------------------------------------------
 
-CAMPOS_FONTE = ('name', 'reference', 'license', 'notes')
+CAMPOS_FONTE = ("name", "reference", "license", "notes")
 
 
 def _contar_usos_fonte(s: Session, fonte: QuestionSource) -> int:
@@ -93,7 +127,9 @@ def _contar_usos_fonte(s: Session, fonte: QuestionSource) -> int:
     ).scalar_one()
 
 
-def aplicar_fonte(s: Session, q: Question, fonte: FonteEntrada | None) -> tuple[bool, QuestionSource | None]:
+def aplicar_fonte(
+    s: Session, q: Question, fonte: FonteEntrada | None
+) -> tuple[bool, QuestionSource | None]:
     """Atualiza a fonte da questão.
 
     Devolve (mudou, fonte_antiga_desligada). A fonte desligada deve ser
@@ -157,9 +193,23 @@ def listar_questoes(
             return [], 0
         consulta = consulta.where(Question.tags.any(Tag.id == encontrada.id))
     if busca:
-        consulta = consulta.where(Question.statement.contains(busca, autoescape=True))
+        # Encontra pelo enunciado ou pelo nome do minijogo, ignorando acentos e maiúsculas.
+        termo = texto_para_busca(busca)
+        condicao = func.quimativa_busca(Question.statement).contains(
+            termo, autoescape=True
+        )
+        tipos = [
+            t.value
+            for t, nome in NOMES_MINIJOGOS.items()
+            if termo in texto_para_busca(nome)
+        ]
+        if tipos:
+            condicao = or_(condicao, Question.minigame_type.in_(tipos))
+        consulta = consulta.where(condicao)
 
-    total = s.execute(select(func.count()).select_from(consulta.subquery())).scalar_one()
+    total = s.execute(
+        select(func.count()).select_from(consulta.subquery())
+    ).scalar_one()
     pagina = s.scalars(
         consulta.options(
             selectinload(Question.tags),

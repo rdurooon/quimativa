@@ -14,7 +14,8 @@
   position: relative;
   width: min(96vw, 1240px);
   height: min(88vh, 680px);
-  overflow: hidden;
+  /* clip (e não hidden): o painel nunca rola sozinho quando um campo escondido recebe foco. */
+  overflow: clip;
   border: 1px solid rgba(30, 42, 37, 0.12);
   border-radius: 18px;
   background: var(--cor-superficie);
@@ -27,6 +28,22 @@
   height: min(88vh, 680px);
   display: flex;
   flex-direction: column;
+}
+
+.popup-painel-medium {
+  width: min(607px, calc(100vw - 32px));
+  height: auto;
+  min-height: 0;
+  max-height: 88vh;
+  border-radius: 20px;
+}
+
+.popup-painel-form {
+  width: min(784px, calc(100vw - 32px));
+  height: min(96vh, 680px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
 }
 
 .popup-painel-confirm {
@@ -52,8 +69,12 @@
 }
 
 @keyframes popup-fundo-entra {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes popup-painel-entra {
@@ -76,8 +97,12 @@
 }
 
 @keyframes popup-fundo-sai {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes popup-painel-sai {
@@ -167,6 +192,51 @@
   align-content: center;
   min-height: 0;
   padding-top: 28px;
+}
+
+.popup-cabecalho + .popup-conteudo.popup-conteudo-lista {
+  align-content: start;
+  justify-items: stretch;
+  gap: 14px;
+  padding: 8px 22px 24px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.popup-cabecalho + .popup-conteudo {
+  flex: 1;
+  align-content: center;
+  min-height: 0;
+  padding-top: 28px;
+}
+
+.popup-cabecalho + .popup-conteudo.popup-conteudo-lista {
+  align-content: start;
+  justify-items: stretch;
+  gap: 14px;
+  padding: 8px 22px 24px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.popup-conteudo.popup-conteudo-formulario {
+  min-height: 0;
+  justify-items: stretch;
+  gap: 6px;
+  padding: 24px 30px 26px;
+  text-align: left;
+}
+
+.popup-conteudo.popup-conteudo-questao {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.popup-conteudo h1 {
+  color: var(--cor-principal);
+  font-size: clamp(1.5rem, 3vh, 2rem);
 }
 
 .popup-conteudo h1 {

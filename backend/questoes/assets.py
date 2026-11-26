@@ -81,23 +81,12 @@ def serializar_asset(asset: Asset, *, usos: int | None = None, com_conteudo: boo
             'delete': asset.source_type != SourceType.BASE and usos == 0,
         }
     if com_conteudo:
-        dados['data_uri'] = _data_uri(asset)
+        svg = ler_svg(asset)
+        # data_uri: para o frontend usar direto em <img src="...">.
+        dados['data_uri'] = 'data:image/svg+xml;base64,' + base64.b64encode(svg.conteudo).decode('ascii')
+        # region_ids: ids aceitos em highlight.region_id (a mesma lista que o serviço valida).
+        dados['region_ids'] = sorted(svg.ids)
     return dados
-
-
-def _data_uri(asset: Asset) -> str:
-    """SVG como data URI, para o frontend usar direto em <img src="...">."""
-    caminho = caminho_do_arquivo(asset)
-    try:
-        conteudo = caminho.read_bytes()
-    except OSError as erro:
-        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não está disponível') from erro
-    try:
-        svg = validar_svg(conteudo)
-    except SvgInvalido as erro:
-        raise AssetIndisponivel(f'Arquivo do asset "{asset.id}" não é um SVG válido: {erro}') from None
-    return 'data:image/svg+xml;base64,' + base64.b64encode(svg.conteudo).decode('ascii')
-
 
 # --- Operações ----------------------------------------------------------------
 
