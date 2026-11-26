@@ -1,13 +1,11 @@
+from backend.api.janela import JanelaAPI
 from backend.api.questoes import QuestoesAPI
 
 
-class API(QuestoesAPI):
+class API(JanelaAPI, QuestoesAPI):
     """Classe exposta ao JavaScript (pywebview.api.*).
 
-    Cada assunto fica em um módulo próprio (questoes.py, partida.py, equipes.py, ...)
-    como uma classe mixin, e é combinado aqui:
-
-        class API(QuestoesAPI, PartidaAPI, EquipesAPI, MinijogosAPI): ...
+    Cada módulo da bridge é combinado aqui como uma classe mixin.
     """
 
     def ping(self):

@@ -17,8 +17,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5.5vh;
-  padding-bottom: 3vh;
+  gap: clamp(12px, 4.7cqh, 36px);
+  padding-bottom: 3cqh;
 }
 
 /* ---------- Revelação dos elementos após a animação ---------- */
@@ -50,7 +50,7 @@
 /* ---------- Logotipo (placeholder) ---------- */
 .home-logotipo {
   display: block;
-  height: 9vh;
+  height: min(9cqh, 14cqw, 68px);
   width: auto;
   overflow: visible;
   fill: var(--cor-principal);
@@ -59,11 +59,11 @@
 
 /* ---------- Botões (estendem o .btn do global.css) ---------- */
 .btn-iniciar {
-  width: clamp(280px, 28vw, 390px);
-  height: clamp(58px, 8.8vh, 76px);
+  width: min(86cqw, clamp(280px, 28cqw, 390px));
+  height: clamp(58px, 8.8cqh, 76px);
   padding: 0;
-  border-radius: 3vh;
-  font-size: clamp(2rem, 5vh, 3rem);
+  border-radius: 3cqh;
+  font-size: clamp(2rem, 5cqh, 3rem);
   font-weight: 700;
   line-height: 1;
 }
@@ -73,16 +73,16 @@
 
 .btn-fechar {
   position: absolute;
-  top: 0.7vh;
-  right: 0.4vw;
-  width: clamp(140px, 11.5vw, 170px);
-  height: clamp(40px, 5.8vh, 52px);
+  top: 0.7cqh;
+  right: 0.4cqw;
+  width: clamp(140px, 11.5cqw, 170px);
+  height: clamp(40px, 5.8cqh, 52px);
   padding: 0;
   border: 3px solid var(--cor-principal);
   border-radius: 999px;
   background: var(--cor-fundo);
   color: var(--cor-principal);
-  font-size: clamp(1.05rem, 2.6vh, 1.45rem);
+  font-size: clamp(1.05rem, 2.6cqh, 1.45rem);
   font-weight: 700;
   transition: background var(--duracao-interacao) var(--easing-suave),
     color var(--duracao-interacao) var(--easing-suave),
@@ -97,10 +97,10 @@
 /* ---------- Rodapé ---------- */
 .home-equipe {
   position: absolute;
-  left: 1vw;
-  bottom: 1.6vh;
+  left: 1cqw;
+  bottom: 1.6cqh;
   color: var(--cor-principal);
-  font-size: clamp(1rem, 2.6vh, 1.25rem);
+  font-size: clamp(1rem, 2.6cqh, 1.25rem);
   font-weight: 600;
 }
 
@@ -109,7 +109,7 @@
    ========================================================== */
 
 .home-logo {
-  --lado: 60vh;
+  --lado: min(56cqh, 62cqw, 430px);
   --folga: calc(var(--lado) * -0.1537); /* tira as margens em branco do desenho */
   position: relative;
   width: var(--lado);

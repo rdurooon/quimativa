@@ -8,7 +8,13 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount, onMounted } from 'vue';
 import TransitionOverlay from './components/TransitionOverlay.vue';
+import { iniciarControlesTelaCheia } from './services/fullscreen';
+
+let pararControles;
+onMounted(() => { pararControles = iniciarControlesTelaCheia(); });
+onBeforeUnmount(() => pararControles?.());
 </script>
 
 <style>

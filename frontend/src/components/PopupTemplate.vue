@@ -22,10 +22,8 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "update:modelValue"]);
 const panel = ref(null);
-const closing = ref(false);
 const isTopModal = computed(() => getTopModal() === panel);
 const modalIndex = computed(() => getModalIndex(panel));
-let closeTimer = null;
 let previouslyFocused = null;
 let listenerActive = false;
 
@@ -86,17 +84,12 @@ function deactivate() {
 }
 
 function close() {
-  if (!props.open || closing.value) return;
-  closing.value = true;
-  closeTimer = window.setTimeout(
-    () => {
-      closeTimer = null;
-      if (!props.open) return;
-      closing.value = false;
-      emit("close");
-    },
-    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : 220,
-  );
+  if (props.open && isTopModal.value) emit("close");
+}
+
+function desativarInteracao(overlay) {
+  overlay.inert = true;
+  overlay.setAttribute("aria-hidden", "true");
 }
 
 function handleKeydown(event) {
@@ -138,6 +131,7 @@ function handleKeydown(event) {
 
 async function focusPanel() {
   await nextTick();
+  if (!props.open || !isTopModal.value) return;
   const target =
     panel.value?.querySelector("[data-autofocus]") ??
     (props.showClose
@@ -149,17 +143,8 @@ async function focusPanel() {
 watch(
   () => props.open,
   (open) => {
-    if (open) {
-      closing.value = false;
-      activate();
-      return;
-    }
-    closing.value = false;
-    if (closeTimer !== null) {
-      window.clearTimeout(closeTimer);
-      closeTimer = null;
-    }
-    deactivate();
+    if (open) activate();
+    else deactivate();
   },
 );
 
@@ -167,52 +152,58 @@ onMounted(() => {
   if (props.open) activate();
 });
 
-onUnmounted(() => {
-  if (closeTimer !== null) window.clearTimeout(closeTimer);
-  deactivate();
-});
+onUnmounted(deactivate);
 </script>
 
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="popup-fundo"
-      :class="{ 'popup-fundo-saindo': closing }"
-      :style="{ zIndex: 100 + modalIndex }"
-      role="presentation"
-      :aria-hidden="isTopModal ? 'false' : 'true'"
-      :inert="!isTopModal"
-      @mousedown.self="close"
-    >
-      <section
-        ref="panel"
-        class="popup-painel"
-        :class="[
-          `popup-painel-${size}`,
-          {
-            'popup-painel-sem-fechar': !showClose,
-            'popup-painel-saindo': closing,
-          },
-        ]"
-        role="dialog"
-        :aria-modal="isTopModal ? 'true' : undefined"
-        :aria-label="title"
-        tabindex="-1"
+    <Transition name="popup" appear @before-leave="desativarInteracao">
+      <div
+        v-if="open"
+        class="popup-fundo"
+        :style="{ zIndex: 100 + modalIndex }"
+        role="presentation"
+        :aria-hidden="isTopModal ? 'false' : 'true'"
+        :inert="!isTopModal"
+        @mousedown.self="close"
       >
-        <header v-if="searchPlaceholder" class="popup-cabecalho">
-          <label class="popup-busca">
-            <span class="sr-only">{{ searchPlaceholder }}</span>
-            <input
-              type="search"
-              :placeholder="searchPlaceholder"
-              :value="modelValue"
-              @input="emit('update:modelValue', $event.target.value)"
-            />
-          </label>
+        <section
+          ref="panel"
+          class="popup-painel"
+          :class="[
+            `popup-painel-${size}`,
+            { 'popup-painel-sem-fechar': !showClose },
+          ]"
+          role="dialog"
+          :aria-modal="isTopModal ? 'true' : undefined"
+          :aria-label="title"
+          tabindex="-1"
+        >
+          <header v-if="searchPlaceholder" class="popup-cabecalho">
+            <label class="popup-busca">
+              <span class="sr-only">{{ searchPlaceholder }}</span>
+              <input
+                type="search"
+                :placeholder="searchPlaceholder"
+                :value="modelValue"
+                @input="emit('update:modelValue', $event.target.value)"
+              />
+            </label>
+            <button
+              v-if="showClose"
+              class="popup-fechar"
+              type="button"
+              aria-label="Fechar"
+              data-modal-close
+              @click="close"
+            >
+              <X aria-hidden="true" />
+            </button>
+          </header>
+
           <button
-            v-if="showClose"
-            class="popup-fechar"
+            v-else-if="showClose"
+            class="popup-fechar popup-fechar-sem-busca"
             type="button"
             aria-label="Fechar"
             data-modal-close
@@ -220,25 +211,14 @@ onUnmounted(() => {
           >
             <X aria-hidden="true" />
           </button>
-        </header>
 
-        <button
-          v-else-if="showClose"
-          class="popup-fechar popup-fechar-sem-busca"
-          type="button"
-          aria-label="Fechar"
-          data-modal-close
-          @click="close"
-        >
-          <X aria-hidden="true" />
-        </button>
-
-        <div class="popup-conteudo" :class="contentClass">
-          <h1 v-if="title" :class="{ 'sr-only': hideTitle }">{{ title }}</h1>
-          <p v-if="description">{{ description }}</p>
-          <slot />
-        </div>
-      </section>
-    </div>
+          <div class="popup-conteudo" :class="contentClass">
+            <h1 v-if="title" :class="{ 'sr-only': hideTitle }">{{ title }}</h1>
+            <p v-if="description">{{ description }}</p>
+            <slot />
+          </div>
+        </section>
+      </div>
+    </Transition>
   </Teleport>
 </template>

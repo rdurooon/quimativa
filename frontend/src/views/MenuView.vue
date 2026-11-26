@@ -1,19 +1,21 @@
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { Maximize, Minimize } from "@lucide/vue";
 import { callDesktop } from "../services/desktop";
+import { alternarTelaCheia, alterandoTelaCheia, erroTelaCheia, telaCheia } from "../services/fullscreen";
 import { GAME_TRANSITION, initializeTransition } from "../services/transition";
 import QuickGameArtwork from "../components/QuickGameArtwork.vue";
 import ConfiguredGameArtwork from "../components/ConfiguredGameArtwork.vue";
 import PopupTemplate from "../components/PopupTemplate.vue";
 import QuestionBankPopup from "../components/QuestionBankPopup.vue";
 import "../../css/menu.css";
-import "../../css/transicao.css";
 
 const router = useRouter();
 const logoUrl = new URL("../../assets/quimativa-logo.png", import.meta.url)
   .href;
 let transition;
+let navegando = false;
 const popupAtivo = ref("");
 
 function confirmarSaida() {
@@ -25,6 +27,8 @@ function pedirSaida() {
 }
 
 async function navigate(path) {
+  if (navegando) return;
+  navegando = true;
   await transition?.cover();
   await router.push(path);
   await nextTick();
@@ -51,15 +55,21 @@ onMounted(() => {
         <img :src="logoUrl" alt="" />
         <span>QUIMATIVA</span>
       </div>
-      <button
-        class="btn btn-sair"
-        type="button"
-        aria-label="Sair"
-        @click="pedirSaida"
-      >
-        Sair
-      </button>
+      <div class="menu-acoes-janela">
+        <button
+          class="btn btn-sair btn-tela-cheia"
+          type="button"
+          title="F11"
+          :disabled="alterandoTelaCheia"
+          @click="alternarTelaCheia"
+        >
+          <component :is="telaCheia ? Minimize : Maximize" aria-hidden="true" />
+          {{ telaCheia ? 'Sair da tela cheia' : 'Tela cheia' }}
+        </button>
+        <button class="btn btn-sair" type="button" aria-label="Sair" @click="pedirSaida">Sair</button>
+      </div>
     </header>
+    <p v-if="erroTelaCheia" class="menu-erro-janela" role="alert">{{ erroTelaCheia }}</p>
 
     <div class="menu-conteudo">
       <aside class="menu-lateral" aria-label="Opções do menu">
@@ -105,7 +115,7 @@ onMounted(() => {
         <button
           class="cartao-partida partida-rapida"
           type="button"
-          @click="navigate('/game')"
+          @click="navigate('/game/quick')"
         >
           <QuickGameArtwork />
           <span class="cartao-titulo">Iniciar partida rápida</span>

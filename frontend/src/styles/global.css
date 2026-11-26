@@ -32,7 +32,10 @@ html, body, #app {
   height: 100%;
 }
 
+html { zoom: var(--escala-tela-cheia, 1); }
+
 body {
+  container: aplicativo / size;
   font-family: var(--fonte);
   color: var(--cor-texto);
   background: var(--cor-fundo);

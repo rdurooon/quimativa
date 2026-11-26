@@ -1,6 +1,7 @@
 const COLORS = ['#006b10', '#008e15', '#31b84b', '#a8e3ae'];
 const DEFAULT_COVER_DURATION = 1250;
 const DEFAULT_REVEAL_DURATION = 1100;
+const transitions = new WeakMap();
 
 export const GAME_TRANSITION = Object.freeze({
   coverDuration: 700,
@@ -72,49 +73,61 @@ export function initializeTransition({
     overlay.setAttribute('aria-hidden', 'true');
     document.body.prepend(overlay);
   }
-  root.style.setProperty('--duracao-cobrir', `${coverDuration}ms`);
-  root.style.setProperty('--duracao-revelar', `${revealDuration}ms`);
   if (!overlay.querySelector('.transicao-camada')) {
     COLORS.forEach((_, index) => overlay.appendChild(createLayer(index)));
   }
   const layers = Array.from(overlay.querySelectorAll('.transicao-camada'));
+  if (!transitions.has(overlay)) transitions.set(overlay, { phase: 'idle' });
+  const state = transitions.get(overlay);
 
-  function waitForAnimation(layer, fallbackDelay) {
+  function waitForAnimation(layer, name, fallbackDelay) {
     return new Promise((resolve) => {
-      let finished = false;
-      const finish = () => {
-        if (finished) return;
-        finished = true;
+      const finish = (event) => {
+        if (event && (event.target !== layer || (event.animationName && event.animationName !== name))) return;
+        window.clearTimeout(timer);
         layer.removeEventListener('animationend', finish);
         resolve();
       };
-      layer.addEventListener('animationend', finish, { once: true });
-      window.setTimeout(finish, fallbackDelay);
+      layer.addEventListener('animationend', finish);
+      const timer = window.setTimeout(finish, fallbackDelay);
     });
   }
 
-  return {
-    cover: () => new Promise((resolve) => {
-      root.classList.remove('transicao-coberta', 'transicao-revelando');
-      root.classList.add('transicao-entrada');
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.setTimeout(resolve, 250);
-        return;
-      }
-      waitForAnimation(layers[3] || overlay, coverDuration + 400).then(resolve);
-    }),
-    reveal: () => {
-      root.classList.remove('transicao-entrada');
-      root.classList.add('transicao-revelando');
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.setTimeout(() => {
-          root.classList.remove('transicao-revelando', 'transicao-coberta');
-        }, 250);
-        return;
-      }
-      waitForAnimation(layers[0] || overlay, revealDuration + 300).then(() => {
-        root.classList.remove('transicao-revelando', 'transicao-coberta');
-      });
-    },
-  };
+  function animation(layer, name, fallbackDelay) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return new Promise((resolve) => window.setTimeout(resolve, 250));
+    }
+    return waitForAnimation(layer, name, fallbackDelay);
+  }
+
+  function cover() {
+    if (state.phase === 'revealing') return state.pending.then(cover);
+    if (state.phase !== 'idle') return state.pending;
+
+    state.phase = 'covering';
+    root.style.setProperty('--duracao-cobrir', `${coverDuration}ms`);
+    root.classList.add('transicao-entrada');
+    state.pending = animation(layers[3], 'liquido-cobrir', coverDuration + 400).then(() => {
+      root.classList.replace('transicao-entrada', 'transicao-coberta');
+      state.phase = 'covered';
+    });
+    return state.pending;
+  }
+
+  function reveal() {
+    if (state.phase === 'covering') return state.pending.then(reveal);
+    if (state.phase === 'revealing') return state.pending;
+
+    state.phase = 'revealing';
+    root.style.setProperty('--duracao-revelar', `${revealDuration}ms`);
+    root.classList.add('transicao-revelando');
+    root.classList.remove('transicao-coberta');
+    state.pending = animation(layers[0], 'liquido-revelar', revealDuration + 300).then(() => {
+      root.classList.remove('transicao-revelando');
+      state.phase = 'idle';
+    });
+    return state.pending;
+  }
+
+  return { cover, reveal };
 }

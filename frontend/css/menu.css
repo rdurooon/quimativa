@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: clamp(18px, 3vh, 30px) clamp(24px, 3.7vw, 56px);
+  padding: clamp(18px, 3cqh, 30px) clamp(24px, 3.7cqw, 56px);
 }
 
 .menu-cabecalho {
@@ -11,30 +11,50 @@
   justify-content: space-between;
 }
 
+.menu-acoes-janela {
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.menu-acoes-janela .btn-tela-cheia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  padding-inline: clamp(12px, 2cqw, 24px);
+  font-size: clamp(.95rem, 2.3cqh, 1.25rem);
+}
+.btn-tela-cheia svg { width: 1em; height: 1em; }
+.btn-tela-cheia:disabled { cursor: wait; opacity: .7; }
+.menu-erro-janela { margin-top: 8px; text-align: right; color: #a31d1d; }
+
 .menu-marca {
   display: flex;
   align-items: center;
   gap: 12px;
   color: var(--cor-principal);
-  font-size: clamp(1.5rem, 3.4vh, 2.15rem);
+  font-size: clamp(1.5rem, 3.4cqh, 2.15rem);
   font-weight: 700;
 }
 
 .menu-marca img {
-  width: clamp(42px, 5vw, 64px);
-  height: clamp(42px, 5vw, 64px);
+  width: clamp(42px, 5cqw, 64px);
+  height: clamp(42px, 5cqw, 64px);
   object-fit: contain;
 }
 
 .btn-sair {
-  width: clamp(140px, 11.5vw, 170px);
-  height: clamp(40px, 5.8vh, 52px);
+  width: clamp(140px, 11.5cqw, 170px);
+  height: clamp(40px, 5.8cqh, 52px);
   padding: 0;
   border: 3px solid var(--cor-principal);
   border-radius: 999px;
   color: var(--cor-principal);
   background: var(--cor-superficie);
-  font-size: clamp(1.05rem, 2.6vh, 1.45rem);
+  font-size: clamp(1.05rem, 2.6cqh, 1.45rem);
   font-weight: 700;
   transition: background var(--duracao-interacao) var(--easing-suave),
     color var(--duracao-interacao) var(--easing-suave),
@@ -50,11 +70,11 @@
 
 .menu-conteudo {
   display: grid;
-  grid-template-columns: minmax(210px, 23vw) 1fr;
-  gap: clamp(28px, 4vw, 58px);
+  grid-template-columns: minmax(210px, 23cqw) 1fr;
+  gap: clamp(28px, 4cqw, 58px);
   align-items: stretch;
   width: min(1120px, 100%);
-  margin: clamp(42px, 8vh, 76px) auto 0;
+  margin: clamp(42px, 8cqh, 76px) auto 0;
 }
 
 .menu-lateral {
@@ -70,7 +90,7 @@
   justify-content: center;
   gap: 26px;
   min-height: 290px;
-  padding: clamp(24px, 4vh, 42px) 18px;
+  padding: clamp(24px, 4cqh, 42px) 18px;
   border-radius: 24px;
   background: var(--cor-principal);
 }
@@ -93,7 +113,7 @@
   color: var(--cor-texto-claro);
   background: transparent;
   text-align: left;
-  font-size: clamp(1rem, 2.5vh, 1.35rem);
+  font-size: clamp(1rem, 2.5cqh, 1.35rem);
   font-weight: 700;
   transition: color var(--duracao-interacao) var(--easing-suave);
 }
@@ -145,7 +165,7 @@
   border-radius: 22px;
   color: var(--cor-principal);
   background: var(--cor-superficie);
-  font-size: clamp(1rem, 2.5vh, 1.3rem);
+  font-size: clamp(1rem, 2.5cqh, 1.3rem);
   font-weight: 700;
   transition: background var(--duracao-interacao) var(--easing-suave),
     color var(--duracao-interacao) var(--easing-suave),
@@ -164,7 +184,7 @@
 .menu-partidas {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(22px, 3vw, 42px);
+  gap: clamp(22px, 3cqw, 42px);
   perspective: 900px;
 }
 
@@ -176,8 +196,8 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  min-height: clamp(390px, 61vh, 490px);
-  padding: clamp(24px, 3vw, 42px);
+  min-height: clamp(390px, 61cqh, 490px);
+  padding: clamp(24px, 3cqw, 42px);
   overflow: hidden;
   border: 3px solid currentColor;
   border-radius: 28px;
@@ -249,8 +269,8 @@
 }
 
 .cartao-partida svg {
-  width: clamp(120px, 13vw, 180px);
-  height: clamp(120px, 25vh, 190px);
+  width: clamp(120px, 13cqw, 180px);
+  height: clamp(120px, 25cqh, 190px);
   color: currentColor;
   fill: currentColor;
   overflow: visible;
@@ -258,18 +278,18 @@
 }
 
 .cartao-titulo {
-  font-size: clamp(1.25rem, 3.2vh, 1.8rem);
+  font-size: clamp(1.25rem, 3.2cqh, 1.8rem);
   font-weight: 700;
 }
 
 .cartao-descricao {
   max-width: 290px;
   color: var(--cor-texto-secundario);
-  font-size: clamp(0.95rem, 2.2vh, 1.2rem);
+  font-size: clamp(0.95rem, 2.2cqh, 1.2rem);
   line-height: 1.25;
 }
 
-@media (max-width: 800px) {
+@container aplicativo (max-width: 800px) {
   .menu-conteudo { grid-template-columns: 1fr; margin-top: 30px; }
   .menu-opcoes { min-height: 0; padding: 20px; }
   .menu-partidas { min-height: 400px; }

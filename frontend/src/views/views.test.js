@@ -4,7 +4,13 @@ import { createRouter, createMemoryHistory } from "vue-router";
 import GameView from "./GameView.vue";
 import IntroView from "./IntroView.vue";
 import MenuView from "./MenuView.vue";
+import MinigameDraw from "../components/MinigameDraw.vue";
+import MatchQuestion from "../components/MatchQuestion.vue";
+import MatchResults from "../components/MatchResults.vue";
+import QuickGameView from "./QuickGameView.vue";
 import PopupTemplate from "../components/PopupTemplate.vue";
+import { listarQuestoes, obterQuestao } from "../services/questoes";
+import { aplicarResultado, minigameDoTurno, prepararCiclo } from "../services/partidaRapida";
 vi.mock("../services/questoes", () => ({
   obterMetadados: vi
     .fn()
@@ -26,6 +32,7 @@ function createTestRouter() {
       { path: "/", component: IntroView },
       { path: "/menu", component: MenuView },
       { path: "/game", component: GameView },
+      { path: "/game/quick", component: QuickGameView },
     ],
   });
 }
@@ -255,7 +262,7 @@ describe("initial views", () => {
       .querySelectorAll(".transicao-camada")[3]
       .dispatchEvent(new Event("animationend"));
     await flushPromises();
-    expect(router.currentRoute.value.path).toBe("/game");
+    expect(router.currentRoute.value.path).toBe("/game/quick");
     expect(
       document.documentElement.classList.contains("transicao-revelando"),
     ).toBe(true);
@@ -265,7 +272,7 @@ describe("initial views", () => {
     await flushPromises();
     menu.unmount();
 
-    const game = mount(GameView, { global: { plugins: [router] } });
+    const game = mount(QuickGameView, { global: { plugins: [router] } });
     await flushPromises();
     await game.get('[aria-label="Voltar ao menu"]').trigger("click");
     expect(
@@ -287,5 +294,263 @@ describe("initial views", () => {
       document.documentElement.classList.contains("transicao-revelando"),
     ).toBe(false);
     game.unmount();
+  });
+
+  it("keeps configured games separate from quick team registration", async () => {
+    const router = createTestRouter();
+    await router.push("/menu");
+    const menu = mount(MenuView, { global: { plugins: [router] } });
+    await menu.get(".partida-configurada").trigger("click");
+    document.querySelectorAll(".transicao-camada")[3].dispatchEvent(new Event("animationend"));
+    await flushPromises();
+    expect(router.currentRoute.value.path).toBe("/game");
+    document.querySelectorAll(".transicao-camada")[0].dispatchEvent(new Event("animationend"));
+    await flushPromises();
+    menu.unmount();
+  });
+
+  it("redistributes students from removed teams without losing or duplicating anyone", async () => {
+    const router = createTestRouter();
+    await router.push("/game/quick");
+    const game = mount(QuickGameView, { global: { plugins: [router] } });
+    const adicionarEquipe = (letra) => game.findAll(".equipe-adicionar")
+      .find((button) => button.text().includes(`equipe ${letra}`));
+    const alunos = (letra) => game.get(`[aria-labelledby="equipe-${letra}"]`)
+      .findAll("li span").map((item) => item.text());
+    async function adicionarAluno(letra, nome) {
+      const cartao = game.get(`[aria-labelledby="equipe-${letra}"]`);
+      await cartao.get("input").setValue(nome);
+      await cartao.get("form").trigger("submit");
+    }
+
+    expect(adicionarEquipe("D").element.disabled).toBe(true);
+    await adicionarEquipe("C").trigger("click");
+    await adicionarEquipe("D").trigger("click");
+    expect(game.get(".inscricao-comecar").element.disabled).toBe(true);
+    await adicionarAluno("A", "Ana");
+    await adicionarAluno("C", "Caio");
+    await adicionarAluno("C", "Clara");
+    await adicionarAluno("D", "Davi");
+    await game.get('[aria-label="Remover equipe D"]').trigger("click");
+    expect(alunos("B")).toEqual(["Davi"]);
+    expect(alunos("C")).toEqual(["Caio", "Clara"]);
+
+    await adicionarEquipe("D").trigger("click");
+    await adicionarAluno("D", "Diana");
+    await game.get('[aria-label="Remover equipe C"]').trigger("click");
+    expect(adicionarEquipe("D").element.disabled).toBe(true);
+    expect([...alunos("A"), ...alunos("B")].sort()).toEqual(["Ana", "Caio", "Clara", "Davi", "Diana"]);
+    expect(Math.abs(alunos("A").length - alunos("B").length)).toBe(1);
+    expect(game.get(".inscricao-comecar").element.disabled).toBe(false);
+    game.unmount();
+  });
+
+  it("draws the first team and minigame and opens a question from the local bank", async () => {
+    const router = createTestRouter();
+    await router.push("/game/quick");
+    const game = mount(QuickGameView, {
+      global: { plugins: [router], stubs: { transition: false } },
+    });
+    for (const [letra, nome] of [["A", "Ana"], ["B", "Bruno"]]) {
+      const cartao = game.get(`[aria-labelledby="equipe-${letra}"]`);
+      await cartao.get("input").setValue(nome);
+      await cartao.get("form").trigger("submit");
+    }
+    expect(game.find(".equipe-vidas").exists()).toBe(false);
+
+    await game.get(".inscricao-comecar").trigger("click");
+    expect(document.body.textContent).toContain("Deseja começar a partida?");
+    document.querySelector(".popup-acao-cancelar").click();
+    await flushPromises();
+    expect(game.find(".sorteio").exists()).toBe(false);
+
+    await game.get(".inscricao-comecar").trigger("click");
+    const sorteio = vi.spyOn(Math, "random").mockReturnValue(0.75);
+    try {
+      document.querySelector(".popup-acao-confirmar").click();
+      await flushPromises();
+      expect(game.find(".inscricao").exists()).toBe(true);
+      expect(game.find(".roleta-girando").exists()).toBe(false);
+    } finally {
+      sorteio.mockRestore();
+    }
+
+    await vi.waitFor(() => expect(game.find(".roleta-girando").exists()).toBe(true));
+    expect(game.findAll(".sorteio-equipe [aria-label='3 vidas'] svg")).toHaveLength(6);
+    expect(game.find(".minigame-voltar").exists()).toBe(false);
+    expect(game.find(".sorteio-vencedora").exists()).toBe(false);
+    const estiloReal = window.getComputedStyle.bind(window);
+    let matriz = "matrix(-1, 0, 0, -1, 0, 0)";
+    const estilo = vi.spyOn(window, "getComputedStyle").mockImplementation((elemento) =>
+      elemento.classList.contains("roleta-ponteiro") ? { transform: matriz } : estiloReal(elemento),
+    );
+    try {
+      await vi.waitFor(() => expect(game.get(".roleta-rotulo-ativo").text()).toBe("Equipe A"));
+      expect(game.get(".sorteio-apontada h2").text()).toBe("Equipe A");
+      matriz = "matrix(1, 0, 0, 1, 0, 0)";
+      await vi.waitFor(() => expect(game.get(".roleta-rotulo-ativo").text()).toBe("Equipe B"));
+      expect(game.get(".sorteio-apontada h2").text()).toBe("Equipe B");
+      await game.get(".roleta-girando").trigger("animationend");
+    } finally {
+      estilo.mockRestore();
+    }
+    expect(game.get(".sorteio-vencedora h2").text()).toBe("Equipe B");
+    expect(game.get(".roleta-rotulo-ativo").text()).toBe("Equipe B");
+    expect(game.find(".minigame-voltar").exists()).toBe(false);
+    const sorteioMinigame = vi.spyOn(Math, "random").mockReturnValue(0.75);
+    try {
+      await vi.waitFor(() => expect(game.find(".minigame-faixa-girando").exists()).toBe(true), { timeout: 2500 });
+    } finally {
+      sorteioMinigame.mockRestore();
+    }
+    expect(game.get(".minigame-equipe-ativa h2").text()).toBe("Equipe B");
+    expect(game.get(".minigame-equipe-ativa [aria-label='3 vidas']").findAll("svg")).toHaveLength(3);
+    expect(game.get(".minigame-equipe-ativa .minigame-pontos dd").text()).toBe("0");
+    expect(game.get(".minigame-equipe-ativa .minigame-sequencia dd").text()).toBe("0");
+    expect(game.find(".minigame-faixa-deslize").exists()).toBe(false);
+    expect(game.find(".minigame-voltar").exists()).toBe(false);
+    listarQuestoes.mockResolvedValueOnce({ items: [{ id: "q1" }], total: 1 });
+    obterQuestao.mockResolvedValueOnce({
+      id: "q1", minigame_name: "Identificação de função orgânica",
+      statement: "Qual é a função?", explanation: "Contém uma carbonila.",
+      payload: {
+        alternatives: [{ id: "A", label: "Cetona" }, { id: "B", label: "Álcool" }],
+        correct_alternative_id: "A",
+      },
+    });
+    await game.get(".minigame-faixa-girando").trigger("animationend");
+    expect(game.find(".minigame-sorteado").exists()).toBe(true);
+    expect(game.find(".questao-partida").exists()).toBe(false);
+    await vi.waitFor(() => expect(game.find(".questao-alternativa:enabled").exists()).toBe(true), { timeout: 2600 });
+    expect(listarQuestoes).toHaveBeenLastCalledWith(expect.objectContaining({ difficulty: 1 }));
+    expect(game.get(".questao-equipe-ativa").text()).toContain("Equipe B");
+    expect(game.get(".questao-tempo strong").text()).toBe("20 s");
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "1" }));
+    await flushPromises();
+    expect(game.get(".opcao-correta").text()).toContain("Cetona");
+    expect(game.findAll(".questao-equipe")[1].get(".contador-placar .sr-only").text()).toBe("100");
+    await vi.waitFor(() => expect(game.findAll(".questao-equipe")[1].get(".contador-valor").text()).toBe("100"), { timeout: 1200 });
+    game.unmount();
+  });
+
+  it.each([2, 3, 4])("shows %i podiums and the champion's trophy", async (quantidade) => {
+    const classificacao = ["C", "A", "B", "D"].slice(0, quantidade).map((letra, indice) => ({
+      letra, pontos: 400 - indice * 100, alunos: [{ id: letra, nome: `Aluno ${letra}` }],
+    }));
+    const tela = mount(MatchResults, { props: { classificacao } });
+    expect(tela.findAll(".resultado-podio")).toHaveLength(quantidade);
+    expect(tela.get(".resultado-posicao-1").text()).toContain("Equipe C");
+    expect(tela.findAll(".resultado-taca")).toHaveLength(1);
+    await tela.get(".resultado-acoes button:first-child").trigger("click");
+    await tela.get(".resultado-menu").trigger("click");
+    expect(tela.emitted("repetir")).toHaveLength(1);
+    expect(tela.emitted("menu")).toHaveLength(1);
+    tela.unmount();
+  });
+
+  it("applies losses without stacking extra time and ends the feedback automatically", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "performance"] });
+    const equipe = { letra: "A", pontos: 100, sequencia: 1, vidas: 3 };
+    const tela = mount(MatchQuestion, { props: {
+      equipes: [equipe], equipeAtiva: "A", tempo: 20, ativo: true,
+      questao: {
+        minigame_name: "Associação de cartas", statement: "Associe as cartas",
+        explanation: "Estas duas cartas se correspondem.",
+        payload: { cards: [{ id: "A", content: "Álcool" }, { id: "B", content: "Etanol" }], correct_pair: ["A", "B"] },
+      },
+    } });
+    await vi.advanceTimersByTimeAsync(20000);
+    expect(tela.emitted("resultado")).toEqual([[false]]);
+    expect(tela.findAll(".opcao-correta")).toHaveLength(2);
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(tela.get(".questao-justificativa").text()).toContain("Estas duas cartas");
+    expect(tela.find(".justificativa-anel-correndo").exists()).toBe(false);
+    await vi.advanceTimersByTimeAsync(560);
+    expect(tela.find(".justificativa-anel-correndo").exists()).toBe(true);
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(tela.find(".justificativa-fechando").exists()).toBe(true);
+    expect(tela.emitted("avancar")).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(560);
+    expect(tela.emitted("avancar")).toHaveLength(1);
+    aplicarResultado(equipe, false);
+    aplicarResultado(equipe, false);
+    expect(equipe).toMatchObject({ pontos: 100, sequencia: 0, vidas: 1, tempoExtra: true });
+    aplicarResultado(equipe, true);
+    aplicarResultado(equipe, true);
+    expect(equipe).toMatchObject({ pontos: 320, sequencia: 2, vidas: 1, tempoExtra: false });
+    tela.unmount();
+  });
+
+  it("keeps all six minigames unique per cycle and avoids consecutive matches after eliminations", () => {
+    let ciclo = prepararCiclo(null, 4);
+    for (let volta = 0; volta < 10; volta++) {
+      const proximo = prepararCiclo(ciclo, 4);
+      for (let i = 0; i < 4; i++) {
+        expect(new Set(Array.from({ length: 6 }, (_, rodada) => minigameDoTurno(ciclo, rodada, i))).size).toBe(6);
+        for (let j = i + 1; j < 4; j++) {
+          for (let rodada = 0; rodada < 6; rodada++) {
+            expect(minigameDoTurno(ciclo, rodada, i)).not.toBe(minigameDoTurno(ciclo, rodada, j));
+            const seguinte = rodada === 5 ? proximo : ciclo;
+            expect(minigameDoTurno(ciclo, rodada, j)).not.toBe(minigameDoTurno(seguinte, rodada + 1, i));
+          }
+        }
+      }
+      ciclo = proximo;
+    }
+  });
+
+  it.each(["click", " ", "Enter"])("skips the justification with %j and advances once", async (entrada) => {
+    vi.useFakeTimers();
+    const tela = mount(MatchQuestion, { props: {
+      equipes: [], equipeAtiva: "A", tempo: 20, ativo: true,
+      questao: {
+        minigame_name: "Identificação", statement: "Escolha a alternativa",
+        explanation: "Justificativa da questão.",
+        payload: { alternatives: [{ id: "A", label: "Certa" }], correct_alternative_id: "A" },
+      },
+    } });
+    const acionar = () => window.dispatchEvent(entrada === "click"
+      ? new MouseEvent("click", { bubbles: true })
+      : new KeyboardEvent("keydown", { key: entrada, cancelable: true }));
+    try {
+      await tela.get(".questao-alternativa").trigger("click");
+      acionar();
+      await vi.advanceTimersByTimeAsync(3560);
+      expect(tela.find(".justificativa-anel-correndo").exists()).toBe(true);
+      acionar();
+      acionar();
+      await vi.advanceTimersByTimeAsync(560);
+      expect(tela.emitted("avancar")).toHaveLength(1);
+      await vi.advanceTimersByTimeAsync(10000);
+      expect(tela.emitted("avancar")).toHaveLength(1);
+    } finally {
+      tela.unmount();
+    }
+  });
+
+  it("keeps the final minigame hidden until the rare slide ends", async () => {
+    const aleatorio = vi.spyOn(Math, "random")
+      .mockReturnValueOnce(0.75)
+      .mockReturnValueOnce(0.01);
+    let tela;
+    try {
+      tela = mount(MinigameDraw, {
+        props: {
+          equipes: [{ letra: "A", alunos: [], pontos: 120, sequencia: 2, vidas: 3 }],
+          equipeAtiva: "A",
+          ativo: true,
+        },
+      });
+    } finally {
+      aleatorio.mockRestore();
+    }
+
+    expect(tela.find(".minigame-faixa-girando.minigame-faixa-deslize").exists()).toBe(true);
+    expect(tela.find(".minigame-sorteado").exists()).toBe(false);
+    expect(tela.emitted("selecionado")).toBeUndefined();
+    await tela.get(".minigame-faixa").trigger("animationend");
+    expect(tela.get(".minigame-sorteado").text()).toBe("Qual molécula pertence à função?");
+    expect(tela.emitted("selecionado")).toEqual([["function_molecule"]]);
+    tela.unmount();
   });
 });

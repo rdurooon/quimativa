@@ -6,7 +6,6 @@ import PopupTemplate from '../components/PopupTemplate.vue';
 import { callDesktop } from '../services/desktop';
 import { initializeTransition } from '../services/transition';
 import '../../css/home.css';
-import '../../css/transicao.css';
 
 const router = useRouter();
 const revelado = ref(false);
@@ -14,6 +13,7 @@ const parada = ref(false);
 let transition;
 let revealTimer;
 let logoMark;
+let iniciando = false;
 const popupSaidaAberto = ref(false);
 
 function getIntroDisplayed() {
@@ -35,7 +35,8 @@ function revelar() {
 }
 
 async function iniciar() {
-  if (!transition) return;
+  if (!transition || iniciando) return;
+  iniciando = true;
   await transition.cover();
   await router.push('/menu');
   await nextTick();

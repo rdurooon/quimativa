@@ -60,6 +60,8 @@ def test_janela_nativa_nao_configura_arraste_personalizado(monkeypatch):
         events = Eventos()
 
     monkeypatch.setattr(app, 'inicializar_banco', lambda: None)
+    monkeypatch.setattr(app, 'carregar_questoes_base', lambda: None)
+    monkeypatch.setattr(app, 'ler_tela_cheia', lambda: True)
     monkeypatch.setattr(app, 'fechar_conexoes', lambda: None)
     monkeypatch.setattr(app.webview, 'screens', [])
     monkeypatch.setattr(app.webview, 'create_window',
@@ -72,3 +74,5 @@ def test_janela_nativa_nao_configura_arraste_personalizado(monkeypatch):
     assert 'frameless' not in chamadas
     assert 'easy_drag' not in chamadas
     assert 'draggable' not in chamadas
+    assert chamadas['fullscreen'] is True
+    assert chamadas['js_api'].janela_estado() == {'tela_cheia': True}

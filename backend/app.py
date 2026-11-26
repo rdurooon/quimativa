@@ -18,6 +18,7 @@ import webview  # noqa: E402
 
 from backend import config  # noqa: E402
 from backend.api import API  # noqa: E402
+from backend.api.janela import ler_tela_cheia  # noqa: E402
 from backend.database.conexao import fechar_conexoes  # noqa: E402
 from backend.database.inicializacao import inicializar_banco  # noqa: E402
 from backend.questoes.erros import ErroPacoteBase  # noqa: E402
@@ -90,16 +91,20 @@ def main() -> None:
         altura_janela,
     )
 
+    tela_cheia = ler_tela_cheia()
+    api = API(tela_cheia=tela_cheia)
     janela = webview.create_window(
         title=config.NOME_APP,
         url=pagina_inicial,
-        js_api=API(),
+        js_api=api,
         x=x,
         y=y,
         width=largura_util,
         height=altura_util,
         resizable=False,
+        fullscreen=tela_cheia,
     )
+    api._vincular_janela(janela)
 
     try:
         webview.start()

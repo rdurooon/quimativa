@@ -7,5 +7,6 @@ import './styles/global.css';
 import './styles/animations.css';
 import './styles/placeholders.css';
 import './styles/popup.css';
+import '../css/transicao.css';
 
 createApp(App).use(createPinia()).use(router).mount('#app');

@@ -15,8 +15,8 @@
 
 .placeholder-voltar {
   position: fixed;
-  top: clamp(18px, 3vh, 30px);
-  left: clamp(18px, 2vw, 28px);
+  top: clamp(18px, 3cqh, 30px);
+  left: clamp(18px, 2cqw, 28px);
   display: flex;
   align-items: center;
   gap: 8px;

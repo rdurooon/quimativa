@@ -1,6 +1,10 @@
 """Testes da tabela app_metadata."""
+from unittest.mock import Mock
+
 import pytest
 
+from backend.api import API
+from backend.api.janela import ler_tela_cheia
 from backend.database import conexao
 from backend.database.inicializacao import inicializar_banco
 from backend.database.metadados import (
@@ -37,3 +41,15 @@ def test_versao_do_conteudo_base():
         definir_versao_base(s, 3)
     with conexao.sessao() as s:
         assert obter_versao_base(s) == 3
+
+
+def test_modo_tela_cheia_e_restaurado_do_banco():
+    janela = Mock()
+    assert ler_tela_cheia() is False
+    api = API(tela_cheia=ler_tela_cheia())
+    api._vincular_janela(janela)
+    assert api.janela_alternar_tela_cheia() == {"tela_cheia": True, "salva": True}
+    assert API(tela_cheia=ler_tela_cheia()).janela_estado() == {"tela_cheia": True}
+    assert api.janela_alternar_tela_cheia() == {"tela_cheia": False, "salva": True}
+    assert ler_tela_cheia() is False
+    assert janela.toggle_fullscreen.call_count == 2

@@ -1,0 +1,2512 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "pedro-0475261d37585d4a9bae51f7",
+      "file": "pedro/pedro-0475261d37585d4a9bae51f7.svg",
+      "name": "Cicloexano"
+    },
+    {
+      "id": "pedro-0581640464f94a4c5da6d719",
+      "file": "pedro/pedro-0581640464f94a4c5da6d719.svg",
+      "name": "Metanol"
+    },
+    {
+      "id": "pedro-0adb6ffe0af6201307dbe102",
+      "file": "pedro/pedro-0adb6ffe0af6201307dbe102.svg",
+      "name": "Benzeno"
+    },
+    {
+      "id": "pedro-1eefde13c5dbd3d6b1f6a790",
+      "file": "pedro/pedro-1eefde13c5dbd3d6b1f6a790.svg",
+      "name": "Etanoato de etila"
+    },
+    {
+      "id": "pedro-264991f7fd53e662bd30dd0f",
+      "file": "pedro/pedro-264991f7fd53e662bd30dd0f.svg",
+      "name": "Ácido propanoico"
+    },
+    {
+      "id": "pedro-277cae9e3060897422718c3a",
+      "file": "pedro/pedro-277cae9e3060897422718c3a.svg",
+      "name": "Cicloexeno"
+    },
+    {
+      "id": "pedro-296014dd240cf0b82a5b39ea",
+      "file": "pedro/pedro-296014dd240cf0b82a5b39ea.svg",
+      "name": "N-metiletanamida"
+    },
+    {
+      "id": "pedro-37ea4a19f5bd058cdfd79c08",
+      "file": "pedro/pedro-37ea4a19f5bd058cdfd79c08.svg",
+      "name": "Etanamida"
+    },
+    {
+      "id": "pedro-3a60336d9cf4b24096424096",
+      "file": "pedro/pedro-3a60336d9cf4b24096424096.svg",
+      "name": "Etanamina"
+    },
+    {
+      "id": "pedro-3ecae046f28cd3bd043428fb",
+      "file": "pedro/pedro-3ecae046f28cd3bd043428fb.svg",
+      "name": "Funções no ácido salicílico"
+    },
+    {
+      "id": "pedro-4020c9b97bfd8bda41d5b10d",
+      "file": "pedro/pedro-4020c9b97bfd8bda41d5b10d.svg",
+      "name": "Etanal simples"
+    },
+    {
+      "id": "pedro-46239ae178c4b88ecd8d59ad",
+      "file": "pedro/pedro-46239ae178c4b88ecd8d59ad.svg",
+      "name": "2-metilpropanal"
+    },
+    {
+      "id": "pedro-4a0b19a4e0db3308b0c2476a",
+      "file": "pedro/pedro-4a0b19a4e0db3308b0c2476a.svg",
+      "name": "Contagem de carbonos no butanol"
+    },
+    {
+      "id": "pedro-4d6caf74df3c6f65ecc73ad3",
+      "file": "pedro/pedro-4d6caf74df3c6f65ecc73ad3.svg",
+      "name": "Presença de anel e carbonila no benzaldeído"
+    },
+    {
+      "id": "pedro-4e7405d41905721f94c03ec6",
+      "file": "pedro/pedro-4e7405d41905721f94c03ec6.svg",
+      "name": "Pentano"
+    },
+    {
+      "id": "pedro-57b53a0a0c8aaaac18cb6b7e",
+      "file": "pedro/pedro-57b53a0a0c8aaaac18cb6b7e.svg",
+      "name": "Etanoato de metila"
+    },
+    {
+      "id": "pedro-59fe195d967782c9ea2ba4cc",
+      "file": "pedro/pedro-59fe195d967782c9ea2ba4cc.svg",
+      "name": "Contagem de carbonos e grupos no acetato de etila"
+    },
+    {
+      "id": "pedro-5eb6fed3130ddc300fb28378",
+      "file": "pedro/pedro-5eb6fed3130ddc300fb28378.svg",
+      "name": "Metoximetano"
+    },
+    {
+      "id": "pedro-6a818a4adc3f321c75ebd90a",
+      "file": "pedro/pedro-6a818a4adc3f321c75ebd90a.svg",
+      "name": "Etanoato de metila"
+    },
+    {
+      "id": "pedro-73fd515badf2e464b63554cf",
+      "file": "pedro/pedro-73fd515badf2e464b63554cf.svg",
+      "name": "Propan-2-ol"
+    },
+    {
+      "id": "pedro-7411311aa7975bf2899b5aa7",
+      "file": "pedro/pedro-7411311aa7975bf2899b5aa7.svg",
+      "name": "Propanal"
+    },
+    {
+      "id": "pedro-7a96dfc00e3d94db058e2274",
+      "file": "pedro/pedro-7a96dfc00e3d94db058e2274.svg",
+      "name": "Ramificação no 2-metilpropano"
+    },
+    {
+      "id": "pedro-7b6ffeaf572128555e46ce90",
+      "file": "pedro/pedro-7b6ffeaf572128555e46ce90.svg",
+      "name": "Funções presentes no ácido lático"
+    },
+    {
+      "id": "pedro-80117ba68df14812a496c3f1",
+      "file": "pedro/pedro-80117ba68df14812a496c3f1.svg",
+      "name": "Ácido etanoico"
+    },
+    {
+      "id": "pedro-897a83f5cc4734154b33c83f",
+      "file": "pedro/pedro-897a83f5cc4734154b33c83f.svg",
+      "name": "Butan-2-ol"
+    },
+    {
+      "id": "pedro-98fd6efc783c9ef8f51d8f9b",
+      "file": "pedro/pedro-98fd6efc783c9ef8f51d8f9b.svg",
+      "name": "Propan-1-ol"
+    },
+    {
+      "id": "pedro-a0dff799ba38ae14a00db11c",
+      "file": "pedro/pedro-a0dff799ba38ae14a00db11c.svg",
+      "name": "Butan-2-ona"
+    },
+    {
+      "id": "pedro-a6f70124f458b32be8856b48",
+      "file": "pedro/pedro-a6f70124f458b32be8856b48.svg",
+      "name": "Etanamida simples"
+    },
+    {
+      "id": "pedro-afec0bb4a31dd286bd085d79",
+      "file": "pedro/pedro-afec0bb4a31dd286bd085d79.svg",
+      "name": "Butan-2-ona"
+    },
+    {
+      "id": "pedro-b07185c6191ea24e221892e8",
+      "file": "pedro/pedro-b07185c6191ea24e221892e8.svg",
+      "name": "Fenol simples"
+    },
+    {
+      "id": "pedro-b2ae41b9695cf9524b53b63c",
+      "file": "pedro/pedro-b2ae41b9695cf9524b53b63c.svg",
+      "name": "Metoxietano"
+    },
+    {
+      "id": "pedro-b8e594526808a8a9f5c85204",
+      "file": "pedro/pedro-b8e594526808a8a9f5c85204.svg",
+      "name": "But-1-eno"
+    },
+    {
+      "id": "pedro-bb0cceee52158de955b42696",
+      "file": "pedro/pedro-bb0cceee52158de955b42696.svg",
+      "name": "Paracetamol"
+    },
+    {
+      "id": "pedro-c8a42dd24ae4305bf148faef",
+      "file": "pedro/pedro-c8a42dd24ae4305bf148faef.svg",
+      "name": "Etanol"
+    },
+    {
+      "id": "pedro-d986f297c5bb092126b7fcbd",
+      "file": "pedro/pedro-d986f297c5bb092126b7fcbd.svg",
+      "name": "Butano"
+    },
+    {
+      "id": "pedro-ddabc470aee2dd23f8ecd1db",
+      "file": "pedro/pedro-ddabc470aee2dd23f8ecd1db.svg",
+      "name": "Fenol"
+    },
+    {
+      "id": "pedro-e3d3b7cb7fa92493d29d1a06",
+      "file": "pedro/pedro-e3d3b7cb7fa92493d29d1a06.svg",
+      "name": "Propeno"
+    },
+    {
+      "id": "pedro-e47d2185bf7b068ca96bdd5d",
+      "file": "pedro/pedro-e47d2185bf7b068ca96bdd5d.svg",
+      "name": "2-metilbutano"
+    },
+    {
+      "id": "pedro-e532b3e6ab76061c28cb930f",
+      "file": "pedro/pedro-e532b3e6ab76061c28cb930f.svg",
+      "name": "Propanona simples"
+    },
+    {
+      "id": "pedro-e61497dfab5e49b267ab557d",
+      "file": "pedro/pedro-e61497dfab5e49b267ab557d.svg",
+      "name": "Propano"
+    },
+    {
+      "id": "pedro-fb23fa6764170b9c35c49e99",
+      "file": "pedro/pedro-fb23fa6764170b9c35c49e99.svg",
+      "name": "Etanal"
+    },
+    {
+      "id": "pedro-fb78db901b13c5b625a9ad59",
+      "file": "pedro/pedro-fb78db901b13c5b625a9ad59.svg",
+      "name": "Etanol em cadeia simples"
+    },
+    {
+      "id": "pedro-fe1f031383645d90e7fd4db3",
+      "file": "pedro/pedro-fe1f031383645d90e7fd4db3.svg",
+      "name": "Salicilato de metila"
+    },
+    {
+      "id": "pedro-ff598d4dbf5c98ca98722202",
+      "file": "pedro/pedro-ff598d4dbf5c98ca98722202.svg",
+      "name": "Vanilina"
+    },
+    {
+      "id": "pedro-ffb52eccabdd5eb155c9c1d7",
+      "file": "pedro/pedro-ffb52eccabdd5eb155c9c1d7.svg",
+      "name": "Ácido etanoico"
+    }
+  ],
+  "questions": [
+    {
+      "id": "87cf21ca-43d7-4081-ad1f-3ad7fcb71ee3",
+      "minigame_type": "identification",
+      "difficulty": 1,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-e532b3e6ab76061c28cb930f",
+        "highlight": {
+          "region_id": "mol1bnd2"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Cetona"
+          },
+          {
+            "id": "B",
+            "label": "Aldeído"
+          },
+          {
+            "id": "C",
+            "label": "Álcool"
+          },
+          {
+            "id": "D",
+            "label": "Éster"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "A carbonila (C=O) está ligada diretamente a dois átomos de carbono, o que caracteriza a função cetona.",
+      "tags": [
+        "ID_FUNC_001",
+        "Funções orgânicas — Cetona"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_001"
+      }
+    },
+    {
+      "id": "a427a1a7-7c9b-5968-9ba4-858fbba0142d",
+      "minigame_type": "identification",
+      "difficulty": 1,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-fb78db901b13c5b625a9ad59",
+        "highlight": {
+          "region_id": "hidroxila"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Fenol"
+          },
+          {
+            "id": "B",
+            "label": "Álcool"
+          },
+          {
+            "id": "C",
+            "label": "Éter"
+          },
+          {
+            "id": "D",
+            "label": "Ácido carboxílico"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "O grupo hidroxila (-OH) está ligado a um átomo de carbono saturado (apenas ligações simples), definindo a função álcool.",
+      "tags": [
+        "ID_FUNC_002",
+        "Funções orgânicas — Álcool"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_002"
+      }
+    },
+    {
+      "id": "91feedce-e1f4-54df-b9fa-734af34140b5",
+      "minigame_type": "identification",
+      "difficulty": 1,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-ffb52eccabdd5eb155c9c1d7",
+        "highlight": {
+          "region_id": "carboxila"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Éster"
+          },
+          {
+            "id": "B",
+            "label": "Álcool"
+          },
+          {
+            "id": "C",
+            "label": "Ácido carboxílico"
+          },
+          {
+            "id": "D",
+            "label": "Cetona"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "A presença do grupo carboxila (-C(=O)OH, união de carbonila e hidroxila no mesmo carbono) caracteriza um ácido carboxílico.",
+      "tags": [
+        "ID_FUNC_003",
+        "Funções orgânicas — Ácido carboxílico"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_003"
+      }
+    },
+    {
+      "id": "ce432c14-a865-5203-b802-aa85af4e2549",
+      "minigame_type": "identification",
+      "difficulty": 1,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-4020c9b97bfd8bda41d5b10d",
+        "highlight": {
+          "region_id": "aldeido"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Aldeído"
+          },
+          {
+            "id": "B",
+            "label": "Cetona"
+          },
+          {
+            "id": "C",
+            "label": "Éter"
+          },
+          {
+            "id": "D",
+            "label": "Amina"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "A carbonila (C=O) encontra-se na extremidade da cadeia carbônica, ligada a pelo menos um hidrogênio (-CHO), caracterizando um aldeído.",
+      "tags": [
+        "ID_FUNC_004",
+        "Funções orgânicas — Aldeído"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_004"
+      }
+    },
+    {
+      "id": "e5bf99d6-e785-5fe1-86c1-1440e1f0dce4",
+      "minigame_type": "identification",
+      "difficulty": 2,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-57b53a0a0c8aaaac18cb6b7e",
+        "highlight": {
+          "region_id": "ester"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Ácido carboxílico"
+          },
+          {
+            "id": "B",
+            "label": "Éster"
+          },
+          {
+            "id": "C",
+            "label": "Éter"
+          },
+          {
+            "id": "D",
+            "label": "Cetona"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "O grupamento -C(=O)-O- ligado a radicais orgânicos (sem hidrogênio na hidroxila) caracteriza a função éster, frequentemente confundida com ácido carboxílico ou éter.",
+      "tags": [
+        "ID_FUNC_005",
+        "Funções orgânicas — Éster"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_005"
+      }
+    },
+    {
+      "id": "41bd14ca-5293-5493-8e5a-98ee99fe9697",
+      "minigame_type": "identification",
+      "difficulty": 2,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-a6f70124f458b32be8856b48",
+        "highlight": {
+          "region_id": "amida"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Amina"
+          },
+          {
+            "id": "B",
+            "label": "Nitrocomposto"
+          },
+          {
+            "id": "C",
+            "label": "Amida"
+          },
+          {
+            "id": "D",
+            "label": "Haleto orgânico"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "O nitrogênio está ligado diretamente a um carbono de carbonila (-C(=O)-NH2), o que define uma amida e a diferencia de uma amina.",
+      "tags": [
+        "ID_FUNC_006",
+        "Funções orgânicas — Amida"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_006"
+      }
+    },
+    {
+      "id": "d9e93cf6-d0dd-599c-b95f-72a69ed916fb",
+      "minigame_type": "identification",
+      "difficulty": 2,
+      "statement": "Observe a estrutura molecular e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-b07185c6191ea24e221892e8",
+        "highlight": {
+          "region_id": "hidroxila-fenolica"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Álcool"
+          },
+          {
+            "id": "B",
+            "label": "Éter"
+          },
+          {
+            "id": "C",
+            "label": "Fenol"
+          },
+          {
+            "id": "D",
+            "label": "Aldeído"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "A hidroxila (-OH) está ligada diretamente a um carbono de anel aromático (benzênico), definindo a função fenol e não álcool.",
+      "tags": [
+        "ID_FUNC_007",
+        "Funções orgânicas — Fenol"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_007"
+      }
+    },
+    {
+      "id": "f421b396-668a-5b6a-84d7-b611141f0e9d",
+      "minigame_type": "identification",
+      "difficulty": 3,
+      "statement": "A molécula representada contém mais de um grupo funcional. Identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-bb0cceee52158de955b42696",
+        "highlight": {
+          "region_id": "amida"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Amina"
+          },
+          {
+            "id": "B",
+            "label": "Amida"
+          },
+          {
+            "id": "C",
+            "label": "Fenol"
+          },
+          {
+            "id": "D",
+            "label": "Éster"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "Apesar de a estrutura também possuir um grupo fenol (-OH no anel), a região destacada apresenta nitrogênio ligado a carbonila (-NH-C=O), que caracteriza uma amida.",
+      "tags": [
+        "ID_FUNC_008",
+        "Funções orgânicas — Amida (em molécula mista)"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_008"
+      }
+    },
+    {
+      "id": "6cb16f05-01a5-5a8d-bf1c-21a281726813",
+      "minigame_type": "identification",
+      "difficulty": 3,
+      "statement": "Observe a estrutura da vanilina e identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-ff598d4dbf5c98ca98722202",
+        "highlight": {
+          "region_id": "mol1atm6"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Cetona"
+          },
+          {
+            "id": "B",
+            "label": "Éter"
+          },
+          {
+            "id": "C",
+            "label": "Aldeído"
+          },
+          {
+            "id": "D",
+            "label": "Ácido carboxílico"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "A região destacada corresponde ao grupo -CHO (carbonila ligada a hidrogênio na extremidade), que caracteriza a função aldeído, distinta do éter (-OCH3) e do fenol (-OH) presentes na mesma molécula.",
+      "tags": [
+        "ID_FUNC_009",
+        "Funções orgânicas — Aldeído (em molécula mista)"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_009"
+      }
+    },
+    {
+      "id": "bd0c2c96-47c8-5f6c-8f24-f972a529321b",
+      "minigame_type": "identification",
+      "difficulty": 3,
+      "statement": "Na estrutura representada, identifique a função orgânica correspondente ao grupo destacado.",
+      "payload": {
+        "molecule_asset_id": "pedro-fe1f031383645d90e7fd4db3",
+        "highlight": {
+          "region_id": "mol1atm3"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Éster"
+          },
+          {
+            "id": "B",
+            "label": "Ácido carboxílico"
+          },
+          {
+            "id": "C",
+            "label": "Cetona"
+          },
+          {
+            "id": "D",
+            "label": "Álcool"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "O grupamento -C(=O)O- ligado a carbono do anel e a um grupo metila (-CH3) caracteriza a função éster, não devendo ser confundido com ácido carboxílico.",
+      "tags": [
+        "ID_FUNC_010",
+        "Funções orgânicas — Éster (em molécula mista)"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_FUNC_010"
+      }
+    },
+    {
+      "id": "2d653e80-1746-407a-a2a7-852e635633c3",
+      "minigame_type": "find_difference",
+      "difficulty": 1,
+      "statement": "Qual das estruturas a seguir apresenta cadeia carbônica fechada?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-b8e594526808a8a9f5c85204"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-0475261d37585d4a9bae51f7"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "explanation": "O cicloexano tem cadeia fechada. O but-1-eno tem cadeia aberta.",
+      "tags": [
+        "ID_DIF_001",
+        "Classificação de cadeias — Cadeia fechada"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_001"
+      }
+    },
+    {
+      "id": "f587f1f5-16e4-50f5-9c18-78a9a3d8ed8f",
+      "minigame_type": "find_difference",
+      "difficulty": 1,
+      "statement": "Entre as estruturas apresentadas, qual possui cadeia carbônica insaturada?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-e61497dfab5e49b267ab557d"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-e3d3b7cb7fa92493d29d1a06"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "explanation": "O propeno contém uma ligação dupla entre carbonos, que torna a cadeia insaturada.",
+      "tags": [
+        "ID_DIF_002",
+        "Classificação de cadeias — Cadeia insaturada"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_002"
+      }
+    },
+    {
+      "id": "764baee1-6ea2-5c90-bd59-dca5edd91b3d",
+      "minigame_type": "find_difference",
+      "difficulty": 1,
+      "statement": "Qual das moléculas abaixo apresenta o grupo hidroxila (-OH)?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-e61497dfab5e49b267ab557d"
+          }
+        ],
+        "correct_molecule_id": "M1"
+      },
+      "explanation": "O etanol apresenta um grupo hidroxila (–OH) ligado a um carbono saturado.",
+      "tags": [
+        "ID_DIF_003",
+        "Funções oxigenadas — Álcool"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_003"
+      }
+    },
+    {
+      "id": "24d22a02-e175-52f8-b5cd-0ff4e6108777",
+      "minigame_type": "find_difference",
+      "difficulty": 1,
+      "statement": "Qual estrutura apresenta cadeia carbônica ramificada?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-4e7405d41905721f94c03ec6"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-e47d2185bf7b068ca96bdd5d"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "explanation": "O 2-metilbutano tem um carbono ligado a três outros carbonos, formando uma ramificação.",
+      "tags": [
+        "ID_DIF_004",
+        "Classificação de cadeias — Cadeia ramificada"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_004"
+      }
+    },
+    {
+      "id": "322144f1-b1df-51fe-8a8a-ecce617428b0",
+      "minigame_type": "find_difference",
+      "difficulty": 2,
+      "statement": "Considerando as duas estruturas abaixo, qual pertence à função éter?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-5eb6fed3130ddc300fb28378"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          }
+        ],
+        "correct_molecule_id": "M1"
+      },
+      "explanation": "O metoximetano é um éter porque seu oxigênio liga dois grupos metila.",
+      "tags": [
+        "ID_DIF_005",
+        "Funções orgânicas — Éter"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_005"
+      }
+    },
+    {
+      "id": "b5f66782-6243-505f-a0b4-adbe1dd1ee06",
+      "minigame_type": "find_difference",
+      "difficulty": 2,
+      "statement": "Qual das estruturas apresentadas contém átomo de nitrogênio?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c"
+          }
+        ],
+        "correct_molecule_id": "M1"
+      },
+      "explanation": "A etanamina contém nitrogênio no grupo amino (–NH₂).",
+      "tags": [
+        "ID_DIF_006",
+        "Funções nitrogenadas — Amina"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_006"
+      }
+    },
+    {
+      "id": "8a956186-fe0a-5392-9e42-0ce031ee94e4",
+      "minigame_type": "find_difference",
+      "difficulty": 2,
+      "statement": "Qual estrutura apresenta anel aromático?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-277cae9e3060897422718c3a"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-0adb6ffe0af6201307dbe102"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "explanation": "O benzeno tem um anel com seis elétrons π deslocalizados, característico de um anel aromático.",
+      "tags": [
+        "ID_DIF_007",
+        "Cadeias carbônicas — Cadeia aromática"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_007"
+      }
+    },
+    {
+      "id": "63f9e5c0-1b5e-5149-abe5-294ce66ac7d6",
+      "minigame_type": "find_difference",
+      "difficulty": 3,
+      "statement": "Entre as moléculas abaixo, qual apresenta função amida?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08"
+          }
+        ],
+        "correct_molecule_id": "M2"
+      },
+      "explanation": "A etanamida é uma amida porque o nitrogênio está ligado diretamente ao carbono da carbonila.",
+      "tags": [
+        "ID_DIF_008",
+        "Funções orgânicas — Amida"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_008"
+      }
+    },
+    {
+      "id": "e733afbc-3c3d-53b2-8156-17c9280849ba",
+      "minigame_type": "find_difference",
+      "difficulty": 3,
+      "statement": "Qual das estruturas apresentadas pertence exclusivamente à função álcool?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-73fd515badf2e464b63554cf"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          }
+        ],
+        "correct_molecule_id": "M1"
+      },
+      "explanation": "O propan-2-ol tem uma hidroxila ligada a carbono saturado, característica da função álcool.",
+      "tags": [
+        "ID_DIF_009",
+        "Funções oxigenadas — Álcool"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_009"
+      }
+    },
+    {
+      "id": "a3d00a3d-7b3d-5a41-b1f8-2563d63dfc53",
+      "minigame_type": "find_difference",
+      "difficulty": 3,
+      "statement": "Qual estrutura apresenta o grupo funcional cetona?",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-afec0bb4a31dd286bd085d79"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-264991f7fd53e662bd30dd0f"
+          }
+        ],
+        "correct_molecule_id": "M1"
+      },
+      "explanation": "A butan-2-ona tem uma carbonila ligada a dois carbonos, característica de cetona.",
+      "tags": [
+        "ID_DIF_010",
+        "Funções oxigenadas — Cetona"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_DIF_010"
+      }
+    },
+    {
+      "id": "ba5f3af4-0601-436a-8d07-9acbb9508e0d",
+      "minigame_type": "card_association",
+      "difficulty": 1,
+      "statement": "Escolha as duas cartas que formam a associação correta entre função orgânica e exemplo de estrutura.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "content": "Função Álcool"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "C3",
+            "content": "Função Éter"
+          },
+          {
+            "id": "C4",
+            "content": "CC(=O)C"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "A Carta 1 indica a função álcool, que corresponde à estrutura do etanol (CCO) na Carta 2.",
+      "tags": [
+        "ID_ASSOC_001",
+        "Funções orgânicas — Álcool"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_001"
+      }
+    },
+    {
+      "id": "3937398f-64a4-5357-8a91-a357cf83d33f",
+      "minigame_type": "card_association",
+      "difficulty": 1,
+      "statement": "Selecione as duas cartas que se relacionam corretamente.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "content": "Função Cetona"
+          },
+          {
+            "id": "C2",
+            "content": "Função Aldeído"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-0581640464f94a4c5da6d719"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C3"
+        ]
+      },
+      "explanation": "A propanona (CC(=O)C, Carta 3) possui carbonila entre carbonos, pertencendo à função cetona (Carta 1).",
+      "tags": [
+        "ID_ASSOC_002",
+        "Funções orgânicas — Cetona"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_002"
+      }
+    },
+    {
+      "id": "cffa7691-a52b-5d89-b5bb-5e730490bcc9",
+      "minigame_type": "card_association",
+      "difficulty": 1,
+      "statement": "Encontre o par correto entre a função orgânica e sua característica estrutural.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "content": "Ácido carboxílico"
+          },
+          {
+            "id": "C2",
+            "content": "Grupo carboxila (-COOH)"
+          },
+          {
+            "id": "C3",
+            "content": "Amina"
+          },
+          {
+            "id": "C4",
+            "content": "Oxigênio entre dois carbonos (-O-)"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "Ácidos carboxílicos são caracterizados pelo grupo carboxila (-COOH).",
+      "tags": [
+        "ID_ASSOC_003",
+        "Funções orgânicas — Ácido carboxílico"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_003"
+      }
+    },
+    {
+      "id": "4c1a5036-3b94-5cff-8b7f-60f06c4a4518",
+      "minigame_type": "card_association",
+      "difficulty": 1,
+      "statement": "Escolha as duas cartas que formam a relação correta.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-ddabc470aee2dd23f8ecd1db"
+          },
+          {
+            "id": "C2",
+            "content": "Função Fenol"
+          },
+          {
+            "id": "C3",
+            "content": "Função Éster"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "A Carta 1 mostra o fenol (Oc1ccccc1), correspondente à função fenol na Carta 2.",
+      "tags": [
+        "ID_ASSOC_004",
+        "Funções orgânicas — Fenol"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_004"
+      }
+    },
+    {
+      "id": "f9ae6301-9156-5756-8491-fca00212f876",
+      "minigame_type": "card_association",
+      "difficulty": 2,
+      "statement": "Selecione as duas cartas que correspondem corretamente entre si.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          },
+          {
+            "id": "C2",
+            "content": "Função Éster"
+          },
+          {
+            "id": "C3",
+            "content": "Função Ácido carboxílico"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-80117ba68df14812a496c3f1"
+          }
+        ],
+        "correct_pair": [
+          "C3",
+          "C4"
+        ]
+      },
+      "explanation": "A carta 4 mostra a estrutura de Ácido etanoico, que corresponde à função ácido carboxílico da carta 3. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_005",
+        "Funções orgânicas — Éster"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_005"
+      }
+    },
+    {
+      "id": "5e75535f-1c52-5ba2-9319-9f98f7a118dc",
+      "minigame_type": "card_association",
+      "difficulty": 2,
+      "statement": "Identifique as duas cartas que formam a associação correta.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "content": "Função Amina"
+          },
+          {
+            "id": "C2",
+            "content": "Função Amida"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          }
+        ],
+        "correct_pair": [
+          "C2",
+          "C3"
+        ]
+      },
+      "explanation": "A carta 3 mostra a estrutura de Etanamida, que corresponde à função amida da carta 2. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_006",
+        "Funções orgânicas — Amida"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_006"
+      }
+    },
+    {
+      "id": "81d250b4-3339-5877-8ffb-bd0f84db8256",
+      "minigame_type": "card_association",
+      "difficulty": 2,
+      "statement": "Escolha as duas cartas que se associam corretamente.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c"
+          },
+          {
+            "id": "C2",
+            "content": "Função Éter"
+          },
+          {
+            "id": "C3",
+            "content": "Função Álcool"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "A carta 1 mostra a estrutura de Metoxietano, que corresponde à função éter da carta 2. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_007",
+        "Funções orgânicas — Éter"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_007"
+      }
+    },
+    {
+      "id": "f0fc9ab7-cf5a-5173-aaeb-26cdad55536b",
+      "minigame_type": "card_association",
+      "difficulty": 3,
+      "statement": "Selecione as duas cartas que formam a única associação válida.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-7411311aa7975bf2899b5aa7"
+          },
+          {
+            "id": "C2",
+            "content": "Função Aldeído"
+          },
+          {
+            "id": "C3",
+            "content": "Função Cetona"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "A carta 1 mostra a estrutura de Propanal, que corresponde à função aldeído da carta 2. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_008",
+        "Funções orgânicas — Aldeído"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_008"
+      }
+    },
+    {
+      "id": "93f46e51-5246-5899-82fd-95cb85c84b40",
+      "minigame_type": "card_association",
+      "difficulty": 3,
+      "statement": "Escolha as duas cartas que se relacionam de forma inequívoca.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "content": "Função Amina"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          },
+          {
+            "id": "C3",
+            "content": "Função Amida"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          }
+        ],
+        "correct_pair": [
+          "C1",
+          "C2"
+        ]
+      },
+      "explanation": "A carta 2 mostra a estrutura de Etanamina, que corresponde à função amina da carta 1. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_009",
+        "Funções orgânicas — Amina"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_009"
+      }
+    },
+    {
+      "id": "558c4c5c-5159-5c9d-b7e9-5e5357620b8f",
+      "minigame_type": "card_association",
+      "difficulty": 3,
+      "statement": "Identifique as duas cartas que formam o par correto.",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-d986f297c5bb092126b7fcbd"
+          },
+          {
+            "id": "C2",
+            "content": "Função Ácido carboxílico"
+          },
+          {
+            "id": "C3",
+            "content": "Função Éster"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a"
+          }
+        ],
+        "correct_pair": [
+          "C3",
+          "C4"
+        ]
+      },
+      "explanation": "A carta 4 mostra a estrutura de Etanoato de metila, que corresponde à função éster da carta 3. O butano é um hidrocarboneto.",
+      "tags": [
+        "ID_ASSOC_010",
+        "Funções orgânicas — Ácido carboxílico"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ASSOC_010"
+      }
+    },
+    {
+      "id": "fa6e081c-455e-4dfa-9f2c-66119f55a34f",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 1,
+      "statement": "Observe a estrutura do butan-1-ol e indique quantos átomos de carbono ela possui.",
+      "payload": {
+        "molecule_asset_id": "pedro-4a0b19a4e0db3308b0c2476a",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "2 carbonos"
+          },
+          {
+            "id": "B",
+            "label": "3 carbonos"
+          },
+          {
+            "id": "C",
+            "label": "4 carbonos"
+          },
+          {
+            "id": "D",
+            "label": "5 carbonos"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "A cadeia principal possui 4 átomos de carbono ligados ao grupo -OH na extremidade.",
+      "tags": [
+        "ID_ANAL_001",
+        "Análise estrutural — Contagem de carbonos"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_001"
+      }
+    },
+    {
+      "id": "a57fa7b7-ce30-50fe-8937-be7c2491d2fa",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 1,
+      "statement": "Sobre a estrutura apresentada, qual característica descreve corretamente sua cadeia carbônica?",
+      "payload": {
+        "molecule_asset_id": "pedro-e61497dfab5e49b267ab557d",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Cadeia aberta e saturada"
+          },
+          {
+            "id": "B",
+            "label": "Cadeia fechada e insaturada"
+          },
+          {
+            "id": "C",
+            "label": "Cadeia aromática"
+          },
+          {
+            "id": "D",
+            "label": "Cadeia ramificada com dupla ligação"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "O propano (CCC) tem cadeia aberta (acíclica) e apenas ligações simples entre carbonos (saturada).",
+      "tags": [
+        "ID_ANAL_002",
+        "Análise estrutural — Cadeia saturada"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_002"
+      }
+    },
+    {
+      "id": "4a11f93d-a013-593e-ab54-4c1a03c1658e",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 1,
+      "statement": "Qual átomo atua como heteroátomo na estrutura representada?",
+      "payload": {
+        "molecule_asset_id": "pedro-b2ae41b9695cf9524b53b63c",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Carbono"
+          },
+          {
+            "id": "B",
+            "label": "Oxigênio"
+          },
+          {
+            "id": "C",
+            "label": "Nitrogênio"
+          },
+          {
+            "id": "D",
+            "label": "Enxofre"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "O átomo de oxigênio está situado entre dois átomos de carbono na cadeia (C-O-C), caracterizando um heteroátomo.",
+      "tags": [
+        "ID_ANAL_003",
+        "Análise estrutural — Heteroátomo"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_003"
+      }
+    },
+    {
+      "id": "e143d522-f4b9-5b08-9bd8-d4f747a35ada",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 1,
+      "statement": "Quantos átomos de carbono existem na molécula representada?",
+      "payload": {
+        "molecule_asset_id": "pedro-e532b3e6ab76061c28cb930f",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "1 carbono"
+          },
+          {
+            "id": "B",
+            "label": "2 carbonos"
+          },
+          {
+            "id": "C",
+            "label": "3 carbonos"
+          },
+          {
+            "id": "D",
+            "label": "4 carbonos"
+          }
+        ],
+        "correct_alternative_id": "C"
+      },
+      "explanation": "A propanona possui dois carbonos metílicos e um carbono da carbonila, totalizando 3 carbonos.",
+      "tags": [
+        "ID_ANAL_004",
+        "Análise estrutural — Contagem de carbonos"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_004"
+      }
+    },
+    {
+      "id": "670ec993-979e-50f8-ae13-4785c926f9d0",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 2,
+      "statement": "Analisando a estrutura apresentada, qual afirmação é correta?",
+      "payload": {
+        "molecule_asset_id": "pedro-b8e594526808a8a9f5c85204",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Possui cadeia fechada e saturada"
+          },
+          {
+            "id": "B",
+            "label": "Possui cadeia aberta e uma ligação dupla"
+          },
+          {
+            "id": "C",
+            "label": "Possui ligação tripla terminal"
+          },
+          {
+            "id": "D",
+            "label": "Possui anel aromático"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "O but-1-eno (CCC=C) tem cadeia aberta de 4 carbonos com uma dupla ligação na extremidade.",
+      "tags": [
+        "ID_ANAL_005",
+        "Análise estrutural — Insaturação e cadeia"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_005"
+      }
+    },
+    {
+      "id": "5385ad23-2f5d-5985-a266-44de426c7cae",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 2,
+      "statement": "Quais funções orgânicas estão presentes na estrutura representada?",
+      "payload": {
+        "molecule_asset_id": "pedro-7b6ffeaf572128555e46ce90",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Álcool e ácido carboxílico"
+          },
+          {
+            "id": "B",
+            "label": "Cetona e álcool"
+          },
+          {
+            "id": "C",
+            "label": "Éster e fenol"
+          },
+          {
+            "id": "D",
+            "label": "Aldeído e ácido carboxílico"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "A molécula possui hidroxila em carbono saturado (álcool) e grupo carboxila -COOH (ácido carboxílico).",
+      "tags": [
+        "ID_ANAL_006",
+        "Análise estrutural — Grupos funcionais"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_006"
+      }
+    },
+    {
+      "id": "af946960-ce92-5085-bf20-7b28c6cc2fbd",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 2,
+      "statement": "Quantos átomos de carbono terciário existem na estrutura apresentada?",
+      "payload": {
+        "molecule_asset_id": "pedro-7a96dfc00e3d94db058e2274",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "0"
+          },
+          {
+            "id": "B",
+            "label": "1"
+          },
+          {
+            "id": "C",
+            "label": "2"
+          },
+          {
+            "id": "D",
+            "label": "3"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "O carbono central liga-se a três carbonos (os três grupos -CH3), sendo portanto 1 carbono terciário; os outros três são primários.",
+      "tags": [
+        "ID_ANAL_007",
+        "Análise estrutural — Classificação de carbonos"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_007"
+      }
+    },
+    {
+      "id": "45fa58d9-e88a-5593-9af1-bcb3fc5e9f33",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 3,
+      "statement": "Ao analisar a estrutura representada, quais funções orgânicas podem ser identificadas?",
+      "payload": {
+        "molecule_asset_id": "pedro-3ecae046f28cd3bd043428fb",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Fenol e ácido carboxílico"
+          },
+          {
+            "id": "B",
+            "label": "Álcool e éster"
+          },
+          {
+            "id": "C",
+            "label": "Fenol e cetona"
+          },
+          {
+            "id": "D",
+            "label": "Álcool e aldeído"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "Há um grupo -OH ligado diretamente ao anel aromático (fenol) e um grupo -COOH (ácido carboxílico).",
+      "tags": [
+        "ID_ANAL_008",
+        "Análise estrutural — Grupos funcionais em aromático"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_008"
+      }
+    },
+    {
+      "id": "5d8feb0c-1dab-52cf-8c44-838ee817d014",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 3,
+      "statement": "Sobre a molécula representada, qual análise está correta?",
+      "payload": {
+        "molecule_asset_id": "pedro-59fe195d967782c9ea2ba4cc",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "É um ácido carboxílico de 4 carbonos"
+          },
+          {
+            "id": "B",
+            "label": "É um éster com 4 carbonos no total e cadeia aberta"
+          },
+          {
+            "id": "C",
+            "label": "É uma cetona com cadeia fechada"
+          },
+          {
+            "id": "D",
+            "label": "É um álcool com 2 carbonos"
+          }
+        ],
+        "correct_alternative_id": "B"
+      },
+      "explanation": "A estrutura CCOC(=O)C apresenta grupamento éster (-COO-), cadeia aberta e 4 átomos de carbono no total.",
+      "tags": [
+        "ID_ANAL_009",
+        "Análise estrutural — Função éster e cadeia"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_009"
+      }
+    },
+    {
+      "id": "1fbf8b7d-0ded-50bb-809c-dfe766a4dbea",
+      "minigame_type": "molecular_analysis",
+      "difficulty": 3,
+      "statement": "Qual alternativa descreve corretamente a estrutura apresentada?",
+      "payload": {
+        "molecule_asset_id": "pedro-4d6caf74df3c6f65ecc73ad3",
+        "highlight": {
+          "region_id": "mol1"
+        },
+        "alternatives": [
+          {
+            "id": "A",
+            "label": "Contém um anel aromático e um grupo aldeído (-CHO)"
+          },
+          {
+            "id": "B",
+            "label": "Contém um anel aromático e uma hidroxila fenólica (-OH)"
+          },
+          {
+            "id": "C",
+            "label": "É um éter cíclico sem carbonila"
+          },
+          {
+            "id": "D",
+            "label": "É uma cetona com 7 carbonos"
+          }
+        ],
+        "correct_alternative_id": "A"
+      },
+      "explanation": "A estrutura corresponde ao benzaldeído, formado por um anel benzênico ligado diretamente ao grupo -CHO (aldeído).",
+      "tags": [
+        "ID_ANAL_010",
+        "Análise estrutural — Aldeído aromático"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ANAL_010"
+      }
+    },
+    {
+      "id": "58c424b5-9190-4301-811c-10e6ad018c88",
+      "minigame_type": "function_molecule",
+      "difficulty": 1,
+      "statement": "Função alvo: Álcool. Qual das moléculas abaixo pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-0581640464f94a4c5da6d719",
+            "supplementary_text": "Metanol"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-5eb6fed3130ddc300fb28378",
+            "supplementary_text": "Metoximetano"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99",
+            "supplementary_text": "Etanal"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f",
+            "supplementary_text": "Propanona"
+          }
+        ],
+        "correct_card_id": "C1"
+      },
+      "explanation": "O metanol possui uma hidroxila (–OH) ligada a um carbono saturado. As outras estruturas são um éter, um aldeído e uma cetona.",
+      "tags": [
+        "ID_PERT_001",
+        "Funções orgânicas — Álcool"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_001"
+      }
+    },
+    {
+      "id": "28b8d4d8-662b-5912-9e6c-9765a86d9298",
+      "minigame_type": "function_molecule",
+      "difficulty": 1,
+      "statement": "Função alvo: Cetona. Qual estrutura pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef",
+            "supplementary_text": "Etanol"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f",
+            "supplementary_text": "Propanona"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-80117ba68df14812a496c3f1",
+            "supplementary_text": "Ácido etanoico"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-e61497dfab5e49b267ab557d",
+            "supplementary_text": "Propano"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "A propanona (CC(=O)C) apresenta carbonila entre dois carbonos, característica de cetona.",
+      "tags": [
+        "ID_PERT_002",
+        "Funções orgânicas — Cetona"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_002"
+      }
+    },
+    {
+      "id": "ff453552-34d7-5567-b389-30577211025a",
+      "minigame_type": "function_molecule",
+      "difficulty": 1,
+      "statement": "Função alvo: Ácido carboxílico. Qual molécula apresenta essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99",
+            "supplementary_text": "Etanal"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-80117ba68df14812a496c3f1",
+            "supplementary_text": "Ácido etanoico"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef",
+            "supplementary_text": "Etanol"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c",
+            "supplementary_text": "Metoxietano"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "O ácido etanoico (CC(=O)O) possui o grupo carboxila (-COOH), definindo a função ácido carboxílico.",
+      "tags": [
+        "ID_PERT_003",
+        "Funções orgânicas — Ácido carboxílico"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_003"
+      }
+    },
+    {
+      "id": "282c2dff-7118-55b2-9c65-047008e300b1",
+      "minigame_type": "function_molecule",
+      "difficulty": 1,
+      "statement": "Função alvo: Aldeído. Qual das estruturas abaixo pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f",
+            "supplementary_text": "Propanona"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99",
+            "supplementary_text": "Etanal"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a",
+            "supplementary_text": "Etanoato de metila"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-0581640464f94a4c5da6d719",
+            "supplementary_text": "Metanol"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "O etanal (CC=O) possui grupo -CHO (carbonila terminal ligada a hidrogênio), caracterizando um aldeído.",
+      "tags": [
+        "ID_PERT_004",
+        "Funções orgânicas — Aldeído"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_004"
+      }
+    },
+    {
+      "id": "8ba17566-7364-5e34-9128-2de82819f2d1",
+      "minigame_type": "function_molecule",
+      "difficulty": 2,
+      "statement": "Função alvo: Fenol. Qual das estruturas a seguir pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef",
+            "supplementary_text": "Etanol"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-ddabc470aee2dd23f8ecd1db",
+            "supplementary_text": "Fenol"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-0adb6ffe0af6201307dbe102",
+            "supplementary_text": "Benzeno"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-80117ba68df14812a496c3f1",
+            "supplementary_text": "Ácido etanoico"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "Apenas Oc1ccccc1 apresenta hidroxila (-OH) ligada diretamente a um anel aromático, caracterizando a função fenol.",
+      "tags": [
+        "ID_PERT_005",
+        "Funções orgânicas — Fenol"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_005"
+      }
+    },
+    {
+      "id": "d1c06563-d9d8-5d0d-9410-107379ae421c",
+      "minigame_type": "function_molecule",
+      "difficulty": 2,
+      "statement": "Função alvo: Éter. Qual molécula pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef",
+            "supplementary_text": "Etanol"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a",
+            "supplementary_text": "Etanoato de metila"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c",
+            "supplementary_text": "Metoxietano"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-80117ba68df14812a496c3f1",
+            "supplementary_text": "Ácido etanoico"
+          }
+        ],
+        "correct_card_id": "C3"
+      },
+      "explanation": "O metoxietano (CCOC) apresenta oxigênio entre dois átomos de carbono sem carbonila adjacente, sendo um éter.",
+      "tags": [
+        "ID_PERT_006",
+        "Funções orgânicas — Éter"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_006"
+      }
+    },
+    {
+      "id": "adee0337-d36b-5929-868c-5500edd939f5",
+      "minigame_type": "function_molecule",
+      "difficulty": 2,
+      "statement": "Função alvo: Amina. Qual estrutura pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08",
+            "supplementary_text": "Etanamida"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-3a60336d9cf4b24096424096",
+            "supplementary_text": "Etanamina"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-80117ba68df14812a496c3f1",
+            "supplementary_text": "Ácido etanoico"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef",
+            "supplementary_text": "Etanol"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "A etanamina (CCN) possui nitrogênio ligado a carbono em cadeia alifática sem carbonila, caracterizando uma amina.",
+      "tags": [
+        "ID_PERT_007",
+        "Funções orgânicas — Amina"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_007"
+      }
+    },
+    {
+      "id": "a4d18974-8929-5f2c-b2d3-64872cd0070f",
+      "minigame_type": "function_molecule",
+      "difficulty": 3,
+      "statement": "Função alvo: Éster. Qual das moléculas abaixo pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-264991f7fd53e662bd30dd0f",
+            "supplementary_text": "Ácido propanoico"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-1eefde13c5dbd3d6b1f6a790",
+            "supplementary_text": "Etanoato de etila"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-a0dff799ba38ae14a00db11c",
+            "supplementary_text": "Butan-2-ona"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-98fd6efc783c9ef8f51d8f9b",
+            "supplementary_text": "Propan-1-ol"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "CCOC(=O)C possui o grupamento -C(=O)-O- entre radicais carbônicos, definindo um éster.",
+      "tags": [
+        "ID_PERT_008",
+        "Funções orgânicas — Éster"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_008"
+      }
+    },
+    {
+      "id": "e770357a-5342-5cb7-a9ee-774ce7a13164",
+      "minigame_type": "function_molecule",
+      "difficulty": 3,
+      "statement": "Função alvo: Amida. Qual das estruturas abaixo pertence a essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-3a60336d9cf4b24096424096",
+            "supplementary_text": "Etanamina"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-296014dd240cf0b82a5b39ea",
+            "supplementary_text": "N-metiletanamida"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a",
+            "supplementary_text": "Etanoato de metila"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99",
+            "supplementary_text": "Etanal"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "CC(=O)NC apresenta o grupo -C(=O)-NH-, característico de amida, distinguindo-se de amina (A), éster (C) e aldeído (D).",
+      "tags": [
+        "ID_PERT_009",
+        "Funções orgânicas — Amida"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_009"
+      }
+    },
+    {
+      "id": "a7f9199e-40d2-5f90-be93-3e4ba7a94c6b",
+      "minigame_type": "function_molecule",
+      "difficulty": 3,
+      "statement": "Função alvo: Aldeído. Qual estrutura apresenta essa função?",
+      "payload": {
+        "cards": [
+          {
+            "id": "C1",
+            "asset_id": "pedro-afec0bb4a31dd286bd085d79",
+            "supplementary_text": "Butan-2-ona"
+          },
+          {
+            "id": "C2",
+            "asset_id": "pedro-46239ae178c4b88ecd8d59ad",
+            "supplementary_text": "2-metilpropanal"
+          },
+          {
+            "id": "C3",
+            "asset_id": "pedro-897a83f5cc4734154b33c83f",
+            "supplementary_text": "Butan-2-ol"
+          },
+          {
+            "id": "C4",
+            "asset_id": "pedro-1eefde13c5dbd3d6b1f6a790",
+            "supplementary_text": "Etanoato de etila"
+          }
+        ],
+        "correct_card_id": "C2"
+      },
+      "explanation": "O 2-metilpropanal (CC(C)C=O) possui grupo -CHO na extremidade, caracterizando aldeído; A é cetona, C é álcool e D é éster.",
+      "tags": [
+        "ID_PERT_010",
+        "Funções orgânicas — Aldeído"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_PERT_010"
+      }
+    },
+    {
+      "id": "b91063f4-c5ee-4a82-a384-2ed42053ae40",
+      "minigame_type": "function_order",
+      "difficulty": 1,
+      "statement": "Selecione as moléculas na ordem solicitada: Álcool -> Cetona -> Ácido carboxílico -> Aldeído.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-80117ba68df14812a496c3f1"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M1",
+          "M4",
+          "M3"
+        ]
+      },
+      "explanation": "Álcool = 2 (CCO), Cetona = 1 (CC(=O)C), Ácido carboxílico = 4 (CC(=O)O), Aldeído = 3 (CC=O).",
+      "tags": [
+        "ID_ORD_001",
+        "Sequência de funções oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_001"
+      }
+    },
+    {
+      "id": "b99da64a-17d4-5a33-9092-faa4ba245298",
+      "minigame_type": "function_order",
+      "difficulty": 1,
+      "statement": "Selecione as moléculas na ordem: Aldeído -> Álcool -> Cetona -> Ácido carboxílico.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-80117ba68df14812a496c3f1"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-0581640464f94a4c5da6d719"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Aldeído = 2, Álcool = 4, Cetona = 3, Ácido carboxílico = 1.",
+      "tags": [
+        "ID_ORD_002",
+        "Sequência de funções oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_002"
+      }
+    },
+    {
+      "id": "e0d7838c-a771-51b4-a0c5-1308d5cb1462",
+      "minigame_type": "function_order",
+      "difficulty": 1,
+      "statement": "Encontre a sequência correta para: Ácido carboxílico -> Álcool -> Aldeído -> Cetona.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-7411311aa7975bf2899b5aa7"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-afec0bb4a31dd286bd085d79"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-80117ba68df14812a496c3f1"
+          }
+        ],
+        "correct_order": [
+          "M4",
+          "M1",
+          "M2",
+          "M3"
+        ]
+      },
+      "explanation": "Ácido carboxílico = 4, Álcool = 1, Aldeído = 2, Cetona = 3.",
+      "tags": [
+        "ID_ORD_003",
+        "Sequência de funções oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_003"
+      }
+    },
+    {
+      "id": "408de8af-9941-516f-ad22-563116f67dca",
+      "minigame_type": "function_order",
+      "difficulty": 1,
+      "statement": "Selecione as moléculas na ordem: Cetona -> Ácido carboxílico -> Álcool -> Aldeído.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-98fd6efc783c9ef8f51d8f9b"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-264991f7fd53e662bd30dd0f"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Cetona = 2, Ácido carboxílico = 4, Álcool = 3, Aldeído = 1.",
+      "tags": [
+        "ID_ORD_004",
+        "Sequência de funções oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_004"
+      }
+    },
+    {
+      "id": "2f0ba74e-2f39-5460-a145-112945acf364",
+      "minigame_type": "function_order",
+      "difficulty": 2,
+      "statement": "Selecione as moléculas na ordem: Éter -> Éster -> Álcool -> Fenol.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-ddabc470aee2dd23f8ecd1db"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Éter = 2, Éster = 4, Álcool = 3, Fenol = 1.",
+      "tags": [
+        "ID_ORD_005",
+        "Sequência com éter, éster, álcool e fenol"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_005"
+      }
+    },
+    {
+      "id": "68a6965a-9eeb-5fc4-b956-5db2f32cd33a",
+      "minigame_type": "function_order",
+      "difficulty": 2,
+      "statement": "Selecione as moléculas na ordem: Amina -> Amida -> Éter -> Cetona.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-e532b3e6ab76061c28cb930f"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-5eb6fed3130ddc300fb28378"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Amina = 2, Amida = 4, Éter = 3, Cetona = 1.",
+      "tags": [
+        "ID_ORD_006",
+        "Sequência com funções nitrogenadas e oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_006"
+      }
+    },
+    {
+      "id": "7ef352b6-19eb-5890-bf08-6b2870de5e5d",
+      "minigame_type": "function_order",
+      "difficulty": 2,
+      "statement": "Selecione as moléculas na ordem: Fenol -> Ácido carboxílico -> Éster -> Aldeído.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-fb23fa6764170b9c35c49e99"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-ddabc470aee2dd23f8ecd1db"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-80117ba68df14812a496c3f1"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M3",
+          "M4",
+          "M1"
+        ]
+      },
+      "explanation": "Fenol = 2, Ácido carboxílico = 3, Éster = 4, Aldeído = 1.",
+      "tags": [
+        "ID_ORD_007",
+        "Sequência de funções oxigenadas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_007"
+      }
+    },
+    {
+      "id": "06981bcf-1240-5d6b-ad80-9bf9d1e5de4a",
+      "minigame_type": "function_order",
+      "difficulty": 3,
+      "statement": "Selecione as moléculas na ordem: Éster -> Amida -> Amina -> Álcool.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-c8a42dd24ae4305bf148faef"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-1eefde13c5dbd3d6b1f6a790"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M3",
+          "M4",
+          "M1"
+        ]
+      },
+      "explanation": "Éster = 2, Amida = 3, Amina = 4, Álcool = 1.",
+      "tags": [
+        "ID_ORD_008",
+        "Sequência com distinções frequentes de prova"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_008"
+      }
+    },
+    {
+      "id": "d4693913-5868-53ab-af3e-e038bc6cc210",
+      "minigame_type": "function_order",
+      "difficulty": 3,
+      "statement": "Selecione as moléculas na ordem: Aldeído -> Cetona -> Éter -> Ácido carboxílico.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-264991f7fd53e662bd30dd0f"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-7411311aa7975bf2899b5aa7"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-b2ae41b9695cf9524b53b63c"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-afec0bb4a31dd286bd085d79"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Aldeído = 2, Cetona = 4, Éter = 3, Ácido carboxílico = 1.",
+      "tags": [
+        "ID_ORD_009",
+        "Sequência com carbonilas e éter"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_009"
+      }
+    },
+    {
+      "id": "9096b741-a8e7-546a-a57c-94812a2f1c09",
+      "minigame_type": "function_order",
+      "difficulty": 3,
+      "statement": "Selecione as moléculas na ordem: Amida -> Éster -> Fenol -> Amina.",
+      "payload": {
+        "molecules": [
+          {
+            "id": "M1",
+            "asset_id": "pedro-3a60336d9cf4b24096424096"
+          },
+          {
+            "id": "M2",
+            "asset_id": "pedro-37ea4a19f5bd058cdfd79c08"
+          },
+          {
+            "id": "M3",
+            "asset_id": "pedro-ddabc470aee2dd23f8ecd1db"
+          },
+          {
+            "id": "M4",
+            "asset_id": "pedro-6a818a4adc3f321c75ebd90a"
+          }
+        ],
+        "correct_order": [
+          "M2",
+          "M4",
+          "M3",
+          "M1"
+        ]
+      },
+      "explanation": "Amida = 2, Éster = 4, Fenol = 3, Amina = 1.",
+      "tags": [
+        "ID_ORD_010",
+        "Sequência mista de funções orgânicas"
+      ],
+      "source": {
+        "name": "Pedro — questões autorais do Quimativa",
+        "reference": "ID_ORD_010"
+      }
+    }
+  ]
+}
