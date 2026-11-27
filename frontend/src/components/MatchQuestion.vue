@@ -4,6 +4,7 @@ import { UsersRound } from '@lucide/vue';
 import TeamLives from './TeamLives.vue';
 import AnimatedScore from './AnimatedScore.vue';
 import MatchFit from './MatchFit.vue';
+import { embaralhar } from '../services/partidaRapida';
 import { destacarRegiao } from '../utils/svgDestaque';
 
 const props = defineProps({
@@ -23,6 +24,9 @@ const resultado = ref(null);
 const justificativa = ref(false);
 const justificativaAtiva = ref(false);
 const fechandoJustificativa = ref(false);
+const cursor = ref(null);
+const areaDica = ref(null);
+const dica = ref(null);
 const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const duracaoSanfona = movimentoReduzido ? 0 : 380;
 const duracaoTexto = movimentoReduzido ? 0 : 180;
@@ -31,7 +35,7 @@ let cronometro;
 let espera;
 
 const payload = props.questao.payload;
-const opcoes = payload.alternatives ?? payload.cards ?? payload.molecules;
+const opcoes = embaralhar(payload.alternatives ?? payload.cards ?? payload.molecules);
 const ordenacao = Boolean(payload.correct_order);
 const gabarito = payload.correct_pair ?? payload.correct_order ?? [
   payload.correct_alternative_id ?? payload.correct_card_id ?? payload.correct_molecule_id,
@@ -64,6 +68,28 @@ function encerrarJustificativa() {
   fechandoJustificativa.value = true;
   espera = window.setTimeout(() => emit('avancar'), duracaoTexto + duracaoSanfona);
 }
+
+function acompanharCursor(evento) {
+  if (evento.pointerType === 'touch') return;
+  cursor.value = { x: evento.clientX, y: evento.clientY };
+}
+
+function posicionarDica() {
+  if (!dica.value || !cursor.value) return;
+  const area = areaDica.value.getBoundingClientRect();
+  if (!area.width || !area.height) return;
+
+  // O retângulo e o cursor estão no mesmo sistema de coordenadas, inclusive com zoom.
+  const caixa = dica.value.getBoundingClientRect();
+  const margem = 6;
+  const centro = Math.max(caixa.width / 2 + margem,
+    Math.min(cursor.value.x - area.left, area.width - caixa.width / 2 - margem));
+  const topo = Math.min(cursor.value.y - area.top + 20, area.height - caixa.height - margem);
+  dica.value.style.left = `${centro / area.width * 100}%`;
+  dica.value.style.top = `${topo / area.height * 100}%`;
+}
+
+watch([cursor, justificativaAtiva], posicionarDica, { flush: 'post' });
 
 function responder(id) {
   if (!props.ativo || resultado.value || marcadas.value.includes(id)) return;
@@ -110,10 +136,14 @@ watch(() => props.ativo, (ativo) => {
 onMounted(() => {
   window.addEventListener('keydown', teclado);
   window.addEventListener('click', encerrarJustificativa);
+  window.addEventListener('pointermove', acompanharCursor);
+  window.addEventListener('resize', posicionarDica);
 });
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', teclado);
   window.removeEventListener('click', encerrarJustificativa);
+  window.removeEventListener('pointermove', acompanharCursor);
+  window.removeEventListener('resize', posicionarDica);
   window.clearInterval(cronometro);
   window.clearTimeout(espera);
 });
@@ -142,7 +172,7 @@ onBeforeUnmount(() => {
       </div>
     </header>
 
-    <MatchFit class="questao-placar-area encaixe-superior">
+    <MatchFit class="questao-placar-area">
     <aside class="questao-placar" aria-label="Placar">
       <div class="questao-turno">
         <h2>Respondendo</h2>
@@ -154,7 +184,10 @@ onBeforeUnmount(() => {
           v-for="equipe in equipes"
           :key="equipe.letra"
           class="questao-equipe"
-          :class="{ 'questao-equipe-atual': equipe.letra === equipeAtiva }"
+          :class="{
+            'questao-equipe-atual': equipe.vidas > 0 && equipe.letra === equipeAtiva,
+            'questao-equipe-eliminada': equipe.vidas === 0,
+          }"
         >
           <div class="questao-equipe-pontos">
             <b>Equipe {{ equipe.letra }}</b>
@@ -162,7 +195,8 @@ onBeforeUnmount(() => {
           </div>
           <div class="questao-equipe-detalhes">
             <TeamLives :vidas="equipe.vidas" />
-            <span>Sequência: <AnimatedScore :valor="equipe.sequencia" /></span>
+            <span v-if="equipe.vidas === 0" class="questao-status-eliminada">Eliminada</span>
+            <span v-else>Sequência: <AnimatedScore :valor="equipe.sequencia" /></span>
           </div>
         </div>
       </div>
@@ -232,6 +266,11 @@ onBeforeUnmount(() => {
         </div>
       </MatchFit>
     </section>
+    <Teleport to="body">
+      <div v-if="justificativaAtiva" ref="areaDica" class="justificativa-dica-area">
+        <span ref="dica" class="justificativa-dica" role="tooltip">Clique para pular</span>
+      </div>
+    </Teleport>
   </main>
 </template>
 
@@ -267,7 +306,7 @@ onBeforeUnmount(() => {
   from { transform: scaleX(1); }
   to { transform: scaleX(0); }
 }
-.questao-placar-area { grid-column: 1; grid-row: 2; }
+.questao-placar-area { grid-column: 1; grid-row: 1 / -1; margin-top: clamp(38px, 7cqh, 64px); }
 .questao-placar { display: grid; gap: 14px; }
 .questao-placar h2 { font-size: clamp(1rem, 1.55cqw, 1.28rem); }
 .questao-turno { padding: 11px 14px; border-radius: 16px; background: #07551a; color: white; }
@@ -276,6 +315,14 @@ onBeforeUnmount(() => {
 .questao-pontuacao { display: grid; gap: 6px; }
 .questao-equipe { display: grid; gap: 3px; padding: 6px 10px; border: 1px solid var(--cor-linha); border-radius: 12px; background: var(--cor-superficie); }
 .questao-equipe-atual { border-color: var(--cor-principal); background: #e9f5eb; }
+.questao-equipe-eliminada { border-color: #8a908d; background: #ebedec; color: #3c4340; }
+.questao-status-eliminada {
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #59615d;
+  color: white;
+}
+.questao-equipe-eliminada :deep(.equipe-vidas) { color: #59615d; }
 .questao-equipe-pontos,
 .questao-equipe-detalhes { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2px 8px; }
 .questao-equipe-pontos b { font-size: clamp(1rem, 1.65cqw, 1.45rem); }
@@ -336,6 +383,24 @@ onBeforeUnmount(() => {
   height: 100%;
   animation: revelar-texto var(--texto) ease-out var(--sanfona) both;
 }
+.justificativa-dica-area {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.justificativa-dica {
+  position: absolute;
+  top: 92%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #18221de0;
+  color: #d9e2dc;
+  font: 500 .75rem/1.3 var(--fonte);
+  white-space: nowrap;
+}
 .justificativa-conteudo :deep(.encaixe-conteudo) { display: grid; justify-items: center; gap: 16px; }
 .questao-justificativa.justificativa-fechando {
   animation: fechar-sanfona var(--sanfona) ease-in var(--texto) both;
@@ -360,6 +425,7 @@ onBeforeUnmount(() => {
 @container partida (max-width: 480px) {
   .questao-partida { grid-template-columns: minmax(92px, 24%) minmax(0, 1fr); gap: 8px; }
   .questao-cabecalho { grid-column: 1 / -1; }
+  .questao-placar-area { grid-row: 2; margin-top: 0; }
   .questao-alternativa { padding-inline: 18px; }
   .questao-marca { display: none; }
 }

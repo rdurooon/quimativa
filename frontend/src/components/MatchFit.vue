@@ -42,9 +42,4 @@ onBeforeUnmount(() => observador?.disconnect());
   width: 100%;
   transform: translate(-50%, -50%) scale(var(--encaixe-escala));
 }
-.encaixe-superior .encaixe-conteudo {
-  top: 0;
-  transform-origin: center top;
-  transform: translateX(-50%) scale(var(--encaixe-escala));
-}
 </style>

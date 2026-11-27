@@ -160,8 +160,12 @@ describe("initial views", () => {
     await router.push("/menu");
     await router.isReady();
     const wrapper = mount(MenuView, { global: { plugins: [router] } });
-    expect(wrapper.text()).toContain("Banco de questões");
-    expect(wrapper.text()).toContain("Configurações");
+    expect(wrapper.findAll(".menu-opcao").map((botao) => botao.text())).toEqual([
+      "Banco de questões", "Histórico de partidas", "Configurações",
+    ]);
+    await wrapper.findAll(".menu-opcao")[1].trigger("click");
+    expect(document.querySelector('[role="dialog"] h1')?.textContent).toBe("Histórico de partidas");
+    expect(router.currentRoute.value.path).toBe("/menu");
     wrapper.unmount();
   });
 
@@ -204,7 +208,7 @@ describe("initial views", () => {
     await router.isReady();
     const wrapper = mount(MenuView, { global: { plugins: [router] } });
 
-    await wrapper.findAll(".menu-opcao")[1].trigger("click");
+    await wrapper.findAll(".menu-opcao")[2].trigger("click");
     await flushPromises();
 
     expect(router.currentRoute.value.path).toBe("/menu");
@@ -425,7 +429,8 @@ describe("initial views", () => {
     expect(listarQuestoes).toHaveBeenLastCalledWith(expect.objectContaining({ difficulty: 1 }));
     expect(game.get(".questao-equipe-ativa").text()).toContain("Equipe B");
     expect(game.get(".questao-tempo strong").text()).toBe("20 s");
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "1" }));
+    const cetona = game.findAll(".questao-alternativa").find((opcao) => opcao.text().includes("Cetona"));
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: cetona.get(".questao-numero").text() }));
     await flushPromises();
     expect(game.get(".opcao-correta").text()).toContain("Cetona");
     expect(game.findAll(".questao-equipe")[1].get(".contador-placar .sr-only").text()).toBe("100");
@@ -446,6 +451,32 @@ describe("initial views", () => {
     expect(tela.emitted("repetir")).toHaveLength(1);
     expect(tela.emitted("menu")).toHaveLength(1);
     tela.unmount();
+  });
+
+  it("checks the original answer order after shuffling the displayed cards", async () => {
+    const aleatorio = vi.spyOn(Math, "random").mockReturnValue(0);
+    const cards = [{ id: "A", content: "Álcool" }, { id: "B", content: "Cetona" }];
+    const correctOrder = ["A", "B"];
+    const tela = mount(MatchQuestion, { props: {
+      equipes: [], equipeAtiva: "A", tempo: 20, ativo: true,
+      questao: {
+        minigame_name: "Ordem das funções", statement: "Ordene as cartas",
+        payload: { cards, correct_order: correctOrder },
+      },
+    } });
+    try {
+      const opcoes = tela.findAll(".questao-alternativa");
+      expect(opcoes[0].text()).toContain("Cetona");
+      expect(opcoes[1].text()).toContain("Álcool");
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "2" }));
+      await opcoes[0].trigger("click");
+      expect(tela.emitted("resultado")).toEqual([[true]]);
+      expect(cards.map(({ id }) => id)).toEqual(["A", "B"]);
+      expect(correctOrder).toEqual(["A", "B"]);
+    } finally {
+      tela.unmount();
+      aleatorio.mockRestore();
+    }
   });
 
   it("applies losses without stacking extra time and ends the feedback automatically", async () => {
@@ -517,9 +548,11 @@ describe("initial views", () => {
       acionar();
       await vi.advanceTimersByTimeAsync(3560);
       expect(tela.find(".justificativa-anel-correndo").exists()).toBe(true);
+      expect(document.querySelector('[role="tooltip"]')?.textContent).toBe("Clique para pular");
       acionar();
       acionar();
       await vi.advanceTimersByTimeAsync(560);
+      expect(document.querySelector('[role="tooltip"]')).toBeNull();
       expect(tela.emitted("avancar")).toHaveLength(1);
       await vi.advanceTimersByTimeAsync(10000);
       expect(tela.emitted("avancar")).toHaveLength(1);

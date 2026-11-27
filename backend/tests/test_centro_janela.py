@@ -34,7 +34,7 @@ def test_pagina_inicial_de_producao_usa_frontend_absoluto(monkeypatch, tmp_path)
     pagina.write_text('<!doctype html>', encoding='utf-8')
     monkeypatch.setattr(app.config, 'FRONTEND_DIR', frontend)
 
-    assert app.obter_pagina_inicial(False) == pagina.as_uri()
+    assert app.obter_pagina_inicial(False) == str(pagina)
 
 
 def test_pagina_inicial_de_producao_nao_depende_do_diretorio_atual(
@@ -47,7 +47,7 @@ def test_pagina_inicial_de_producao_nao_depende_do_diretorio_atual(
     monkeypatch.setattr(app.config, 'FRONTEND_DIR', frontend)
     monkeypatch.chdir(tmp_path.parent)
 
-    assert app.obter_pagina_inicial(False) == pagina.as_uri()
+    assert app.obter_pagina_inicial(False) == str(pagina)
 
 
 def test_janela_nativa_nao_configura_arraste_personalizado(monkeypatch):

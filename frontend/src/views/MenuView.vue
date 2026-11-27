@@ -1,12 +1,10 @@
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { Maximize, Minimize } from "@lucide/vue";
+import { History, Maximize, Minimize, SlidersHorizontal, Zap } from "@lucide/vue";
 import { callDesktop } from "../services/desktop";
 import { alternarTelaCheia, alterandoTelaCheia, erroTelaCheia, telaCheia } from "../services/fullscreen";
 import { GAME_TRANSITION, initializeTransition } from "../services/transition";
-import QuickGameArtwork from "../components/QuickGameArtwork.vue";
-import ConfiguredGameArtwork from "../components/ConfiguredGameArtwork.vue";
 import PopupTemplate from "../components/PopupTemplate.vue";
 import QuestionBankPopup from "../components/QuestionBankPopup.vue";
 import "../../css/menu.css";
@@ -87,6 +85,10 @@ onMounted(() => {
             </svg>
             <span>Banco de questões</span>
           </button>
+          <button class="menu-opcao" type="button" @click="abrirPopup('history')">
+            <History aria-hidden="true" />
+            <span>Histórico de partidas</span>
+          </button>
           <button
             class="menu-opcao"
             type="button"
@@ -117,28 +119,29 @@ onMounted(() => {
           type="button"
           @click="navigate('/game/quick')"
         >
-          <QuickGameArtwork />
+          <span class="cartao-icone"><Zap aria-hidden="true" /></span>
           <span class="cartao-titulo">Iniciar partida rápida</span>
-          <span class="cartao-descricao"
-            >Inicie uma partida rápida, sem se preocupar em configurar</span
-          >
+          <span class="cartao-descricao">Jogue com as regras padrão.</span>
         </button>
         <button
           class="cartao-partida partida-configurada"
           type="button"
           @click="navigate('/game')"
         >
-          <ConfiguredGameArtwork />
+          <span class="cartao-icone"><SlidersHorizontal aria-hidden="true" /></span>
           <span class="cartao-titulo">Configurar partida</span>
-          <span class="cartao-descricao"
-            >Faça ajustes para a partida antes de começar uma</span
-          >
+          <span class="cartao-descricao">Personalize as regras antes de jogar.</span>
         </button>
       </section>
     </div>
 
     <QuestionBankPopup
       :open="popupAtivo === 'questions'"
+      @close="fecharPopup"
+    />
+    <PopupTemplate
+      :open="popupAtivo === 'history'"
+      title="Histórico de partidas"
       @close="fecharPopup"
     />
     <PopupTemplate

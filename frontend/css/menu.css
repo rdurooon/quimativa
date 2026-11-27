@@ -88,7 +88,7 @@
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  gap: 26px;
+  gap: clamp(8px, 2cqh, 18px);
   min-height: 290px;
   padding: clamp(24px, 4cqh, 42px) 18px;
   border-radius: 24px;
@@ -153,6 +153,11 @@
   stroke-linejoin: round;
   stroke-width: 2;
   transition: color var(--duracao-interacao) var(--easing-suave);
+}
+
+.menu-opcao .lucide {
+  padding: 5px;
+  stroke-width: 1.65;
 }
 
 .menu-tutorial {
@@ -268,25 +273,36 @@
   to { left: 125%; }
 }
 
-.cartao-partida svg {
-  width: clamp(120px, 13cqw, 180px);
-  height: clamp(120px, 25cqh, 190px);
-  color: currentColor;
-  fill: currentColor;
-  overflow: visible;
-  transition: transform 280ms var(--easing-suave);
+.cartao-icone {
+  display: grid;
+  place-items: center;
+  width: clamp(72px, 10cqw, 116px);
+  aspect-ratio: 1;
+  margin-bottom: 8px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 25%;
+  background: color-mix(in srgb, currentColor 9%, var(--cor-superficie));
+}
+
+.cartao-icone svg {
+  width: 54%;
+  height: 54%;
+  stroke-width: 1.7;
 }
 
 .cartao-titulo {
   font-size: clamp(1.25rem, 3.2cqh, 1.8rem);
   font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
 .cartao-descricao {
-  max-width: 290px;
+  max-width: 26ch;
   color: var(--cor-texto-secundario);
-  font-size: clamp(0.95rem, 2.2cqh, 1.2rem);
-  line-height: 1.25;
+  font-size: clamp(1rem, 1.6cqw, 1.125rem);
+  line-height: 1.45;
+  text-wrap: balance;
 }
 
 @container aplicativo (max-width: 800px) {
@@ -298,6 +314,5 @@
 @media (prefers-reduced-motion: reduce) {
   .menu-opcao,
   .menu-tutorial,
-  .cartao-partida,
-  .cartao-partida svg { transition: none; animation: none !important; }
+  .cartao-partida { transition: none; animation: none !important; }
 }

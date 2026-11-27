@@ -64,7 +64,8 @@ def obter_pagina_inicial(modo_desenvolvimento: bool) -> str:
             f"Frontend compilado não encontrado em {pagina_inicial}. "
             'Execute "npm run build" em frontend.'
         )
-    return pagina_inicial.as_uri()
+    # O pywebview serve caminhos locais por HTTP, necessário para os módulos JS.
+    return str(pagina_inicial)
 
 
 def main() -> None:

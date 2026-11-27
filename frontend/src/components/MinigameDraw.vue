@@ -21,7 +21,7 @@ const quantidade = minigames.length;
 const indiceFinal = 4 * quantidade + (props.minigame
   ? minigames.findIndex(({ id }) => id === props.minigame)
   : Math.floor(Math.random() * quantidade));
-const deslizeRaro = Math.random() < 0.03;
+const simularDeslize = Math.random() < 0.18;
 const faixa = Array.from({ length: indiceFinal + 4 }, (_, indice) => minigames[indice % quantidade]);
 const escolhido = faixa[indiceFinal];
 const concluido = ref(false);
@@ -47,13 +47,19 @@ function concluirSorteio() {
         v-for="equipe in equipes"
         :key="equipe.letra"
         class="minigame-equipe"
-        :class="{ 'minigame-equipe-ativa': equipe.letra === equipeAtiva }"
-        :aria-label="equipe.letra === equipeAtiva ? `Equipe ${equipe.letra}, turno atual` : `Equipe ${equipe.letra}`"
+        :class="{
+          'minigame-equipe-ativa': equipe.vidas > 0 && equipe.letra === equipeAtiva,
+          'minigame-equipe-eliminada': equipe.vidas === 0,
+        }"
+        :aria-label="`Equipe ${equipe.letra}`"
       >
         <UsersRound class="minigame-equipe-icone" aria-hidden="true" />
         <h2>Equipe {{ equipe.letra }}</h2>
-        <TeamLives :vidas="equipe.vidas" />
-        <span v-if="equipe.letra === equipeAtiva" class="minigame-turno">Equipe da vez</span>
+        <div class="minigame-equipe-status">
+          <TeamLives :vidas="equipe.vidas" />
+          <span v-if="equipe.vidas === 0" class="minigame-turno">Eliminada</span>
+          <span v-else-if="equipe.letra === equipeAtiva" class="minigame-turno">Equipe da vez</span>
+        </div>
         <p class="minigame-alunos">Alunos</p>
         <TeamRoster class="minigame-alunos-lista" :alunos="equipe.alunos" :equipe="equipe.letra" />
         <dl class="minigame-placar">
@@ -77,7 +83,7 @@ function concluirSorteio() {
           class="minigame-faixa"
           :class="{
             'minigame-faixa-girando': ativo && !concluido,
-            'minigame-faixa-deslize': deslizeRaro,
+            'minigame-faixa-deslize': simularDeslize,
             'minigame-faixa-parada': concluido,
           }"
           :style="{
@@ -138,7 +144,7 @@ function concluirSorteio() {
   width: min(calc(var(--equipes) * 260px), 100% - 100px);
   margin: 0 auto;
   align-self: center;
-  height: min(100%, 49cqh);
+  height: min(100%, 56cqh);
   min-height: 0;
 }
 .minigame-equipe {
@@ -165,13 +171,30 @@ function concluirSorteio() {
   font-weight: 700;
 }
 .minigame-equipe-icone {
-  width: clamp(42px, 9cqh, 86px);
-  height: clamp(42px, 9cqh, 86px);
+  width: clamp(32px, 7cqh, 72px);
+  height: clamp(32px, 7cqh, 72px);
   flex-shrink: 0;
   color: var(--cor-principal);
 }
 .minigame-equipe h2 { font-size: clamp(1rem, 2cqw, 1.5rem); }
 .minigame-alunos { font-weight: 700; }
+.minigame-equipe-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px 8px;
+  min-height: 1.5em;
+}
+.minigame-equipe-eliminada {
+  border-color: #8a908d;
+  background: #ebedec;
+  color: #3c4340;
+}
+.minigame-equipe-eliminada .minigame-equipe-icone,
+.minigame-equipe-eliminada .minigame-alunos-lista { color: #4f5753; }
+.minigame-equipe-eliminada .minigame-turno { background: #59615d; color: white; }
+.minigame-equipe-eliminada .minigame-placar > div { background: #dce0de; color: inherit; }
 .minigame-alunos-lista { color: var(--cor-texto-secundario); }
 .minigame-placar {
   width: 100%;
